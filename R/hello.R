@@ -14,5 +14,8 @@
 #   Test Package:              'Cmd + Shift + T'
 
 hello <- function() {
-  print("Hello1, world!")
+  data.frame(kolom = 1:3) %>% mutate(kolom2 = kolom + 1)
 }
+
+hello()
+
