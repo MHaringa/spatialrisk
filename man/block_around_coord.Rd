@@ -2,7 +2,7 @@
 % Please edit documentation in R/block_around_coord.R
 \name{block_around_coord}
 \alias{block_around_coord}
-\title{Title}
+\title{Coordinates of the four cardinal directions from centre}
 \usage{
 block_around_coord(lon = lon, lat = lat, radius = 200)
 }
@@ -13,6 +13,12 @@ block_around_coord(lon = lon, lat = lat, radius = 200)
 
 \item{radius}{Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.}
 }
+\value{
+A data.frame consisting of the four coordinates (long,lat) obtained by walking the radius to the four cardinal directions.
+}
 \description{
-Title
+Coordinates of the four cardinal directions from centre
+}
+\examples{
+block_around_coord(lon = 6.520386, lat = 53.24007, radius = 200)
 }
