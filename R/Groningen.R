@@ -8,10 +8,11 @@
 #'   \item{number}{Number of house}
 #'   \item{letter}{Letter of house}
 #'   \item{suffix}{Suffix to number of house}
-#'   \item{postcal_code}{Postal code of house}
+#'   \item{postal_code}{Postal code of house}
 #'   \item{city}{The name of the city}
 #'   \item{lon}{Longitude (in degrees)}
 #'   \item{lat}{Latitude (in degrees)}
+#'   \item{value}{Random value}
 #' }
 #' @source The BAG is the Dutch registry for Buildings and adresses (Basisregistratie adressen en gebouwen).
 "Groningen"

@@ -2,15 +2,22 @@
 % Please edit documentation in R/concentration_risk.R
 \name{concentration_risk}
 \alias{concentration_risk}
-\title{Title}
+\title{Concentration risk}
 \usage{
 concentration_risk(data, value, radius = 200)
 }
 \arguments{
-\item{radius}{}
+\item{data}{Data frame}
+
+\item{value}{Column}
+
+\item{radius}{Radius (in meters)}
+}
+\value{
+value
 }
 \description{
-Title
+Concentration risk
 }
 \examples{
 Groningen \%>\%

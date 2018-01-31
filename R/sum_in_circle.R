@@ -1,16 +1,18 @@
 #' Title
 #'
-#' @param data
-#' @param value
-#' @param lon
-#' @param lat
-#' @param radius
+#' @param data Data frame
+#' @param value waarde
+#' @param lon longitude
+#' @param lat latitude
+#' @param radius radius in meters
 #'
-#' @return
-#' @export
+#' @return waarde
 #'
-#' @examples
-sum_in_circle <- function(data, value, lon = lon, lat = lat, radius = 200){
+#' @importFrom dplyr "select"
+#'
+#' @examples sum_in_circle(Groningen, value, 6.520386, 53.24007)
+#' @export sum_in_circle
+sum_in_circle <- function(data, value, lon, lat, radius = 200){
 
   value <- enquo(value)
   tryCatch(

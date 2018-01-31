@@ -7,6 +7,8 @@
 coord_in_circle(data, lon = lon, lat = lat, radius = 200)
 }
 \arguments{
+\item{data}{Data}
+
 \item{lon}{Longitude of centre point, in degrees.}
 
 \item{lat}{Latitude of centre point, in degrees.}
@@ -20,6 +22,5 @@ A data.frame of coordinates within \code{radius} around \code{(lon, lat)}.
 Coordinates in circle
 }
 \examples{
-#
 coord_in_circle(Groningen, lon = 6.5203, lat = 53.24007, radius = 200)
 }

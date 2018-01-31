@@ -4,11 +4,25 @@
 \alias{sum_in_circle}
 \title{Title}
 \usage{
-sum_in_circle(data, value, lon = lon, lat = lat, radius = 200)
+sum_in_circle(data, value, lon, lat, radius = 200)
 }
 \arguments{
-\item{radius}{}
+\item{data}{Data frame}
+
+\item{value}{waarde}
+
+\item{lon}{longitude}
+
+\item{lat}{latitude}
+
+\item{radius}{radius in meters}
+}
+\value{
+waarde
 }
 \description{
 Title
+}
+\examples{
+sum_in_circle(Groningen, value, 6.520386, 53.24007)
 }
