@@ -7,7 +7,11 @@
 block_around_coord(lon = lon, lat = lat, radius = 200)
 }
 \arguments{
-\item{radius}{}
+\item{lon}{Longitude of point(s), in degrees.}
+
+\item{lat}{Latitude of point(s), in degrees.}
+
+\item{radius}{Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.}
 }
 \description{
 Title

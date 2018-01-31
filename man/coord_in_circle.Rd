@@ -7,8 +7,19 @@
 coord_in_circle(data, lon = lon, lat = lat, radius = 200)
 }
 \arguments{
-\item{radius}{}
+\item{lon}{Longitude of centre point, in degrees.}
+
+\item{lat}{Latitude of centre point, in degrees.}
+
+\item{radius}{Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.}
+}
+\value{
+A data.frame of coordinates within \code{radius} around \code{(lon, lat)}.
 }
 \description{
 Coordinates in circle
+}
+\examples{
+#
+coord_in_circle(Groningen, lon = 6.5203, lat = 53.24007, radius = 200)
 }
