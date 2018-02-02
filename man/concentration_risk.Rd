@@ -20,8 +20,6 @@ value
 Concentration risk
 }
 \examples{
-Groningen \%>\%
-  filter(amount > 1000) \%>\%
-  concentration_risk(., amount)
+concentration_risk(Groningen[1:10, ], amount, radius = 10)
 
 }

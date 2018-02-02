@@ -14,7 +14,7 @@
   \item{city}{The name of the city}
   \item{lon}{Longitude (in degrees)}
   \item{lat}{Latitude (in degrees)}
-  \item{value}{Random value}
+  \item{amount}{Random value}
 }}
 \source{
 The BAG is the Dutch registry for Buildings and adresses (Basisregistratie adressen en gebouwen).

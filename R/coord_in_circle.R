@@ -6,13 +6,9 @@
 #' @param radius Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.
 #'
 #' @return A data.frame of coordinates within \code{radius} around \code{(lon, lat)}.
-#' @importFrom dplyr "filter"
-#' @importFrom dplyr "arrange"
 #' @importFrom purrr "pmap_dbl"
 #' @import geosphere
 #'
-#' @examples
-#' coord_in_circle(Groningen, lon = 6.5203, lat = 53.24007, radius = 200)
 #' @export
 coord_in_circle <- function(data, lon = lon, lat = lat, radius = 200){
 

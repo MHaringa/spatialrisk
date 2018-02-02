@@ -21,6 +21,3 @@ A data.frame of coordinates within \code{radius} around \code{(lon, lat)}.
 \description{
 Coordinates in circle
 }
-\examples{
-coord_in_circle(Groningen, lon = 6.5203, lat = 53.24007, radius = 200)
-}

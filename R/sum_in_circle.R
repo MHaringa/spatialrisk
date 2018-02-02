@@ -8,7 +8,6 @@
 #'
 #' @return waarde
 #'
-#' @importFrom dplyr "select"
 #'
 #' @examples sum_in_circle(Groningen, value, 6.520386, 53.24007)
 #' @export sum_in_circle
@@ -26,6 +25,5 @@ sum_in_circle <- function(data, value, lon, lat, radius = 200){
   )
 }
 
-sum_in_circle(Groningen, amount, 6.520386, 53.2400, 100)
 
 
