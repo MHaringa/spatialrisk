@@ -16,20 +16,30 @@
 #' @export
 coord_in_circle <- function(data, lon = lon, lat = lat, radius = 200){
 
-  if (sum(names(data) %in% c("lon", "lat")) < 2) stop("Data does not have latitude and longitude information included.")
+  #if (sum(names(data) %in% c("lon", "lat")) < 2) stop("Data does not have latitude and longitude information included.")
 
   centre <- data.frame(lon = lon, lat = lat)
 
   block <- block_around_coord(lon, lat, radius)
 
-  data %>%
-    dplyr::filter(lon > block$west & lon < block$east) %>%
-    dplyr::filter(lat > block$south & lat < block$north) %>%
-    mutate(distanceFromCentre = purrr::pmap_dbl(., function(lon, lat, ...)
-      geosphere::distHaversine(c(lon, lat), centre))) %>%
-    dplyr::filter(.$distanceFromCentre < radius) %>%
-    arrange(distanceFromCentre)
+  data_sub <- data[data$lon > block$west &
+                     data$lon < block$east &
+                     data$lat > block$south &
+                     data$lat < block$north, ]
+
+  data_sub$distance_from_centre <- purrr::pmap_dbl(
+    data_sub, function(lon, lat, ...)  {
+      geosphere::distHaversine(c(lon, lat), centre)
+      }
+    )
+
+  data_sub <- data_sub[data_sub$distance_from_centre < radius, ]
+
+  data_sub[ order(data_sub$distance_from_centre), ]
 }
+
+
+
 
 
 

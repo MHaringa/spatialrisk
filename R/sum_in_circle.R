@@ -14,11 +14,18 @@
 #' @export sum_in_circle
 sum_in_circle <- function(data, value, lon, lat, radius = 200){
 
-  value <- enquo(value)
+  value <- deparse(substitute(value))
+
+  # if(!value %in% names(data)) stop("Data does not have this column included.")
+
+  df <- coord_in_circle(data, lon = lon, lat = lat, radius)
+
   tryCatch(
-    coord_in_circle(data, lon = lon, lat = lat, radius)  %>%
-      select(!!value) %>%
-      sum(., na.rm = TRUE),
+    sum( df[ , value ], na.rm = TRUE ),
     error = function(e) NA
   )
 }
+
+sum_in_circle(Groningen, amount, 6.520386, 53.2400, 100)
+
+
