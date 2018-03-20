@@ -15,8 +15,6 @@ sum_in_circle <- function(data, value, lon, lat, radius = 200){
 
   value <- deparse(substitute(value))
 
-  # if(!value %in% names(data)) stop("Data does not have this column included.")
-
   df <- coord_in_circle(data, lon = lon, lat = lat, radius)
 
   tryCatch(

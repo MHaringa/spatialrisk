@@ -23,7 +23,3 @@ block_around_coord <- function(lon = lon, lat = lat, radius = 200){
 
 
 
-
-
-
-
