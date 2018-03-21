@@ -10,11 +10,11 @@
 #'
 #' @examples
 haversine <- function(lat_from, lon_from, lat_to, lon_to){
-  radians <- pi / 180
-  lat_to <- lat_to * radians
-  lat_from <- lat_from * radians
-  lon_to <- lon_to * radians
-  lon_from <- lon_from * radians
+  toRad <- pi / 180
+  lat_to <- lat_to * toRad
+  lat_from <- lat_from * toRad
+  lon_to <- lon_to * toRad
+  lon_from <- lon_from * toRad
   dLat <- (lat_to - lat_from)
   dLon <- (lon_to - lon_from)
   a <- (sin(dLat / 2) ^ 2) + (cos(lat_from) * cos(lat_to)) * (sin(dLon / 2) ^ 2)

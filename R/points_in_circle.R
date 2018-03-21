@@ -10,19 +10,30 @@
 #'
 #' @export points_in_circle
 points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat, radius = 200){
+
+  # Turn into character vector
   lon <- deparse(substitute(lon))
   lat <- deparse(substitute(lat))
+
+  # Create data.table
   data <- data.table(data)
+
+  # Calculate coordinates of the four cardinal directions
   block <- block_around_point(lon_center, lat_center, radius)
+
+  # Error handling: return NA in case no points available within radius from center
   tryCatch({
+
+    # A simplified "pre-subsetting" before applying the Haversine formula
     data_in_block <- data[lon > block[4,1] & lon < block[2,1] & lat > block[3,2] & lat < block[1,2]]
+
+    # Apply Haversine formula to points in square around center
     data_in_circle <- data_in_block[, distance := haversine(lat_center, lon_center, lat, lon),
                                     by = 1:nrow(data_in_block)][distance < radius][order(distance)]
     return(data_in_circle)},
     error = function(e) NA
   )
 }
-
 
 
 
