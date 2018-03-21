@@ -9,6 +9,9 @@
 #' @export haversine
 #'
 #' @examples
+#' haversine(53.24007, 6.520386, 53.24054, 6.520386)
+#'
+#' @export
 haversine <- function(lat_from, lon_from, lat_to, lon_to){
   toRad <- pi / 180
   lat_to <- lat_to * toRad

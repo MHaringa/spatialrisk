@@ -1,12 +1,15 @@
-#' Title
+#' Sum in circle
 #'
 #' @param data Data frame
 #' @param value waarde
-#' @param lon longitude
-#' @param lat latitude
-#' @param radius radius in meters
+#' @param lon_center Longitude of center point, in degrees.
+#' @param lat_center Latitude of center point, in degrees.
+#' @param lon Name of column with longitudes, in degrees.
+#' @param lat Name of column with latitudes, in degrees.
+#' @param radius Radius in meters
 #'
 #' @return waarde
+#' @import data.table
 #'
 #'
 #' @examples sum_in_circle(Groningen, value, 6.520386, 53.24007)

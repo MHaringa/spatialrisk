@@ -2,26 +2,31 @@
 % Please edit documentation in R/sum_in_circle.R
 \name{sum_in_circle}
 \alias{sum_in_circle}
-\title{Title}
+\title{Sum in circle}
 \usage{
-sum_in_circle(data, value, lon, lat, radius = 200)
+sum_in_circle(data, value, lon_center, lat_center, lon = lon, lat = lat,
+  radius = 200)
 }
 \arguments{
 \item{data}{Data frame}
 
 \item{value}{waarde}
 
-\item{lon}{longitude}
+\item{lon_center}{Longitude of center point, in degrees.}
 
-\item{lat}{latitude}
+\item{lat_center}{Latitude of center point, in degrees.}
 
-\item{radius}{radius in meters}
+\item{lon}{Name of column with longitudes, in degrees.}
+
+\item{lat}{Name of column with latitudes, in degrees.}
+
+\item{radius}{Radius in meters}
 }
 \value{
 waarde
 }
 \description{
-Title
+Sum in circle
 }
 \examples{
 sum_in_circle(Groningen, value, 6.520386, 53.24007)

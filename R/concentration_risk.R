@@ -20,7 +20,7 @@ concentration_risk <- function(data, value, radius = 200)  {
   data_sub$lon <- data$lon
   data_sub$lat <- data$lat
 
-  data$concentration <- purrr::pmap_dbl(data_sub, function(value, lon, lat, ...) sum_in_circle(data_sub, value, lon = lon, lat = lat, radius))
+  data$concentration <- purrr::pmap_dbl(data_sub, function(value, lon, lat, ...) sum_in_circle(data_sub, value, lon_center = lon, lat_center = lat, radius = radius))
 
   data$concentration <- ifelse(is.na(data$concentration), value, data$concentration)
 

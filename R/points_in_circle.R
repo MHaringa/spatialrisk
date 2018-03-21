@@ -1,8 +1,10 @@
 #' Coordinates in circle
 #'
 #' @param data Data
-#' @param lon Longitude of centre point, in degrees.
-#' @param lat Latitude of centre point, in degrees.
+#' @param lon_center Longitude of center point, in degrees.
+#' @param lat_center Latitude of center point, in degrees.
+#' @param lon Name of column with longitudes, in degrees.
+#' @param lat Name of column with latitudes, in degrees.
 #' @param radius Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.
 #'
 #' @return A data.frame of coordinates within \code{radius} around \code{(lon, lat)}.
