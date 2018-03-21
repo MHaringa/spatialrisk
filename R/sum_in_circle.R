@@ -11,14 +11,14 @@
 #'
 #' @examples sum_in_circle(Groningen, value, 6.520386, 53.24007)
 #' @export sum_in_circle
-sum_in_circle <- function(data, value, lon, lat, radius = 200){
-
+sum_in_circle <- function(data, value, lon_center, lat_center, lon = lon, lat = lat, radius = 200){
   value <- deparse(substitute(value))
-
-  df <- coord_in_circle(data, lon = lon, lat = lat, radius)
-
+  lon <- deparse(substitute(lon))
+  lat <- deparse(substitute(lat))
+  data <- data.table(data)
+  summation <- points_in_circle(data, lon_center, lat_center, lon, lat, radius)
   tryCatch(
-    sum( df[ , value ], na.rm = TRUE ),
+    sum(summation[, value, with = FALSE][[1]], na.rm = TRUE),
     error = function(e) NA
   )
 }
