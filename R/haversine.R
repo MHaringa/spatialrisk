@@ -13,6 +13,10 @@
 #'
 #' @export
 haversine <- function(lat_from, lon_from, lat_to, lon_to){
+
+  if( lat_from > 90 | lat_to > 90) warning('latitude > 90')
+  if( lon_from > 360 | lon_to > 360) warning('longitude > 360')
+
   toRad <- pi / 180
   lat_to <- lat_to * toRad
   lat_from <- lat_from * toRad
@@ -24,3 +28,5 @@ haversine <- function(lat_from, lon_from, lat_to, lon_to){
   dist <- 2 * atan2(sqrt(a), sqrt(1 - a)) * 6378137
   return(dist)
 }
+
+
