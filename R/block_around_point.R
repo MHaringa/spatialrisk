@@ -11,10 +11,13 @@
 #' block_around_point(lon_center = 6.520386, lat_center = 53.24007, radius = 200)
 #' @export block_around_point
 block_around_point <- function(lon_center, lat_center, radius = 200){
+
+  # Absolute bearing (i.e. angle away (clockwise) from North)
   north <- 0
   east <- 90
   south <- 180
   west <- 270
+
   return(geosphere::destPoint(c(lon_center, lat_center), c(north, east, south, west), radius))
 }
 
