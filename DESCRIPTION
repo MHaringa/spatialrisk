@@ -9,8 +9,8 @@ Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
-Imports: data.table,
-    geosphere
+Imports: geosphere,
+    data.table
 Depends: R (>= 2.10)
 RoxygenNote: 6.0.1
 Suggests: knitr,

@@ -5,7 +5,7 @@
 #' @param radius Radius (in meters)
 #'
 #' @return value
-#' @importFrom data.table
+#' @import data.table
 #'
 #' @examples
 #' concentration(Groningen[1:10, ], amount, radius = 1000)
