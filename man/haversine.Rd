@@ -2,7 +2,7 @@
 % Please edit documentation in R/haversine.R
 \name{haversine}
 \alias{haversine}
-\title{Haversine}
+\title{Haversine great circle distance}
 \usage{
 haversine(lat_from, lon_from, lat_to, lon_to)
 }
@@ -19,7 +19,12 @@ haversine(lat_from, lon_from, lat_to, lon_to)
 A data frame with new location
 }
 \description{
-Haversine
+The shortest distance between two points (i.e., the 'great-circle-distance' or 'as the crow flies'),
+according to the 'haversine method'. This method assumes a spherical earth, ignoring ellipsoidal effects. Note that this version is a copy
+of geosphere, but without the matrix conversion. A quick benchmark showed it to be a non-insignificant improvement.
+}
+\details{
+The Haversine ('half-versed-sine') formula was published by R.W. Sinnott in 1984, although it has been known for much longer.
 }
 \examples{
 haversine(53.24007, 6.520386, 53.24054, 6.520386)
