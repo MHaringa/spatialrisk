@@ -16,7 +16,7 @@ haversine(lat_from, lon_from, lat_to, lon_to)
 \item{lon_to}{Destination longitude}
 }
 \value{
-A data frame with new location
+Distance in meters
 }
 \description{
 The shortest distance between two points (i.e., the 'great-circle-distance' or 'as the crow flies'),
