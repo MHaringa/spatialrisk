@@ -17,9 +17,9 @@ concentration <- function(data, value, radius = 200){
   setnames(dt, value, "value")
   concentration <- dt[, concentration := sum_in_circle(dt, value = value, lon_center = lon, lat_center = lat, radius = radius),
                       by = 1:nrow(dt)][order(-concentration)]
+  setnames(concentration, "value", value)
   return(concentration)
 }
-
 
 
 
