@@ -12,13 +12,12 @@
 block_around_point <- function(lon_center, lat_center, radius = 200){
   circumference_earth_in_meters <- 40075000
   toRad <- pi / 180
-  buffer <- radius + 1
   one_lat_in_meters <- circumference_earth_in_meters / 360
   one_lon_in_meters <- circumference_earth_in_meters * cos(lat_center * toRad) / 360
-  south_lat <- lat_center - buffer / one_lat_in_meters
-  north_lat <- lat_center + buffer / one_lat_in_meters
-  west_lon <- lon_center - buffer / one_lon_in_meters
-  east_lon <- lon_center + buffer / one_lon_in_meters
+  south_lat <- lat_center - radius / one_lat_in_meters
+  north_lat <- lat_center + radius / one_lat_in_meters
+  west_lon <- lon_center - radius / one_lon_in_meters
+  east_lon <- lon_center + radius / one_lon_in_meters
   return(c(south_lat, north_lat, west_lon, east_lon))
 }
 
