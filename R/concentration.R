@@ -1,14 +1,16 @@
 #' Concentration
 #'
 #' @param data Data frame
-#' @param value Column name
-#' @param radius Radius (in meters)
+#' @param value Column name with value
+#' @param radius Radius (in meters) (default is 200m)
+#' @param lon Column name with longitude (lon is default)
+#' @param lat Column name with latitude (lat is default)
 #'
 #' @return value
 #' @import data.table
 #'
 #' @examples
-#' concentration(Groningen[1:10, ], amount, radius = 1000)
+#' concentration(Groningen[1:10, ], amount, radius = 1000, lon = lon, lat = lat)
 #'
 #' @export
 concentration <- function(data, value, radius = 200, lon = lon, lat = lat){

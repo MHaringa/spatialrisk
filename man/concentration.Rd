@@ -4,14 +4,18 @@
 \alias{concentration}
 \title{Concentration}
 \usage{
-concentration(data, value, radius = 200)
+concentration(data, value, radius = 200, lon = lon, lat = lat)
 }
 \arguments{
 \item{data}{Data frame}
 
-\item{value}{Column name}
+\item{value}{Column name with value}
 
-\item{radius}{Radius (in meters)}
+\item{radius}{Radius (in meters) (default is 200m)}
+
+\item{lon}{Column name with longitude (lon is default)}
+
+\item{lat}{Column name with latitude (lat is default)}
 }
 \value{
 value
@@ -20,6 +24,6 @@ value
 Concentration
 }
 \examples{
-concentration(Groningen[1:10, ], amount, radius = 1000)
+concentration(Groningen[1:10, ], amount, radius = 1000, lon = lon, lat = lat)
 
 }
