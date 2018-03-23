@@ -2,7 +2,7 @@
 % Please edit documentation in R/block_around_point.R
 \name{block_around_point}
 \alias{block_around_point}
-\title{Coordinates of the four cardinal directions from centre}
+\title{Coordinates of the four cardinal directions from center}
 \usage{
 block_around_point(lon_center, lat_center, radius = 200)
 }
@@ -17,7 +17,7 @@ block_around_point(lon_center, lat_center, radius = 200)
 A data.frame consisting of the four coordinates (long,lat) obtained by walking the radius to the four cardinal directions.
 }
 \description{
-Coordinates of the four cardinal directions from centre
+Coordinates of the four cardinal directions from center
 }
 \examples{
 block_around_point(lon_center = 6.520386, lat_center = 53.24007, radius = 200)
