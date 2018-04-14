@@ -22,8 +22,11 @@ concentration <- function(data, value, radius = 200, lon = lon, lat = lat){
 
   setnames(dt, c(value, lon, lat), c("value", "lon", "lat"))
 
-  concentration <- dt[, concentration := sum_in_circle(dt, value = value, lon_center = lon, lat_center = lat, radius = radius),
-                      by = 1:nrow(dt)][order(-concentration)]
+  pb <- txtProgressBar(min = 0, max = nrow(dt), style = 3)
+  concentration <- dt[, concentration := {setTxtProgressBar(pb, .GRP);
+    sum_in_circle(dt, value = value, lon_center = lon, lat_center = lat, radius = radius)},
+    by = 1:nrow(dt)][order(-concentration)]
+  close(pb)
 
   setnames(concentration, c("value", "lon", "lat"), c(value, lon, lat))
   return(concentration)
