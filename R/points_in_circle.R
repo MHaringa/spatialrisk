@@ -31,7 +31,7 @@ points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat,
 
     # Apply Haversine formula to points in square around center
     data_in_circle <- data_in_block[, distance := haversine(lat_center, lon_center, lat, lon),
-                                    by = 1:nrow(data_in_block)][distance < radius][setorder(distance)]
+                                    by = 1:nrow(data_in_block)][distance < radius][order(distance)]
     return(data_in_circle)},
     error = function(e) NA
   )
