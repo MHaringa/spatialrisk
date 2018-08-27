@@ -7,7 +7,9 @@
 #' @return df
 #' @export concentration_cpp
 #'
-#' @import Rcpp
+#' @useDynLib spatialrisk
+#' @importFrom Rcpp sourceCpp
+#'
 #'
 #' @examples
 concentration_cpp <- function(sub, ref){
