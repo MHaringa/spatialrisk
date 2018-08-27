@@ -2,7 +2,9 @@
 
 export(block_around_point)
 export(concentration)
+export(concentration_cpp)
 export(haversine)
 export(points_in_circle)
 export(sum_in_circle)
+import(Rcpp)
 import(data.table)

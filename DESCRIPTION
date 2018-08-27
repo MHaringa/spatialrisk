@@ -9,11 +9,13 @@ Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
+LinkingTo: Rcpp
 Imports: 
     data.table,
-    geosphere
+    geosphere,
+    Rcpp
 Depends: R (>= 2.10)
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: knitr,
     rmarkdown,
     testthat

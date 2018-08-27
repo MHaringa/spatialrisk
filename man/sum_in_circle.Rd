@@ -4,8 +4,8 @@
 \alias{sum_in_circle}
 \title{Sum in circle}
 \usage{
-sum_in_circle(data, value, lon_center, lat_center, lon = lon, lat = lat,
-  radius = 200)
+sum_in_circle(data, value, lon_center, lat_center, lon = lon,
+  lat = lat, radius = 200)
 }
 \arguments{
 \item{data}{Data frame}
