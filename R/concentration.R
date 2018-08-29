@@ -17,6 +17,8 @@
 #' @importFrom Rcpp sourceCpp
 #' @import RcppProgress
 #'
+#' @author Martin Haringa
+#'
 #' @examples
 #' concentration(Groningen[1:10,], Groningen, value_sub = amount, value_full = amount)
 #'

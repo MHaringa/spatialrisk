@@ -33,3 +33,6 @@ The Haversine ('half-versed-sine') formula was published by R.W. Sinnott in 1984
 haversine(53.24007, 6.520386, 53.24054, 6.520386)
 
 }
+\author{
+Martin Haringa
+}

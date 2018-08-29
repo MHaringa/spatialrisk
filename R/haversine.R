@@ -12,6 +12,7 @@
 #' that this version is implemented in C++. A quick benchmark to the version of geosphere showed it to be a non-insignificant speed enhancement.
 #' The algorithm converges in one-twentieth of the original time.
 #'
+#' @author Martin Haringa
 #'
 #' @details The Haversine ('half-versed-sine') formula was published by R.W. Sinnott in 1984, although it has been known for much longer.
 #'

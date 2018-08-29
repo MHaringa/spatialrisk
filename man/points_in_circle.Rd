@@ -28,3 +28,6 @@ A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_c
 \description{
 Coordinates in circle
 }
+\author{
+Martin Haringa
+}

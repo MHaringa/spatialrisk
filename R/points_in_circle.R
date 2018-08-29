@@ -8,6 +8,8 @@
 #' @param value Name of column in data with insured sums.
 #' @param radius Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.
 #'
+#' @author Martin Haringa
+#'
 #' @return A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}.
 #'
 #' @export points_in_circle

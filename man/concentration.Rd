@@ -39,3 +39,6 @@ Concentration risk
 concentration(Groningen[1:10,], Groningen, value_sub = amount, value_full = amount)
 
 }
+\author{
+Martin Haringa
+}
