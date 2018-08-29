@@ -20,8 +20,8 @@ Distance in meters
 }
 \description{
 The shortest distance between two points (i.e., the 'great-circle-distance' or 'as the crow flies'),
-according to the 'haversine method'. This method assumes a spherical earth, ignoring ellipsoidal effects. Note that this version is a copy
-of geosphere, but without the matrix conversion. A quick benchmark showed it to be a non-insignificant improvement.
+according to the 'haversine method'. This method assumes a spherical earth, ignoring ellipsoidal effects. Note
+that this version is implemented in C++. A quick benchmark to the version of geosphere showed it to be a non-insignificant speed enhancement.
 }
 \details{
 The Haversine ('half-versed-sine') formula was published by R.W. Sinnott in 1984, although it has been known for much longer.
