@@ -4,7 +4,7 @@
 \alias{haversine}
 \title{Haversine great circle distance}
 \usage{
-haversine(lat_from, lon_from, lat_to, lon_to)
+haversine(lat_from, lon_from, lat_to, lon_to, r = 6378137)
 }
 \arguments{
 \item{lat_from}{Origin latitude}
@@ -14,6 +14,8 @@ haversine(lat_from, lon_from, lat_to, lon_to)
 \item{lat_to}{Destination latitude}
 
 \item{lon_to}{Destination longitude}
+
+\item{r}{Radius of the earth; default = 6378137m}
 }
 \value{
 Distance in meters
@@ -22,6 +24,7 @@ Distance in meters
 The shortest distance between two points (i.e., the 'great-circle-distance' or 'as the crow flies'),
 according to the 'haversine method'. This method assumes a spherical earth, ignoring ellipsoidal effects. Note
 that this version is implemented in C++. A quick benchmark to the version of geosphere showed it to be a non-insignificant speed enhancement.
+The algorithm converges in one-twentieth of the original time.
 }
 \details{
 The Haversine ('half-versed-sine') formula was published by R.W. Sinnott in 1984, although it has been known for much longer.

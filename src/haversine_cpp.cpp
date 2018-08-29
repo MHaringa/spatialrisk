@@ -3,8 +3,8 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 double haversine_cpp(double lat1, double long1,
-                     double lat2, double long2){
-  double earth_radius = 6371;
+                     double lat2, double long2,
+                     double earth_radius = 6378137){
   double deg_to_rad = 0.0174532925199432957; // i.e. pi/180 (multiplication is faster than division)
   double delta_phi = (lat2 - lat1) * deg_to_rad;
   double delta_lambda = (long2 - long1) * deg_to_rad;
@@ -13,7 +13,7 @@ double haversine_cpp(double lat1, double long1,
   double term1 = pow(sin(delta_phi * .5), 2);
   double term2 = cos(phi1) * cos(phi2) * pow(sin(delta_lambda * .5), 2);
   double delta_sigma = 2 * atan2(sqrt(term1 + term2), sqrt(1 - term1 - term2));
-  double distance = earth_radius * delta_sigma * 1000;
+  double distance = earth_radius * delta_sigma;
   return distance;
 }
 
@@ -25,7 +25,6 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   IntegerVector id = seq(1, x.nrows());
   NumericVector lon = x["lon"];
   NumericVector lat = x["lat"];
-  NumericVector amount = x["amount"];
 
   // create block around center point
   int circumference_earth_in_meters = 40075000;
@@ -48,9 +47,8 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   IntegerVector id_sub = id[ind_block];
   NumericVector lat_sub = lat[ind_block];
   NumericVector lon_sub = lon[ind_block];
-  NumericVector amount_sub = amount[ind_block];
 
-  int n1 = amount_sub.size();
+  int n1 = id_sub.size();
 
   // apply haversine method to find points within radius from center
   NumericVector result(n1);
@@ -66,7 +64,6 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 
   // create a new data frame
   DataFrame NDF = DataFrame::create(Named("id") = id_sub[ind_radius],
-                                    Named("amount") = amount_sub[ind_radius],
                                     Named("lon") = lon_sub[ind_radius],
                                     Named("lat") = lat_sub[ind_radius],
                                     Named("distance_m") = result[ind_radius]);

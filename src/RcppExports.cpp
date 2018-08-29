@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // haversine_cpp
-double haversine_cpp(double lat1, double long1, double lat2, double long2);
-RcppExport SEXP _spatialrisk_haversine_cpp(SEXP lat1SEXP, SEXP long1SEXP, SEXP lat2SEXP, SEXP long2SEXP) {
+double haversine_cpp(double lat1, double long1, double lat2, double long2, double earth_radius);
+RcppExport SEXP _spatialrisk_haversine_cpp(SEXP lat1SEXP, SEXP long1SEXP, SEXP lat2SEXP, SEXP long2SEXP, SEXP earth_radiusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -15,7 +15,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type long1(long1SEXP);
     Rcpp::traits::input_parameter< double >::type lat2(lat2SEXP);
     Rcpp::traits::input_parameter< double >::type long2(long2SEXP);
-    rcpp_result_gen = Rcpp::wrap(haversine_cpp(lat1, long1, lat2, long2));
+    Rcpp::traits::input_parameter< double >::type earth_radius(earth_radiusSEXP);
+    rcpp_result_gen = Rcpp::wrap(haversine_cpp(lat1, long1, lat2, long2, earth_radius));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -48,7 +49,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_spatialrisk_haversine_cpp", (DL_FUNC) &_spatialrisk_haversine_cpp, 4},
+    {"_spatialrisk_haversine_cpp", (DL_FUNC) &_spatialrisk_haversine_cpp, 5},
     {"_spatialrisk_haversine_loop_cpp", (DL_FUNC) &_spatialrisk_haversine_loop_cpp, 4},
     {"_spatialrisk_concentration_loop_cpp", (DL_FUNC) &_spatialrisk_concentration_loop_cpp, 3},
     {NULL, NULL, 0}
