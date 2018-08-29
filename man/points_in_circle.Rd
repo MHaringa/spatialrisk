@@ -2,7 +2,7 @@
 % Please edit documentation in R/points_in_circle.R
 \name{points_in_circle}
 \alias{points_in_circle}
-\title{Coordinates in circle}
+\title{Points in circle}
 \usage{
 points_in_circle(data, lon_center, lat_center, lon = lon, lat = lat,
   value = value, radius = 200)
@@ -26,7 +26,7 @@ points_in_circle(data, lon_center, lat_center, lon = lon, lat = lat,
 A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}.
 }
 \description{
-Coordinates in circle
+The points (e.g. addresses) within radius of the center point (i.e. longitude, latitude).
 }
 \author{
 Martin Haringa

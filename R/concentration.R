@@ -11,7 +11,10 @@
 #' @param radius Radius (in meters) (default is 200m)
 #' @param display_progress Show progress bar (TRUE/FALSE)
 #'
-#' @return value
+#' @description The points (e.g. addresses) with the highest concentrations. In the context of the 'standard formula' under Solvency II,
+#' this is the maximum gross sum insured of the set of buildings fully or partly located within this radius.
+#'
+#' @return data.frame with points with the highest concentrations.
 #'
 #' @useDynLib spatialrisk
 #' @importFrom Rcpp sourceCpp

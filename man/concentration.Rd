@@ -30,10 +30,11 @@ concentration(sub, full, lon_sub = lon, lat_sub = lat,
 \item{display_progress}{Show progress bar (TRUE/FALSE)}
 }
 \value{
-value
+data.frame with points with the highest concentrations.
 }
 \description{
-Concentration risk
+The points (e.g. addresses) with the highest concentrations. In the context of the 'standard formula' under Solvency II,
+this is the maximum gross sum insured of the set of buildings fully or partly located within this radius.
 }
 \examples{
 concentration(Groningen[1:10,], Groningen, value_sub = amount, value_full = amount)

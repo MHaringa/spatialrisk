@@ -1,4 +1,4 @@
-#' Coordinates in circle
+#' Points in circle
 #'
 #' @param data Data
 #' @param lon_center Longitude of center point, in degrees.
@@ -7,6 +7,8 @@
 #' @param lat Name of column in data with latitudes. The default name is lat.
 #' @param value Name of column in data with insured sums.
 #' @param radius Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.
+#'
+#' @description The points (e.g. addresses) within radius of the center point (i.e. longitude, latitude).
 #'
 #' @author Martin Haringa
 #'

@@ -1,12 +1,14 @@
 #' Haversine great circle distance
 #'
-#' @param lat_from Origin latitude
-#' @param lon_from Origin longitude
-#' @param lat_to Destination latitude
-#' @param lon_to Destination longitude
+#' @param lat_from Latitude of point.
+#' @param lon_from Longitude of point.
+#' @param lat_to Latitude of point.
+#' @param lon_to Longitude of point.
 #' @param r Radius of the earth; default = 6378137m
 #'
-#' @return Distance in meters
+#' @references Sinnott, R.W, 1984. Virtues of the Haversine. Sky and Telescope 68(2): 159.
+#'
+#' @return Vector of distances in the same unit as \code{r} (default in meters).
 #' @description The shortest distance between two points (i.e., the 'great-circle-distance' or 'as the crow flies'),
 #' according to the 'haversine method'. This method assumes a spherical earth, ignoring ellipsoidal effects. Note
 #' that this version is implemented in C++. A quick benchmark to the version of geosphere showed it to be a non-insignificant speed enhancement.

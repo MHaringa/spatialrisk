@@ -7,18 +7,18 @@
 haversine(lat_from, lon_from, lat_to, lon_to, r = 6378137)
 }
 \arguments{
-\item{lat_from}{Origin latitude}
+\item{lat_from}{Latitude of point.}
 
-\item{lon_from}{Origin longitude}
+\item{lon_from}{Longitude of point.}
 
-\item{lat_to}{Destination latitude}
+\item{lat_to}{Latitude of point.}
 
-\item{lon_to}{Destination longitude}
+\item{lon_to}{Longitude of point.}
 
 \item{r}{Radius of the earth; default = 6378137m}
 }
 \value{
-Distance in meters
+Vector of distances in the same unit as \code{r} (default in meters).
 }
 \description{
 The shortest distance between two points (i.e., the 'great-circle-distance' or 'as the crow flies'),
@@ -32,6 +32,9 @@ The Haversine ('half-versed-sine') formula was published by R.W. Sinnott in 1984
 \examples{
 haversine(53.24007, 6.520386, 53.24054, 6.520386)
 
+}
+\references{
+Sinnott, R.W, 1984. Virtues of the Haversine. Sky and Telescope 68(2): 159.
 }
 \author{
 Martin Haringa
