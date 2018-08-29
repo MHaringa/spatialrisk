@@ -2,16 +2,16 @@
 % Please edit documentation in R/concentration.R
 \name{concentration}
 \alias{concentration}
-\title{Concentration}
+\title{Concentration risk}
 \usage{
 concentration(sub, full, lon_sub = lon, lat_sub = lat,
   value_sub = value, lon_full = lon, lat_full = lat,
   value_full = value, radius = 200)
 }
 \arguments{
-\item{sub}{deelverzameling}
+\item{sub}{data.frame of locations to calculate concentration risk for. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.}
 
-\item{full}{origineel}
+\item{full}{data.frame of full portfolio. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.}
 
 \item{lon_sub}{Column name with longitude (lon is default)}
 
@@ -31,7 +31,7 @@ concentration(sub, full, lon_sub = lon, lat_sub = lat,
 value
 }
 \description{
-Concentration
+Concentration risk
 }
 \examples{
 concentration(Groningen[1:10,], Groningen, value_sub = amount, value_full = amount)
