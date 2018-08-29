@@ -1,1 +1,1 @@
-globalVariables(c("concentration", "distance", "radius"))
+globalVariables(c("lon", "lat", "value"))

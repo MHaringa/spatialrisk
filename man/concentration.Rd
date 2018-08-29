@@ -4,18 +4,28 @@
 \alias{concentration}
 \title{Concentration}
 \usage{
-concentration(data, value, radius = 200, lon = lon, lat = lat)
+concentration(sub, full, lon_sub = lon, lat_sub = lat,
+  value_sub = value, lon_full = lon, lat_full = lat,
+  value_full = value, radius = 200)
 }
 \arguments{
-\item{data}{Data frame}
+\item{sub}{deelverzameling}
 
-\item{value}{Column name with value}
+\item{full}{origineel}
+
+\item{lon_sub}{Column name with longitude (lon is default)}
+
+\item{lat_sub}{Column name with latitude (lat is default)}
+
+\item{value_sub}{Column name with value in the sub data (value is default)}
+
+\item{lon_full}{Column name with longitude in the full data (lon is default)}
+
+\item{lat_full}{Column name with latitude in the full data (lat is default)}
+
+\item{value_full}{Column name with value in the full data (value is default)}
 
 \item{radius}{Radius (in meters) (default is 200m)}
-
-\item{lon}{Column name with longitude (lon is default)}
-
-\item{lat}{Column name with latitude (lat is default)}
 }
 \value{
 value
@@ -24,6 +34,6 @@ value
 Concentration
 }
 \examples{
-concentration(Groningen[1:10, ], amount, radius = 1000, lon = lon, lat = lat)
+concentration(Groningen[1:10,], Groningen, value_sub = amount, value_full = amount)
 
 }

@@ -3,38 +3,30 @@
 #' @param data Data
 #' @param lon_center Longitude of center point, in degrees.
 #' @param lat_center Latitude of center point, in degrees.
-#' @param lon Name of column with longitudes, in degrees.
-#' @param lat Name of column with latitudes, in degrees.
+#' @param lon Name of column in data with longitudes. The default name is lon.
+#' @param lat Name of column in data with latitudes. The default name is lat.
+#' @param value Name of column in data with insured sums.
 #' @param radius Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.
 #'
-#' @return A data.frame of coordinates within \code{radius} around \code{(lon, lat)}.
-#' @import data.table
+#' @return A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}.
 #'
 #' @export points_in_circle
-points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat, radius = 200){
+points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat, value = value, radius = 200){
 
   # Turn into character vector
   lon <- deparse(substitute(lon))
   lat <- deparse(substitute(lat))
+  value <- deparse(substitute(value))
 
-  # Create data.table
-  data <- data.table(data)
+  df <- data.frame("lon" = data[[lon]], "lat" = data[[lat]], "value" = data[[value]])
 
-  # Calculate coordinates of the four cardinal directions
-  block <- block_around_point(lon_center, lat_center, radius)
+  incircle <- haversine_loop_cpp(df, lat_center, lon_center, radius)
 
-  # Error handling: return NA in case no points available within radius from center
-  tryCatch({
+  incircle_df <- data[incircle$id,]
+  incircle_df$distance_m <- incircle$distance_m
+  incircle_df <- incircle_df[order(incircle_df$distance_m),]
 
-    # A simplified "pre-subsetting" before applying the Haversine formula
-    data_in_block <- data[lon > block[[3]] & lon < block[[4]] & lat > block[[1]] & lat < block[[2]]]
-
-    # Apply Haversine formula to points in square around center
-    data_in_circle <- data_in_block[, distance := haversine(lat_center, lon_center, lat, lon),
-                                    by = 1:nrow(data_in_block)][distance < radius][order(distance)]
-    return(data_in_circle)},
-    error = function(e) NA
-  )
+  return(incircle_df)
 }
 
 

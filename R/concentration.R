@@ -1,43 +1,44 @@
-#' Concentration
+#' Concentration risk
 #'
-#' @param data Data frame
-#' @param value Column name with value
+#' @param sub data.frame of locations to calculate concentration risk for. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.
+#' @param full data.frame of full portfolio. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.
+#' @param lon_sub Column name with longitude (lon is default)
+#' @param lat_sub Column name with latitude (lat is default)
+#' @param value_sub Column name with value in the sub data (value is default)
+#' @param lon_full Column name with longitude in the full data (lon is default)
+#' @param lat_full Column name with latitude in the full data (lat is default)
+#' @param value_full Column name with value in the full data (value is default)
 #' @param radius Radius (in meters) (default is 200m)
-#' @param lon Column name with longitude (lon is default)
-#' @param lat Column name with latitude (lat is default)
 #'
 #' @return value
-#' @import data.table
+#'
+#' @useDynLib spatialrisk
+#' @importFrom Rcpp sourceCpp
 #'
 #' @examples
-#' concentration(Groningen[1:10, ], amount, radius = 1000, lon = lon, lat = lat)
+#' concentration(Groningen[1:10,], Groningen, value_sub = amount, value_full = amount)
 #'
 #' @export
-concentration <- function(data, value, radius = 200, lon = lon, lat = lat){
-  dt <- data.table(data)
+concentration <- function(sub, full,
+                          lon_sub = lon, lat_sub = lat, value_sub = value,
+                          lon_full = lon, lat_full = lat, value_full = value,
+                          radius = 200){
 
-  value <- deparse(substitute(value))
-  lon <- deparse(substitute(lon))
-  lat <- deparse(substitute(lat))
+  # Turn into character vector
+  lon_sub <- deparse(substitute(lon_sub))
+  lat_sub <- deparse(substitute(lat_sub))
+  value_sub <- deparse(substitute(value_sub))
 
-  setnames(dt, c(value, lon, lat), c("value", "lon", "lat"))
+  lon_full <- deparse(substitute(lon_full))
+  lat_full <- deparse(substitute(lat_full))
+  value_full <- deparse(substitute(value_full))
 
-  pb <- txtProgressBar(min = 0, max = nrow(dt), style = 3)
-  concentration <- dt[, concentration := {setTxtProgressBar(pb, .GRP);
-    sum_in_circle(dt, value = value, lon_center = lon, lat_center = lat, radius = radius)},
-    by = 1:nrow(dt)][order(-concentration)]
-  close(pb)
+  sub_df <- data.frame("lon" = sub[[lon_sub]], "lat" = sub[[lat_sub]], "value" = sub[[value_sub]])
+  full_df <- data.frame("lon" = full[[lon_full]], "lat" = full[[lat_full]], "value" = full[[value_full]])
 
-  setnames(concentration, c("value", "lon", "lat"), c(value, lon, lat))
-  return(concentration)
+  concentration_df <- concentration_loop_cpp(sub_df, full_df, radius)
+
+  sub$concentration <- concentration_df$cumulation
+
+  return(sub)
 }
-
-
-
-
-
-
-
-
-
-
