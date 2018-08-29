@@ -22,8 +22,7 @@ double haversine_cpp(double lat1, double long1,
 DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, double radius = 200) {
 
   // extracting each column into a vector
-  NumericVector number = x["number"];
-  CharacterVector postalcode = x["postal_code"];
+  IntegerVector id = seq(1, x.nrows());
   NumericVector lon = x["lon"];
   NumericVector lat = x["lat"];
   NumericVector amount = x["amount"];
@@ -32,10 +31,10 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   int circumference_earth_in_meters = 40075000;
   double one_lat_in_meters = circumference_earth_in_meters * 0.002777778;  // 0.002777778 is used instead of 1/360;
   double one_lon_in_meters = circumference_earth_in_meters * cos(lat_center * 0.01745329) * 0.002777778;
-  double south_lat = lat_center - (radius + 5) / one_lat_in_meters;
-  double north_lat = lat_center + (radius + 5)  / one_lat_in_meters;
-  double west_lon = lon_center - (radius + 5)  / one_lon_in_meters;
-  double east_lon = lon_center + (radius + 5)  / one_lon_in_meters;
+  double south_lat = lat_center - (radius + 2) / one_lat_in_meters;
+  double north_lat = lat_center + (radius + 2)  / one_lat_in_meters;
+  double west_lon = lon_center - (radius + 2)  / one_lon_in_meters;
+  double east_lon = lon_center + (radius + 2)  / one_lon_in_meters;
 
   // apply "pre-subsetting" before using haversine method
   int n = x.nrows();
@@ -46,8 +45,7 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   }
 
   // create new data.frame based on "pre-subsetting"
-  NumericVector number_sub = number[ind_block];
-  CharacterVector postalcode_sub = postalcode[ind_block];
+  IntegerVector id_sub = id[ind_block];
   NumericVector lat_sub = lat[ind_block];
   NumericVector lon_sub = lon[ind_block];
   NumericVector amount_sub = amount[ind_block];
@@ -67,8 +65,7 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   }
 
   // create a new data frame
-  DataFrame NDF = DataFrame::create(Named("number") = number_sub[ind_radius],
-                                    Named("postal_code") = postalcode_sub[ind_radius],
+  DataFrame NDF = DataFrame::create(Named("id") = id_sub[ind_radius],
                                     Named("amount") = amount_sub[ind_radius],
                                     Named("lon") = lon_sub[ind_radius],
                                     Named("lat") = lat_sub[ind_radius],
@@ -82,8 +79,7 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200) {
 
   // extracting each column into a vector
-  IntegerVector number = sub["number"];
-  CharacterVector postalcode = sub["postal_code"];
+  IntegerVector id = seq(1, sub.nrows());
   NumericVector amount = sub["amount"];
   NumericVector lon = sub["lon"];
   NumericVector lat = sub["lat"];
@@ -100,8 +96,7 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
   }
 
   // create a new data frame
-  DataFrame NDF = DataFrame::create(Named("number") = number,
-                                    Named("postal_code") = postalcode,
+  DataFrame NDF = DataFrame::create(Named("id") = id,
                                     Named("amount") = amount,
                                     Named("lon") = lon,
                                     Named("lat") = lat,
