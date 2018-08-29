@@ -9,11 +9,13 @@
 #' @param lat_full Column name with latitude in the full data (lat is default)
 #' @param value_full Column name with value in the full data (value is default)
 #' @param radius Radius (in meters) (default is 200m)
+#' @param display_progress Show progress bar (TRUE/FALSE)
 #'
 #' @return value
 #'
 #' @useDynLib spatialrisk
 #' @importFrom Rcpp sourceCpp
+#' @import RcppProgress
 #'
 #' @examples
 #' concentration(Groningen[1:10,], Groningen, value_sub = amount, value_full = amount)
@@ -22,7 +24,7 @@
 concentration <- function(sub, full,
                           lon_sub = lon, lat_sub = lat, value_sub = value,
                           lon_full = lon, lat_full = lat, value_full = value,
-                          radius = 200){
+                          radius = 200, display_progress = TRUE){
 
   # Turn into character vector
   lon_sub <- deparse(substitute(lon_sub))
@@ -36,7 +38,7 @@ concentration <- function(sub, full,
   sub_df <- data.frame("lon" = sub[[lon_sub]], "lat" = sub[[lat_sub]], "value" = sub[[value_sub]])
   full_df <- data.frame("lon" = full[[lon_full]], "lat" = full[[lat_full]], "value" = full[[value_full]])
 
-  concentration_df <- concentration_loop_cpp(sub_df, full_df, radius)
+  concentration_df <- concentration_loop_cpp(sub_df, full_df, radius, display_progress)
 
   sub$concentration <- concentration_df$cumulation
 

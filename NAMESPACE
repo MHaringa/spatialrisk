@@ -3,5 +3,6 @@
 export(concentration)
 export(haversine)
 export(points_in_circle)
+import(RcppProgress)
 importFrom(Rcpp,sourceCpp)
 useDynLib(spatialrisk)

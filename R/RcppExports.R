@@ -9,7 +9,7 @@ haversine_loop_cpp <- function(x, lat_center, lon_center, radius = 200) {
     .Call('_spatialrisk_haversine_loop_cpp', PACKAGE = 'spatialrisk', x, lat_center, lon_center, radius)
 }
 
-concentration_loop_cpp <- function(sub, ref, radius = 200) {
-    .Call('_spatialrisk_concentration_loop_cpp', PACKAGE = 'spatialrisk', sub, ref, radius)
+concentration_loop_cpp <- function(sub, ref, radius = 200, display_progress = TRUE) {
+    .Call('_spatialrisk_concentration_loop_cpp', PACKAGE = 'spatialrisk', sub, ref, radius, display_progress)
 }
 

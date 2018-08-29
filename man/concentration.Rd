@@ -6,7 +6,7 @@
 \usage{
 concentration(sub, full, lon_sub = lon, lat_sub = lat,
   value_sub = value, lon_full = lon, lat_full = lat,
-  value_full = value, radius = 200)
+  value_full = value, radius = 200, display_progress = TRUE)
 }
 \arguments{
 \item{sub}{data.frame of locations to calculate concentration risk for. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.}
@@ -26,6 +26,8 @@ concentration(sub, full, lon_sub = lon, lat_sub = lat,
 \item{value_full}{Column name with value in the full data (value is default)}
 
 \item{radius}{Radius (in meters) (default is 200m)}
+
+\item{display_progress}{Show progress bar (TRUE/FALSE)}
 }
 \value{
 value

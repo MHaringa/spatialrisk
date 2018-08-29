@@ -1,4 +1,6 @@
 #include <Rcpp.h>
+#include <progress.hpp>
+#include <progress_bar.hpp>
 using namespace Rcpp;
 
 // [[Rcpp::export]]
@@ -71,10 +73,9 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   return(NDF);
 }
 
-
-
+// [[Rcpp::depends(RcppProgress)]]
 // [[Rcpp::export]]
-DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200) {
+DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool display_progress = true) {
 
   // extracting each column into a vector
   IntegerVector id = seq(1, sub.nrows());
@@ -87,7 +88,9 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
   NumericVector cumulation(n);
 
   // determine cumulation per row
+  Progress p(n, display_progress);
   for ( int i = 0; i < n; ++i ) {
+    p.increment();
     DataFrame result = haversine_loop_cpp(ref, lat[i], lon[i], radius);
     NumericVector value = result["value"];
     cumulation[i] = sum(value);
@@ -95,12 +98,12 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
 
   // create a new data frame
   DataFrame NDF = DataFrame::create(Named("id") = id,
-                                   // Named("value") = value,
-                                  //  Named("lon") = lon,
-                                  //  Named("lat") = lat,
                                     Named("cumulation") = cumulation);
   return(NDF);
 }
+
+
+
 
 
 
