@@ -2,19 +2,23 @@
 #'
 #' @param sub data.frame of locations to calculate concentration risk for.
 #' @param full data.frame to find the locations within radius \code{r} from locations in \code{sub}.
-#' @param lon_sub Column name with longitude (lon is default).
-#' @param lat_sub Column name with latitude (lat is default).
-#' @param lon_full Column name with longitude in \code{full} (lon is default).
-#' @param lat_full Column name with latitude in \code{full} (lat is default).
-#' @param value Column name with value in \code{full}.
+#' @param lon_sub Column in \code{sub} with longitude (lon is default).
+#' @param lat_sub Column in \code{sub} with latitude (lat is default).
+#' @param lon_full Column in \code{full} with longitude in \code{full} (lon is default).
+#' @param lat_full Column in \code{full} with latitude in \code{full} (lat is default).
+#' @param value Column with value in \code{full}.
 #' @param radius Radius (in meters) (default is 200m).
 #' @param display_progress Show progress bar (TRUE/FALSE).
 #'
-#' @description The points (e.g. addresses) with the highest concentrations. In the context of the 'standard formula' under Solvency II,
-#' this is the maximum gross sum insured of the set of buildings fully or partly located within this radius.
+#' @description The sum of all observations within a radius from center point(s). In particular,
+#' it can be used to determine concentration risk in the context of Solvency II.
+#' The function offers an effective approach to calculate the *standard formula* under Solvency II.
+#' The *standard formula* under Solvency II asks companies to report their largest fire concentration in
+#' respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of
+#' buildings fully or partly located within this radius.
 #'
-#' @details \code{sub} should include at least columns for longitude and latitude.
-#' @details \code{full} should include at least columns for longitude, latitude and value of interest to summarize.
+#' @details The data.frame \code{sub} should include at least columns for longitude and latitude.
+#' @details The data.frame \code{full} should include at least columns for longitude, latitude and value of interest to summarize.
 #'
 #' @return A data.frame equal to data.frame \code{sub} including an extra column \code{concentration}.
 #'

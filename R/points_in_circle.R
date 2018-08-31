@@ -1,13 +1,13 @@
 #' Points in circle
 #'
-#' @param data Data.
+#' @param data A data.frame.
 #' @param lon_center Longitude of center point.
 #' @param lat_center Latitude of center point.
-#' @param lon Name of column in data with longitudes (lon is default).
-#' @param lat Name of column in data with latitudes (lat is default).
-#' @param radius Major radius (in meters) of the circle.
+#' @param lon Name of column in \code{data} with longitudes (lon is default).
+#' @param lat Name of column in \code{data} with latitudes (lat is default).
+#' @param radius Radius (in meters) (default is 200m).
 #'
-#' @description The points within radius of the center point (i.e. longitude, latitude).
+#' @description The observations within radius from the center point.
 #'
 #' @author Martin Haringa
 #'

@@ -8,23 +8,23 @@ points_in_circle(data, lon_center, lat_center, lon = lon, lat = lat,
   radius = 200)
 }
 \arguments{
-\item{data}{Data.}
+\item{data}{A data.frame.}
 
 \item{lon_center}{Longitude of center point.}
 
 \item{lat_center}{Latitude of center point.}
 
-\item{lon}{Name of column in data with longitudes (lon is default).}
+\item{lon}{Name of column in \code{data} with longitudes (lon is default).}
 
-\item{lat}{Name of column in data with latitudes (lat is default).}
+\item{lat}{Name of column in \code{data} with latitudes (lat is default).}
 
-\item{radius}{Major radius (in meters) of the circle.}
+\item{radius}{Radius (in meters) (default is 200m).}
 }
 \value{
 A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}. The column \code{distance_m} gives the distance from the center point (in meters).
 }
 \description{
-The points within radius of the center point (i.e. longitude, latitude).
+The observations within radius from the center point.
 }
 \author{
 Martin Haringa

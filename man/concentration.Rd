@@ -13,15 +13,15 @@ concentration(sub, full, lon_sub = lon, lat_sub = lat,
 
 \item{full}{data.frame to find the locations within radius \code{r} from locations in \code{sub}.}
 
-\item{lon_sub}{Column name with longitude (lon is default).}
+\item{lon_sub}{Column in \code{sub} with longitude (lon is default).}
 
-\item{lat_sub}{Column name with latitude (lat is default).}
+\item{lat_sub}{Column in \code{sub} with latitude (lat is default).}
 
-\item{lon_full}{Column name with longitude in \code{full} (lon is default).}
+\item{lon_full}{Column in \code{full} with longitude in \code{full} (lon is default).}
 
-\item{lat_full}{Column name with latitude in \code{full} (lat is default).}
+\item{lat_full}{Column in \code{full} with latitude in \code{full} (lat is default).}
 
-\item{value}{Column name with value in \code{full}.}
+\item{value}{Column with value in \code{full}.}
 
 \item{radius}{Radius (in meters) (default is 200m).}
 
@@ -31,13 +31,17 @@ concentration(sub, full, lon_sub = lon, lat_sub = lat,
 A data.frame equal to data.frame \code{sub} including an extra column \code{concentration}.
 }
 \description{
-The points (e.g. addresses) with the highest concentrations. In the context of the 'standard formula' under Solvency II,
-this is the maximum gross sum insured of the set of buildings fully or partly located within this radius.
+The sum of all observations within a radius from center point(s). In particular,
+it can be used to determine concentration risk in the context of Solvency II.
+The function offers an effective approach to calculate the *standard formula* under Solvency II.
+The *standard formula* under Solvency II asks companies to report their largest fire concentration in
+respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of
+buildings fully or partly located within this radius.
 }
 \details{
-\code{sub} should include at least columns for longitude and latitude.
+The data.frame \code{sub} should include at least columns for longitude and latitude.
 
-\code{full} should include at least columns for longitude, latitude and value of interest to summarize.
+The data.frame \code{full} should include at least columns for longitude, latitude and value of interest to summarize.
 }
 \examples{
 df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
