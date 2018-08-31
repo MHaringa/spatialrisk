@@ -3,14 +3,9 @@
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
+There were no ERRORs, WARNINGs or NOTEs. 
 
-There was 1 NOTE:
-
-* checking CRAN incoming feasibility ... NOTE
-  Maintainer: 'Martin Haringa <mtharinga@gmail.com>'
-
-  New submission
+Note that this package is my first submission.
 
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of spatialrisk.
