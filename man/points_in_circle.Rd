@@ -5,7 +5,7 @@
 \title{Points in circle}
 \usage{
 points_in_circle(data, lon_center, lat_center, lon = lon, lat = lat,
-  value = value, radius = 200)
+  radius = 200)
 }
 \arguments{
 \item{data}{Data}
@@ -17,8 +17,6 @@ points_in_circle(data, lon_center, lat_center, lon = lon, lat = lat,
 \item{lon}{Name of column in data with longitudes. The default name is lon.}
 
 \item{lat}{Name of column in data with latitudes. The default name is lat.}
-
-\item{value}{Name of column in data with insured sums.}
 
 \item{radius}{Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.}
 }

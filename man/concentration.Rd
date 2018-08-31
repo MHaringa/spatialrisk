@@ -5,8 +5,8 @@
 \title{Concentration risk}
 \usage{
 concentration(sub, full, lon_sub = lon, lat_sub = lat,
-  value_sub = value, lon_full = lon, lat_full = lat,
-  value_full = value, radius = 200, display_progress = TRUE)
+  lon_full = lon, lat_full = lat, value_full = value, radius = 200,
+  display_progress = TRUE)
 }
 \arguments{
 \item{sub}{data.frame of locations to calculate concentration risk for. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.}
@@ -16,8 +16,6 @@ concentration(sub, full, lon_sub = lon, lat_sub = lat,
 \item{lon_sub}{Column name with longitude (lon is default)}
 
 \item{lat_sub}{Column name with latitude (lat is default)}
-
-\item{value_sub}{Column name with value in the sub data (value is default)}
 
 \item{lon_full}{Column name with longitude in the full data (lon is default)}
 
