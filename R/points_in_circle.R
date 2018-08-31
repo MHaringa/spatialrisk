@@ -11,6 +11,11 @@
 #'
 #' @author Martin Haringa
 #'
+#' @importFrom Rcpp sourceCpp
+#' @import RcppProgress
+#' @import rmarkdown
+#' @import knitr
+#'
 #' @examples
 #' points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
 #'

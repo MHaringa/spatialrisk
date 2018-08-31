@@ -1,6 +1,5 @@
 #include <Rcpp.h>
-#include <progress.hpp>
-#include <progress_bar.hpp>
+
 using namespace Rcpp;
 
 // [[Rcpp::export]]
@@ -71,6 +70,8 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 }
 
 // [[Rcpp::depends(RcppProgress)]]
+#include <progress.hpp>
+#include <progress_bar.hpp>
 // [[Rcpp::export]]
 DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool display_progress = true) {
 

@@ -9,11 +9,11 @@ License: GPL (>= 2)
 LazyData: true
 LinkingTo: Rcpp, RcppProgress
 Imports: 
-    Rcpp, 
+    Rcpp,
     RcppProgress
 Depends: R (>= 2.10)
 RoxygenNote: 6.1.0
-Suggests: knitr,
-    rmarkdown,
+Suggests: 
+    knitr,
+    rmarkdown, 
     testthat
-
