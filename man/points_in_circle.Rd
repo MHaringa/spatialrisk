@@ -26,6 +26,10 @@ A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_c
 \description{
 The observations within radius from the center point.
 }
+\examples{
+points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
+
+}
 \author{
 Martin Haringa
 }

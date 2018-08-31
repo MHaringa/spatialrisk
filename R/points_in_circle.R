@@ -11,7 +11,7 @@
 #'
 #' @author Martin Haringa
 #'
-#' @example
+#' @examples
 #' points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
 #'
 #' @return A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}. The column \code{distance_m} gives the distance from the center point (in meters).
