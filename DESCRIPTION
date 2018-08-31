@@ -11,7 +11,7 @@ LinkingTo: Rcpp, RcppProgress
 Imports: 
     Rcpp,
     RcppProgress
-Depends: R (>= 2.10)
+Depends: R (>= 3.3)
 RoxygenNote: 6.1.0
 Suggests: 
     knitr,
