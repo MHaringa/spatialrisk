@@ -1,17 +1,20 @@
 #' Points in circle
 #'
-#' @param data Data
-#' @param lon_center Longitude of center point, in degrees.
-#' @param lat_center Latitude of center point, in degrees.
-#' @param lon Name of column in data with longitudes. The default name is lon.
-#' @param lat Name of column in data with latitudes. The default name is lat.
-#' @param radius Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.
+#' @param data Data.
+#' @param lon_center Longitude of center point.
+#' @param lat_center Latitude of center point.
+#' @param lon Name of column in data with longitudes (lon is default).
+#' @param lat Name of column in data with latitudes (lat is default).
+#' @param radius Major radius (in meters) of the circle.
 #'
-#' @description The points (e.g. addresses) within radius of the center point (i.e. longitude, latitude).
+#' @description The points within radius of the center point (i.e. longitude, latitude).
 #'
 #' @author Martin Haringa
 #'
-#' @return A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}.
+#' @example
+#' points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
+#'
+#' @return A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}. The column \code{distance_m} gives the distance from the center point (in meters).
 #'
 #' @export points_in_circle
 points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat, radius = 200){

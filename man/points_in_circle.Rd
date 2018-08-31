@@ -8,23 +8,23 @@ points_in_circle(data, lon_center, lat_center, lon = lon, lat = lat,
   radius = 200)
 }
 \arguments{
-\item{data}{Data}
+\item{data}{Data.}
 
-\item{lon_center}{Longitude of center point, in degrees.}
+\item{lon_center}{Longitude of center point.}
 
-\item{lat_center}{Latitude of center point, in degrees.}
+\item{lat_center}{Latitude of center point.}
 
-\item{lon}{Name of column in data with longitudes. The default name is lon.}
+\item{lon}{Name of column in data with longitudes (lon is default).}
 
-\item{lat}{Name of column in data with latitudes. The default name is lat.}
+\item{lat}{Name of column in data with latitudes (lat is default).}
 
-\item{radius}{Major (equatorial) radius (default is meters) of the ellipsoid. The default value is for WGS84.}
+\item{radius}{Major radius (in meters) of the circle.}
 }
 \value{
-A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}.
+A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}. The column \code{distance_m} gives the distance from the center point (in meters).
 }
 \description{
-The points (e.g. addresses) within radius of the center point (i.e. longitude, latitude).
+The points within radius of the center point (i.e. longitude, latitude).
 }
 \author{
 Martin Haringa

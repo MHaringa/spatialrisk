@@ -35,7 +35,8 @@ The points (e.g. addresses) with the highest concentrations. In the context of t
 this is the maximum gross sum insured of the set of buildings fully or partly located within this radius.
 }
 \examples{
-concentration(Groningen[1:10,], Groningen, value_sub = amount, value_full = amount)
+df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
+concentration(df, Groningen, value = amount, radius = 100)
 
 }
 \author{
