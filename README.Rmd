@@ -39,8 +39,8 @@ points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius
 
 ## Example 2
 Find for each row in dataframe `df` the observations in dataframe `Groningen` within radius of 100m from lon/lat pair. Then the function takes for the obtained observations the sum of the column `amount`: 
-
-```{r example2}
+  
+  ```{r example2}
 df <- data.frame(location = c("p1", "p2"), 
                  lon = c(6.561561, 6.561398), 
                  lat = c(53.21369, 53.21326))
