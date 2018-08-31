@@ -13,22 +13,22 @@ concentration(sub, full, lon_sub = lon, lat_sub = lat,
 
 \item{full}{data.frame of full portfolio. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.}
 
-\item{lon_sub}{Column name with longitude (lon is default)}
+\item{lon_sub}{Column name with longitude (lon is default).}
 
-\item{lat_sub}{Column name with latitude (lat is default)}
+\item{lat_sub}{Column name with latitude (lat is default).}
 
-\item{lon_full}{Column name with longitude in the full data (lon is default)}
+\item{lon_full}{Column name with longitude in the full data (lon is default).}
 
-\item{lat_full}{Column name with latitude in the full data (lat is default)}
+\item{lat_full}{Column name with latitude in the full data (lat is default).}
 
-\item{value_full}{Column name with value in the full data (value is default)}
+\item{value_full}{Column name with value in the full data (value is default).}
 
-\item{radius}{Radius (in meters) (default is 200m)}
+\item{radius}{Radius (in meters) (default is 200m).}
 
-\item{display_progress}{Show progress bar (TRUE/FALSE)}
+\item{display_progress}{Show progress bar (TRUE/FALSE).}
 }
 \value{
-data.frame with points with the highest concentrations.
+A data.frame equal to data.frame \code{sub} including an extra column \code{concentration}.
 }
 \description{
 The points (e.g. addresses) with the highest concentrations. In the context of the 'standard formula' under Solvency II,

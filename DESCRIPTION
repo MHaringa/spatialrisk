@@ -1,11 +1,10 @@
 Package: spatialrisk
 Type: Package
-Title: Calculating concentration risk under Solvency II
+Title: Calculating Concentration Risk under Solvency II
 Version: 0.1.0
 Author: Martin Haringa
 Maintainer: Martin Haringa <mtharinga@gmail.com>
-Description: spatialrisk is an R-package for spatial risk calculations. In particular, it can be used to determine concentration risk in the context of Solvency II. The package offers an effective approach to calculate the 'standard formula' under Solvency II. 
-    The 'standard formula' under Solvency II asks companies to report their largest fire concentration in respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of buildings fully or partly located within this radius.
+Description: Methods for determining spatial risk, in particular concentration risk in the context of Solvency II.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true

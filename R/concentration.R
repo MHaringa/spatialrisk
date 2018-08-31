@@ -2,18 +2,18 @@
 #'
 #' @param sub data.frame of locations to calculate concentration risk for. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.
 #' @param full data.frame of full portfolio. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.
-#' @param lon_sub Column name with longitude (lon is default)
-#' @param lat_sub Column name with latitude (lat is default)
-#' @param lon_full Column name with longitude in the full data (lon is default)
-#' @param lat_full Column name with latitude in the full data (lat is default)
-#' @param value_full Column name with value in the full data (value is default)
-#' @param radius Radius (in meters) (default is 200m)
-#' @param display_progress Show progress bar (TRUE/FALSE)
+#' @param lon_sub Column name with longitude (lon is default).
+#' @param lat_sub Column name with latitude (lat is default).
+#' @param lon_full Column name with longitude in the full data (lon is default).
+#' @param lat_full Column name with latitude in the full data (lat is default).
+#' @param value_full Column name with value in the full data (value is default).
+#' @param radius Radius (in meters) (default is 200m).
+#' @param display_progress Show progress bar (TRUE/FALSE).
 #'
 #' @description The points (e.g. addresses) with the highest concentrations. In the context of the 'standard formula' under Solvency II,
 #' this is the maximum gross sum insured of the set of buildings fully or partly located within this radius.
 #'
-#' @return data.frame with points with the highest concentrations.
+#' @return A data.frame equal to data.frame \code{sub} including an extra column \code{concentration}.
 #'
 #' @useDynLib spatialrisk
 #' @importFrom Rcpp sourceCpp

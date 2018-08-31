@@ -27,7 +27,6 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   IntegerVector id = seq(1, x.nrows());
   NumericVector lon = x["lon"];
   NumericVector lat = x["lat"];
- // NumericVector value = x["value"];
 
   // create block around center point
   int circumference_earth_in_meters = 40075000;
@@ -43,14 +42,13 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   LogicalVector ind_block(n);
 
   for ( int i = 0; i < n; i++ ){
-    ind_block[i] = (lon[i] < east_lon & lon[i] > west_lon & lat[i] > south_lat & lat[i] < north_lat);
+    ind_block[i] = ((lon[i] < east_lon) & (lon[i] > west_lon) & (lat[i] > south_lat) & (lat[i] < north_lat));
   }
 
   // create new data.frame based on "pre-subsetting"
   IntegerVector id_sub = id[ind_block];
   NumericVector lat_sub = lat[ind_block];
   NumericVector lon_sub = lon[ind_block];
-  //NumericVector value_sub = value[ind_block];
 
   int n1 = id_sub.size();
 
@@ -68,7 +66,6 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 
   // create a new data frame
   DataFrame NDF = DataFrame::create(Named("id") = id_sub[ind_radius],
-                                  //  Named("value") = value_sub[ind_radius],
                                     Named("distance_m") = result[ind_radius]);
   return(NDF);
 }
