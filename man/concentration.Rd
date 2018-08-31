@@ -5,23 +5,23 @@
 \title{Concentration risk}
 \usage{
 concentration(sub, full, lon_sub = lon, lat_sub = lat,
-  lon_full = lon, lat_full = lat, value_full = value, radius = 200,
+  lon_full = lon, lat_full = lat, value, radius = 200,
   display_progress = TRUE)
 }
 \arguments{
-\item{sub}{data.frame of locations to calculate concentration risk for. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.}
+\item{sub}{data.frame of locations to calculate concentration risk for.}
 
-\item{full}{data.frame of full portfolio. The data.frame should include at least columns for longitude, latitude and value of interest to summarize.}
+\item{full}{data.frame to find the locations within radius \code{r} from locations in \code{sub}.}
 
 \item{lon_sub}{Column name with longitude (lon is default).}
 
 \item{lat_sub}{Column name with latitude (lat is default).}
 
-\item{lon_full}{Column name with longitude in the full data (lon is default).}
+\item{lon_full}{Column name with longitude in \code{full} (lon is default).}
 
-\item{lat_full}{Column name with latitude in the full data (lat is default).}
+\item{lat_full}{Column name with latitude in \code{full} (lat is default).}
 
-\item{value_full}{Column name with value in the full data (value is default).}
+\item{value}{Column name with value in \code{full}.}
 
 \item{radius}{Radius (in meters) (default is 200m).}
 
@@ -33,6 +33,11 @@ A data.frame equal to data.frame \code{sub} including an extra column \code{conc
 \description{
 The points (e.g. addresses) with the highest concentrations. In the context of the 'standard formula' under Solvency II,
 this is the maximum gross sum insured of the set of buildings fully or partly located within this radius.
+}
+\details{
+\code{sub} should include at least columns for longitude and latitude.
+
+\code{full} should include at least columns for longitude, latitude and value of interest to summarize.
 }
 \examples{
 df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
