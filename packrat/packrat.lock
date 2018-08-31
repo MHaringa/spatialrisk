@@ -125,9 +125,17 @@ Hash: 0fafa863f1a86a1f1966e5d5b46a48b5
 Requires: httr, ini, jsonlite
 
 Package: git2r
-Source: CRAN
-Version: 0.23.0
-Hash: f7190a7a4b5c5f0983b4b6ee29ed7bc3
+Source: github
+Version: 0.23.0.9000
+Hash: b244a8a3ed9b9d39c1e19120212c9099
+GithubRepo: git2r
+GithubUsername: ropensci
+GithubRef: master
+GithubSha1: e18e8f7b568724bccba29b26f32894776884b104
+RemoteHost: https://api.github.com
+RemoteRepo: git2r
+RemoteUsername: ropensci
+RemoteSha: e18e8f7b568724bccba29b26f32894776884b104
 
 Package: glue
 Source: CRAN
@@ -150,6 +158,12 @@ Source: CRAN
 Version: 1.3.1
 Hash: 2d32e01e53d532c812052e27a1021441
 Requires: R6, curl, jsonlite, mime, openssl
+
+Package: hunspell
+Source: CRAN
+Version: 2.9
+Hash: 81a71268e04eb04d4453b1117465dce9
+Requires: Rcpp, digest
 
 Package: ini
 Source: CRAN
@@ -289,6 +303,12 @@ Package: rstudioapi
 Source: CRAN
 Version: 0.7
 Hash: e2ebaff8160aff3e6b32e6e78a693c2d
+
+Package: rversions
+Source: CRAN
+Version: 1.0.3
+Hash: 44837671df6bf1d0b863dc6f83f42a16
+Requires: curl, xml2
 
 Package: stringi
 Source: CRAN
