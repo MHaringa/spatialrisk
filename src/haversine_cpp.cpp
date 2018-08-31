@@ -27,7 +27,7 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   IntegerVector id = seq(1, x.nrows());
   NumericVector lon = x["lon"];
   NumericVector lat = x["lat"];
-  NumericVector value = x["value"];
+ // NumericVector value = x["value"];
 
   // create block around center point
   int circumference_earth_in_meters = 40075000;
@@ -50,7 +50,7 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   IntegerVector id_sub = id[ind_block];
   NumericVector lat_sub = lat[ind_block];
   NumericVector lon_sub = lon[ind_block];
-  NumericVector value_sub = value[ind_block];
+  //NumericVector value_sub = value[ind_block];
 
   int n1 = id_sub.size();
 
@@ -68,7 +68,7 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 
   // create a new data frame
   DataFrame NDF = DataFrame::create(Named("id") = id_sub[ind_radius],
-                                    Named("value") = value_sub[ind_radius],
+                                  //  Named("value") = value_sub[ind_radius],
                                     Named("distance_m") = result[ind_radius]);
   return(NDF);
 }
@@ -79,7 +79,7 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
 
   // extracting each column into a vector
   IntegerVector id = seq(1, sub.nrows());
-  NumericVector value = sub["value"];
+  NumericVector value = ref["value"];
   NumericVector lon = sub["lon"];
   NumericVector lat = sub["lat"];
 
@@ -92,8 +92,9 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
   for ( int i = 0; i < n; ++i ) {
     p.increment();
     DataFrame result = haversine_loop_cpp(ref, lat[i], lon[i], radius);
-    NumericVector value = result["value"];
-    cumulation[i] = sum(value);
+    IntegerVector id = result["id"];
+    NumericVector value_id = value[id];
+    cumulation[i] = sum(value_id);
   }
 
   // create a new data frame
