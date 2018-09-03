@@ -1,10 +1,10 @@
 Package: spatialrisk
 Type: Package
 Title: Calculating Concentration Risk under Solvency II
-Version: 0.2.0
+Version: 0.2.1
 Author: Martin Haringa
 Maintainer: Martin Haringa <mtharinga@gmail.com>
-Description: Methods for determining spatial risk, in particular concentration risk in the context of Solvency II.
+Description: Methods for determining spatial risk, in particular concentration risk in the context of the EU insurance regulation framework (Solvency II).
 License: GPL (>= 2)
 LazyData: true
 LinkingTo: Rcpp, RcppProgress

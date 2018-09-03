@@ -32,11 +32,11 @@ A data.frame equal to data.frame \code{sub} including an extra column \code{conc
 }
 \description{
 The sum of all observations within a radius from center point(s). In particular,
-it can be used to determine concentration risk in the context of Solvency II.
-The function offers an effective approach to calculate the *standard formula* under Solvency II.
-The *standard formula* under Solvency II asks companies to report their largest fire concentration in
+it can be used to determine concentration risk in the context of the EU insurance regulation framework (Solvency II).
+The function offers an effective approach to calculate the 'standard formula' under Solvency II.
+The 'standard formula' under Solvency II asks companies to report their largest fire concentration in
 respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of
-buildings fully or partly located within this radius.
+buildings fully or partly located within this radius (Commission Delegated Regulation (EU), 2015, Article 132).
 }
 \details{
 The data.frame \code{sub} should include at least columns for longitude and latitude.
@@ -47,6 +47,9 @@ The data.frame \code{full} should include at least columns for longitude, latitu
 df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
 concentration(df, Groningen, value = amount, radius = 100)
 
+}
+\references{
+Commission Delegated Regulation (EU) (2015). Solvency II Delegated Act 2015/35. Official Journal of the European Union, 58:124.
 }
 \author{
 Martin Haringa
