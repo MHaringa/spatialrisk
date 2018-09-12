@@ -2,11 +2,11 @@
 #'
 #' @param sub data.frame of locations to calculate concentration risk for.
 #' @param full data.frame to find the locations within radius \code{r} from locations in \code{sub}.
+#' @param value Column with value in \code{full}.
 #' @param lon_sub Column in \code{sub} with longitude (lon is default).
 #' @param lat_sub Column in \code{sub} with latitude (lat is default).
 #' @param lon_full Column in \code{full} with longitude in \code{full} (lon is default).
 #' @param lat_full Column in \code{full} with latitude in \code{full} (lat is default).
-#' @param value Column with value in \code{full}.
 #' @param radius Radius (in meters) (default is 200m).
 #' @param display_progress Show progress bar (TRUE/FALSE).
 #'
@@ -35,10 +35,12 @@
 #' concentration(df, Groningen, value = amount, radius = 100)
 #'
 #' @export
-concentration <- function(sub, full,
+concentration <- function(sub, full, value,
                           lon_sub = lon, lat_sub = lat,
-                          lon_full = lon, lat_full = lat, value,
+                          lon_full = lon, lat_full = lat,
                           radius = 200, display_progress = TRUE){
+
+  if(!(radius > 0)) stop('radius should be positive')
 
   # Turn into character vector
   lon_sub <- deparse(substitute(lon_sub))

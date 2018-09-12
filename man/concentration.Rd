@@ -4,14 +4,16 @@
 \alias{concentration}
 \title{Concentration risk}
 \usage{
-concentration(sub, full, lon_sub = lon, lat_sub = lat,
-  lon_full = lon, lat_full = lat, value, radius = 200,
+concentration(sub, full, value, lon_sub = lon, lat_sub = lat,
+  lon_full = lon, lat_full = lat, radius = 200,
   display_progress = TRUE)
 }
 \arguments{
 \item{sub}{data.frame of locations to calculate concentration risk for.}
 
 \item{full}{data.frame to find the locations within radius \code{r} from locations in \code{sub}.}
+
+\item{value}{Column with value in \code{full}.}
 
 \item{lon_sub}{Column in \code{sub} with longitude (lon is default).}
 
@@ -20,8 +22,6 @@ concentration(sub, full, lon_sub = lon, lat_sub = lat,
 \item{lon_full}{Column in \code{full} with longitude in \code{full} (lon is default).}
 
 \item{lat_full}{Column in \code{full} with latitude in \code{full} (lat is default).}
-
-\item{value}{Column with value in \code{full}.}
 
 \item{radius}{Radius (in meters) (default is 200m).}
 

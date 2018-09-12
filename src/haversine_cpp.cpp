@@ -69,6 +69,58 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   return(NDF);
 }
 
+
+// [[Rcpp::export]]
+DataFrame haversine_loop_cpp2(DataFrame x, double lat_center, double lon_center, double radius = 200) {
+
+  // extracting each column into a vector
+  IntegerVector id = seq(1, x.nrows());
+  NumericVector lon = x["lon"];
+  NumericVector lat = x["lat"];
+
+  // create block around center point
+  int circumference_earth_in_meters = 40075000;
+  double one_lat_in_meters = circumference_earth_in_meters * 0.002777778;  // 0.002777778 is used instead of 1/360;
+  double one_lon_in_meters = circumference_earth_in_meters * cos(lat_center * 0.01745329) * 0.002777778;
+  double south_lat = lat_center - (radius + 2) / one_lat_in_meters;
+  double north_lat = lat_center + (radius + 2)  / one_lat_in_meters;
+  double west_lon = lon_center - (radius + 2)  / one_lon_in_meters;
+  double east_lon = lon_center + (radius + 2)  / one_lon_in_meters;
+
+  // apply "pre-subsetting" before using haversine method
+  int n = x.nrows();
+  LogicalVector ind_block(n);
+
+  for ( int i = 0; i < n; i++ ){
+    ind_block[i] = ((lon[i] < east_lon) & (lon[i] > west_lon) & (lat[i] > south_lat) & (lat[i] < north_lat));
+  }
+
+  // create new data.frame based on "pre-subsetting"
+  IntegerVector id_sub = id[ind_block];
+  NumericVector lat_sub = lat[ind_block];
+  NumericVector lon_sub = lon[ind_block];
+
+  int n1 = id_sub.size();
+
+  // apply haversine method to find points within radius from center
+  NumericVector result(n1);
+  for ( int i = 0; i < n1; ++i ) {
+    result[i] = haversine_cpp(lat_center, lon_center, lat_sub[i], lon_sub[i]);
+  }
+
+  // create indicator whether coordinates are within radius
+  LogicalVector ind_radius(n1);
+  for (int i = 0; i < n1; i++){
+    ind_radius[i] = (result[i] < radius);
+  }
+
+  // create a new data frame
+  DataFrame NDF = DataFrame::create(Named("id") = id_sub[ind_radius],
+                                    Named("distance_m") = result[ind_radius]);
+  return(NDF);
+}
+
+
 // [[Rcpp::depends(RcppProgress)]]
 #include <progress.hpp>
 #include <progress_bar.hpp>
@@ -90,8 +142,8 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
   for ( int i = 0; i < n; ++i ) {
     p.increment();
     DataFrame result = haversine_loop_cpp(ref, lat[i], lon[i], radius);
-    IntegerVector id = result["id"];
-    NumericVector value_id = value[id];
+    IntegerVector id1 = result["id"];
+    NumericVector value_id = value[(id1 - 1)]; // vector indices start at 0
     cumulation[i] = sum(value_id);
   }
 
