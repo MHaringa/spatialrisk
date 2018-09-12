@@ -34,20 +34,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// haversine_loop_cpp2
-DataFrame haversine_loop_cpp2(DataFrame x, double lat_center, double lon_center, double radius);
-RcppExport SEXP _spatialrisk_haversine_loop_cpp2(SEXP xSEXP, SEXP lat_centerSEXP, SEXP lon_centerSEXP, SEXP radiusSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type lat_center(lat_centerSEXP);
-    Rcpp::traits::input_parameter< double >::type lon_center(lon_centerSEXP);
-    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
-    rcpp_result_gen = Rcpp::wrap(haversine_loop_cpp2(x, lat_center, lon_center, radius));
-    return rcpp_result_gen;
-END_RCPP
-}
 // concentration_loop_cpp
 DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius, bool display_progress);
 RcppExport SEXP _spatialrisk_concentration_loop_cpp(SEXP subSEXP, SEXP refSEXP, SEXP radiusSEXP, SEXP display_progressSEXP) {
@@ -66,7 +52,6 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_spatialrisk_haversine_cpp", (DL_FUNC) &_spatialrisk_haversine_cpp, 5},
     {"_spatialrisk_haversine_loop_cpp", (DL_FUNC) &_spatialrisk_haversine_loop_cpp, 4},
-    {"_spatialrisk_haversine_loop_cpp2", (DL_FUNC) &_spatialrisk_haversine_loop_cpp2, 4},
     {"_spatialrisk_concentration_loop_cpp", (DL_FUNC) &_spatialrisk_concentration_loop_cpp, 4},
     {NULL, NULL, 0}
 };
