@@ -71,6 +71,7 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 }
 
 
+
 // [[Rcpp::depends(RcppProgress)]]
 #include <progress.hpp>
 #include <progress_bar.hpp>
@@ -82,6 +83,9 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
   NumericVector value_ref = ref["value"];
   NumericVector lon_sub = sub["lon"];
   NumericVector lat_sub = sub["lat"];
+  IntegerVector id_ref = seq(1, ref.nrows());
+  NumericVector lon_ref = ref["lon"];
+  NumericVector lat_ref = ref["lat"];
 
   int one_lat_in_meters = 111319;  // 1 latitude is the same everywhere
 
@@ -89,15 +93,13 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
   int n_sub = sub.nrows();
   NumericVector cumulation(n_sub);
 
+  int n_ref = ref.nrows();
+  LogicalVector ind_block(n_ref);
+
   // determine cumulation per row
   Progress p(n_sub, display_progress);
   for ( int j = 0; j < n_sub; ++j ) {
     p.increment();
-
-    // extracting each column into a vector
-    IntegerVector id_ref = seq(1, ref.nrows());
-    NumericVector lon_ref = ref["lon"];
-    NumericVector lat_ref = ref["lat"];
 
     // create block around center point
     double one_lon_in_meters = 40075000 * cos(lat_sub[j] * 0.01745329) * 0.002777778;
@@ -107,9 +109,6 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
     double east_lon = lon_sub[j] + (radius  / one_lon_in_meters);
 
     // apply "pre-subsetting" before using haversine method
-    int n_ref = ref.nrows();
-    LogicalVector ind_block(n_ref);
-
     for ( int i = 0; i < n_ref; i++ ){
       ind_block[i] = !((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat));
     }
@@ -137,3 +136,6 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
                                     Named("cumulation") = cumulation);
   return(NDF);
 }
+
+
+
