@@ -41,7 +41,8 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   LogicalVector ind_block(n);
 
   for ( int i = 0; i < n; i++ ){
-    ind_block[i] = ((lon[i] < east_lon) & (lon[i] > west_lon) & (lat[i] > south_lat) & (lat[i] < north_lat));
+    // ind_block[i] = ((lon[i] < east_lon) & (lon[i] > west_lon) & (lat[i] > south_lat) & (lat[i] < north_lat));
+    ind_block[i] = !((lon[i] > east_lon) || (lon[i] < west_lon) || (lat[i] < south_lat) || (lat[i] > north_lat));
   }
 
   // create new data.frame based on "pre-subsetting"
@@ -101,12 +102,4 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
                                     Named("cumulation") = cumulation);
   return(NDF);
 }
-
-
-
-
-
-
-
-
 
