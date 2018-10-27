@@ -48,26 +48,11 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// concentration_loop_cpp2
-DataFrame concentration_loop_cpp2(DataFrame sub, DataFrame ref, double radius, bool display_progress);
-RcppExport SEXP _spatialrisk_concentration_loop_cpp2(SEXP subSEXP, SEXP refSEXP, SEXP radiusSEXP, SEXP display_progressSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type sub(subSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type ref(refSEXP);
-    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
-    Rcpp::traits::input_parameter< bool >::type display_progress(display_progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(concentration_loop_cpp2(sub, ref, radius, display_progress));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_spatialrisk_haversine_cpp", (DL_FUNC) &_spatialrisk_haversine_cpp, 5},
     {"_spatialrisk_haversine_loop_cpp", (DL_FUNC) &_spatialrisk_haversine_loop_cpp, 4},
     {"_spatialrisk_concentration_loop_cpp", (DL_FUNC) &_spatialrisk_concentration_loop_cpp, 4},
-    {"_spatialrisk_concentration_loop_cpp2", (DL_FUNC) &_spatialrisk_concentration_loop_cpp2, 4},
     {NULL, NULL, 0}
 };
 
