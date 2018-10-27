@@ -78,28 +78,62 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool display_progress = true) {
 
   // extracting each column into a vector
-  IntegerVector id = seq(1, sub.nrows());
-  NumericVector value = ref["value"];
-  NumericVector lon = sub["lon"];
-  NumericVector lat = sub["lat"];
+  IntegerVector id_sub = seq(1, sub.nrows());
+  NumericVector value_ref = ref["value"];
+  NumericVector lon_sub = sub["lon"];
+  NumericVector lat_sub = sub["lat"];
+
+  int one_lat_in_meters = 111319;  // 1 latitude is the same everywhere
 
   // define length of loop and create output vector
-  int n = sub.nrows();
-  NumericVector cumulation(n);
+  int n_sub = sub.nrows();
+  NumericVector cumulation(n_sub);
 
   // determine cumulation per row
-  Progress p(n, display_progress);
-  for ( int i = 0; i < n; ++i ) {
+  Progress p(n_sub, display_progress);
+  for ( int j = 0; j < n_sub; ++j ) {
     p.increment();
-    DataFrame result = haversine_loop_cpp(ref, lat[i], lon[i], radius);
-    IntegerVector id1 = result["id"];
-    NumericVector value_id = value[(id1 - 1)]; // vector indices start at 0
-    cumulation[i] = sum(value_id);
+
+    // extracting each column into a vector
+    IntegerVector id_ref = seq(1, ref.nrows());
+    NumericVector lon_ref = ref["lon"];
+    NumericVector lat_ref = ref["lat"];
+
+    // create block around center point
+    double one_lon_in_meters = 40075000 * cos(lat_sub[j] * 0.01745329) * 0.002777778;
+    double south_lat = lat_sub[j] - (radius / one_lat_in_meters);
+    double north_lat = lat_sub[j] + (radius / one_lat_in_meters);
+    double west_lon = lon_sub[j] - (radius  / one_lon_in_meters);
+    double east_lon = lon_sub[j] + (radius  / one_lon_in_meters);
+
+    // apply "pre-subsetting" before using haversine method
+    int n_ref = ref.nrows();
+    LogicalVector ind_block(n_ref);
+
+    for ( int i = 0; i < n_ref; i++ ){
+      ind_block[i] = !((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat));
+    }
+
+    // create new subset
+    IntegerVector id_block = id_ref[ind_block];
+    NumericVector lat_block = lat_ref[ind_block];
+    NumericVector lon_block = lon_ref[ind_block];
+
+    // apply Haversine method to find points within radius from center
+    int n_block = id_block.size();
+    LogicalVector ind_radius(n_block);
+    for ( int i = 0; i < n_block; ++i ) {
+      double result = haversine_cpp(lat_sub[j], lon_sub[j], lat_block[i], lon_block[i]);
+      ind_radius[i] = (result < radius);
+    }
+
+    IntegerVector id_radius = id_block[ind_radius];
+    NumericVector value_id = value_ref[(id_radius - 1)]; // vector indices start at 0
+    cumulation[j] = sum(value_id);
   }
 
   // create a new data frame
-  DataFrame NDF = DataFrame::create(Named("id") = id,
+  DataFrame NDF = DataFrame::create(Named("id") = id_sub,
                                     Named("cumulation") = cumulation);
   return(NDF);
 }
-
