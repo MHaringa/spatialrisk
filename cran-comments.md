@@ -1,8 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Solved problems with the index of vectors in specific situations 
-* Written additional test scripts
+* Rewritten C++ code. This resulted in a speed enhancement (approx. ~2x faster). 
 
 ## Test environments
 * local OS X install, R 3.5.1
