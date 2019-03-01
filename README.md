@@ -57,11 +57,11 @@ takes for the obtained observations the sum of the column `amount`:
 
 ``` r
 df <- data.frame(location = c("p1", "p2"), 
-                 lon = c(6.561561, 6.561398), 
-                 lat = c(53.21369, 53.21326))
+               lon = c(6.561561, 6.561398), 
+               lat = c(53.21369, 53.21326))
 
 concentration(df, Groningen, value = amount, radius = 100)
 #>   location      lon      lat concentration
-#> 1       p1 6.561561 53.21369          4810
-#> 2       p2 6.561398 53.21326          4776
+#> 1       p1 6.561561 53.21369          3819
+#> 2       p2 6.561398 53.21326          4771
 ```
