@@ -1,10 +1,11 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Rewritten C++ code. Equation for testing if a point is inside a circle is extended with testing whether point is inside a square diamond inside the square before applying the Haversine formula. This resulted in a speed enhancement (approx. ~2x faster). 
+* Added a function to join coordinates (in terms of longitude and latitude) to the polygon level. This is useful to shade the areas with the highest risks on a choropleth map. 
+* Added several maps to the data folder. 
 
 ## Test environments
-* local OS X install, R 3.5.2
+* local OS X install, R 3.5.3
 * win-builder (devel and release)
 
 ## R CMD check results

@@ -1,1 +1,1 @@
-globalVariables(c("lon", "lat", "value"))
+globalVariables(c("lon", "lat", "value", "clustering", "output"))

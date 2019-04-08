@@ -1,7 +1,7 @@
 Package: spatialrisk
 Type: Package
 Title: Calculating Concentration Risk under Solvency II
-Version: 0.5.1.9000
+Version: 0.6.0
 Author: Martin Haringa
 Maintainer: Martin Haringa <mtharinga@gmail.com>
 Description: Methods for determining spatial risk, in particular calculating the maximum value of insured fire risk policies of all buildings that are partly or fully located within circle of a radius of 200m.
@@ -9,8 +9,14 @@ License: GPL (>= 2)
 LazyData: true
 LinkingTo: Rcpp, RcppProgress
 Imports: 
+    classInt,
+    dplyr,
+    ggplot2,
     Rcpp,
-    RcppProgress
+    RcppProgress, 
+    sf,
+    tmap,
+    viridis
 Depends: R (>= 3.3)
 RoxygenNote: 6.1.1
 Suggests: 

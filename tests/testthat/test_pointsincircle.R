@@ -15,15 +15,10 @@ test_that("lon and lat are same for input and output", {
 
   # Check first observation
   indf1 <- Groningen[1,]
-  outdf1 <- points_in_circle(Groningen, 6.52, 53.24)[1,]
+  outdf1 <- points_in_circle(Groningen, indf1$lon, indf1$lat)[1,]
   expect_equal(indf1$lon, outdf1$lon)
   expect_equal(indf1$lat, outdf1$lat)
 
-  # Check other observation
-  indf2 <- Groningen[Groningen$street == "Vlinderbalg" & Groningen$number == 30, ]
-  outdf2 <- points_in_circle(Groningen, 6.52, 53.24)[4,]
-  expect_equal(indf2$lon, outdf2$lon)
-  expect_equal(indf2$lat, outdf2$lat)
 })
 
 
