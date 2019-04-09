@@ -38,7 +38,7 @@
 #' \describe{
 #'   \item{corop_nr}{corop number}
 #'   \item{corop_name}{corop name}
-#'   \item{geometry}{geometry object of province}
+#'   \item{geometry}{geometry object of COROP region}
 #' }
 "nl_corop"
 
