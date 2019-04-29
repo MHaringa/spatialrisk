@@ -4,7 +4,7 @@
 \alias{choropleth_sf}
 \title{Aggregate attributes of coordinates to area level}
 \usage{
-choropleth_sf(sf_map, df, oper, crs = 4326)
+choropleth_sf(sf_map, df, oper, crs = 4326, outside_print = FALSE)
 }
 \arguments{
 \item{sf_map}{object of class sf}
@@ -14,6 +14,8 @@ choropleth_sf(sf_map, df, oper, crs = 4326)
 \item{oper}{an arithmetic operation on the polygon level}
 
 \item{crs}{coordinate reference system: integer with the EPSG code, or character with proj4string}
+
+\item{outside_print}{print points that are not within a polygon (default is FALSE).}
 }
 \value{
 an object of class sf

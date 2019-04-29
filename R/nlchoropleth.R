@@ -7,6 +7,7 @@
 #' @param df data.frame containing coordinates (column names should be 'lon' and 'lat')
 #' @param oper an arithmetic operation on the polygon level
 #' @param crs coordinate reference system: integer with the EPSG code, or character with proj4string
+#' @param outside_print print points that are not within a polygon (default is FALSE).
 #'
 #' @export choropleth_sf
 #'
@@ -23,7 +24,7 @@
 #' shp_read <- sf::st_read(~/path/to/file.shp)
 #' choropleth_sf(shp_read, insurance, sum(amount, na.rm = TRUE))
 #'}
-choropleth_sf <- function(sf_map, df, oper, crs = 4326){
+choropleth_sf <- function(sf_map, df, oper, crs = 4326, outside_print = FALSE){
 
   oper <- enquo(oper)
 
@@ -46,7 +47,17 @@ choropleth_sf <- function(sf_map, df, oper, crs = 4326){
 
   suppressMessages({
     df_map_sf <- sf::st_join(shp_wgs84, df_sf)
+    outside <- df_sf[!lengths(sf::st_intersects(df_sf, shp_wgs84)), ]
   })
+
+  if( nrow(outside) > 0 ){
+    if( isTRUE(outside_print)){
+      message("Points that are not within a polygon:\n", paste0(capture.output(data.frame(outside)), collapse = "\n"))
+    }
+    else {
+      message(nrow(outside), " points fall not within a polygon.")
+    }
+  }
 
   # Change sf to data.frame
   df_map <- df_map_sf

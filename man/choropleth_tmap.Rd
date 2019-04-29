@@ -5,7 +5,7 @@
 \title{Map object of class sf using tmap}
 \usage{
 choropleth_tmap(sf_object, value = "output", id_name = "id",
-  mode = "plot", legend_title = "Clustering", bgcolor = "gray")
+  mode = "plot", legend_title = "Clustering", palette = "viridis")
 }
 \arguments{
 \item{sf_object}{object of class sf}
@@ -18,7 +18,7 @@ choropleth_tmap(sf_object, value = "output", id_name = "id",
 
 \item{legend_title}{title of legend}
 
-\item{bgcolor}{background color (default is "gray")}
+\item{palette}{palette name or a vector of colors. See tmaptools::palette_explorer() for the named palettes. Use a "-" as prefix to reverse the palette. The default palette is "viridis".}
 }
 \value{
 ggplot map
