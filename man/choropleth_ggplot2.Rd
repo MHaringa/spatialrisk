@@ -5,7 +5,7 @@
 \title{Map object of class sf using ggplot2}
 \usage{
 choropleth_ggplot2(sf_object, value = output, n = 7, dig.lab = 2,
-  legend_title = "Class")
+  legend_title = "Class", option = "D", direction = 1)
 }
 \arguments{
 \item{sf_object}{object of class sf}
@@ -17,6 +17,10 @@ choropleth_ggplot2(sf_object, value = output, n = 7, dig.lab = 2,
 \item{dig.lab}{number of digits in legend (default is 2)}
 
 \item{legend_title}{title of legend}
+
+\item{option}{a character string indicating the colormap option to use. Four options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
+
+\item{direction}{Sets the order of colors in the scale. If 1, the default, colors are ordered from darkest to lightest. If -1, the order of colors is reversed.}
 }
 \value{
 ggplot map
