@@ -1,11 +1,10 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Added a function to join coordinates (in terms of longitude and latitude) to the polygon level. This is useful to shade the areas with the highest risks on a choropleth map. 
-* Added several maps to the data folder. 
+* Added messages when points are not within polygons
 
 ## Test environments
-* local OS X install, R 3.5.3
+* local OS X install, R 3.6.0
 * win-builder (devel and release)
 
 ## R CMD check results

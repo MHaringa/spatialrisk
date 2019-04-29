@@ -1,3 +1,7 @@
+# spatialrisk 0.6.1
+
+* Several message functions are added when points are not within polygons. 
+
 # spatialrisk 0.6.0
 
 * A function to join coordinates (in terms of longitude and latitude) to the polygon level is added. This is useful to shade the areas with the highest risks on a choropleth map. 
