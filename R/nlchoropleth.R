@@ -13,6 +13,7 @@
 #'
 #' @import sf
 #' @import dplyr
+#' @importFrom utils capture.output
 #'
 #' @return an object of class sf
 #'
