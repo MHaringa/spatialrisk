@@ -50,7 +50,6 @@ choropleth_tmap <- function(sf_object, value = "output", id_name = "id",
                   palette = palette,
                   style = "fisher",
                   title = legend_title,
-                  border.col = "white",
                   lwd = .1) +
       tm_compass(position = c("right", "bottom")) +
       tm_scale_bar(position = c("left", "bottom"))
