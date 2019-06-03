@@ -15,7 +15,7 @@
 nl_gemeente
 }
 \description{
-An object of class sf (simple feature) for gemeentes (English: municipalities) in the Netherlands.
+An object of class sf (simple feature) for gemeentes (English: municipalities) in the Netherlands in the year 2018.
 }
 \author{
 Martin Haringa

@@ -1,10 +1,11 @@
 ---
   output: github_document
+  always_allow_html: yes
 ---
   
   <!-- README.md is generated from README.Rmd. Please edit that file -->
   
-  ```{r, echo = FALSE}
+```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -24,7 +25,7 @@ The package offers an effective approach to calculate the *standard formula* und
 
 You can install spatialrisk from github with:
   
-  ```{r gh-installation, eval = FALSE}
+```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("MHaringa/spatialrisk")
 ```
@@ -32,7 +33,7 @@ devtools::install_github("MHaringa/spatialrisk")
 ## Example 1
 Find all observations in dataframe `Groningen` within radius of 50m from center point *(lon,lat) = (6.561561,53.21326)*:
   
-  ```{r example}
+```{r example, eval = TRUE}
 library(spatialrisk)
 points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
 ```
@@ -40,15 +41,61 @@ points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius
 ## Example 2
 Find for each row in dataframe `df` the observations in dataframe `Groningen` within radius of 100m from lon/lat pair. Then the function takes for the obtained observations the sum of the column `amount`: 
   
-  ```{r example2}
+```{r example2, eval = TRUE}
 df <- data.frame(location = c("p1", "p2"), 
                  lon = c(6.561561, 6.561398), 
                  lat = c(53.21369, 53.21326))
 
 concentration(df, Groningen, value = amount, radius = 100)
+
+```
+
+## Example 3
+The package also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. The functions presented here attempt to elegantly solve this problem.
+
+The common approach is to first aggregate the data on the level of the regions in the shapefile and then merging the aggregated data with the shapefile. This is done by joining on the name. This approach is often problematic. For example, in case of municipality names in the Netherlands it is not easy to merge municipality names in the shapefile with the names in the data set. This is hard because of municipal reorganizations or differences in punctuation marks in municipality names. To solve this problem the data is not aggregated on the level of the regions in the shapefile. Contrary, the functions in this package detect directly the region containing the coordinates of the underlying object. This flexible approach makes it easy to create choropleth maps on different region levels.
+
+The package has the following build-in choropleth maps:
+
+- nl_provincie
+- nl_corop
+- nl_gemeente
+- nl_postcode1
+- nl_postcode2
+- nl_postcode3
+- nl_postcode4
+- world_countries
+- europe_countries
+
+The insurance dataset contains 30,000 postal codes with their sum insured, population and the corresponding longitude and latitude. The following code shows how to create a simple feature object on the 2-digit postcode level. The regions are shaded by the total sum insured per region.
+
+```{r example3, eval = TRUE}
+
+gemeente_sf <- choropleth_sf(nl_gemeente, insurance, sum(amount, na.rm = TRUE))
+
+```
+
+The following code shows how to create a choropleth map based on the simple feature object obtained in the previous step. There are three options to create a choropleth map. The first one is using the ggplot2 package:
+
+```{r example3a, eval = TRUE}
+spatialrisk::choropleth_ggplot2(gemeente_sf)
 ```
 
 
+The second approach is creating a choropleth map using the tmap package:
 
+```{r example3b, eval = TRUE}
+choropleth_tmap(gemeente_sf, mode = "plot")
+```
 
+The third option is to create an interactive map. This can also be achieved using the tmap package.
+
+```{r example3c, eval = FALSE, echo = TRUE}
+choropleth_tmap(gemeente_sf, mode = "view")
+```
+
+```{r example3d, eval = TRUE, echo = FALSE}
+gemeente <- choropleth_tmap(gemeente_sf, mode = "view")
+tmap::tmap_leaflet(gemeente)
+```
 

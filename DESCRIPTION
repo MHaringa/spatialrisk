@@ -15,6 +15,7 @@ Imports:
     Rcpp,
     RcppProgress, 
     sf,
+    shiny,
     tmap,
     viridis
 Depends: R (>= 3.3)
