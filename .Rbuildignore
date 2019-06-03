@@ -7,4 +7,4 @@
 ^README\.md$
 ^README-.*\.png$
 ^cran-comments\.md$
-^inst/spatialrisk
+^inst$
