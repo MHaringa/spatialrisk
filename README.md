@@ -96,8 +96,8 @@ The package has the following build-in choropleth maps:
 The insurance dataset contains 30,000 postal codes with their sum
 insured, population and the corresponding longitude and latitude. The
 following code shows how to create a simple feature object on the
-2-digit postcode level. The regions are shaded by the total sum insured
-per region.
+municipality (Dutch: *gemeente*) level. The regions are shaded by the
+total sum insured per region.
 
 ``` r
 
