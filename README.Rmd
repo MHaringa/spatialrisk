@@ -19,28 +19,32 @@ spatialrisk is an R-package for spatial risk calculations. In particular, it can
 
 The package offers an effective approach to calculate the *standard formula* under Solvency II. The *standard formula* under Solvency II asks companies to report their largest fire concentration in respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of buildings fully or partly located within this radius. 
 
-
-
 ## Installation
 
-You can install spatialrisk from github with:
-  
+Install spatialrisk from CRAN:
+
+```{r, eval = FALSE}
+install.packages("spatialrisk")
+```
+
+Or the development version from GitHub:
+
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("MHaringa/spatialrisk")
 ```
 
 ## Example 1
-Find all observations in dataframe `Groningen` within radius of 50m from center point *(lon,lat) = (6.561561,53.21326)*:
+Find all observations in dataframe `Groningen` within a radius of 50m from the point *(lon,lat) = (6.561561,53.21326)*:
   
-```{r example, eval = TRUE}
+```{r example, eval = TRUE, message = FALSE, warning = FALSE}
 library(spatialrisk)
 points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
 ```
 
 ## Example 2
-Find for each row in dataframe `df` the observations in dataframe `Groningen` within radius of 100m from lon/lat pair. Then the function takes for the obtained observations the sum of the column `amount`: 
-  
+Find for each row in dataframe `df` the observations in dataframe `Groningen` within a radius of 100m from the lon/lat pair. Subsequently, the sum of the column `amount` is taken for the obtained observations.
+
 ```{r example2, eval = TRUE}
 df <- data.frame(location = c("p1", "p2"), 
                  lon = c(6.561561, 6.561398), 

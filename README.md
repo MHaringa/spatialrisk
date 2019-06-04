@@ -16,7 +16,13 @@ radius.
 
 ## Installation
 
-You can install spatialrisk from github with:
+Install spatialrisk from CRAN:
+
+``` r
+install.packages("spatialrisk")
+```
+
+Or the development version from GitHub:
 
 ``` r
 # install.packages("devtools")
@@ -25,16 +31,11 @@ devtools::install_github("MHaringa/spatialrisk")
 
 ## Example 1
 
-Find all observations in dataframe `Groningen` within radius of 50m from
-center point *(lon,lat) = (6.561561,53.21326)*:
+Find all observations in dataframe `Groningen` within a radius of 50m
+from the point *(lon,lat) = (6.561561,53.21326)*:
 
 ``` r
 library(spatialrisk)
-#> Registered S3 methods overwritten by 'ggplot2':
-#>   method         from 
-#>   [.quosures     rlang
-#>   c.quosures     rlang
-#>   print.quosures rlang
 points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
 #> # A tibble: 3 x 10
 #>   street number letter suffix postal_code city    lon   lat amount
@@ -48,8 +49,8 @@ points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius
 ## Example 2
 
 Find for each row in dataframe `df` the observations in dataframe
-`Groningen` within radius of 100m from lon/lat pair. Then the function
-takes for the obtained observations the sum of the column `amount`:
+`Groningen` within a radius of 100m from the lon/lat pair. Subsequently,
+the sum of the column `amount` is taken for the obtained observations.
 
 ``` r
 df <- data.frame(location = c("p1", "p2"), 
