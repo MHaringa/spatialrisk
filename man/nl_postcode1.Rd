@@ -6,7 +6,7 @@
 \title{Object of class sf for 1-digit postcode regions in the Netherlands}
 \format{A simple feature object with 9 rows and 2 variables:
 \describe{
-  \item{pc1}{1-digit postal code}
+  \item{areaname}{1-digit postal code}
   \item{geometry}{geometry object of postal code}
 }}
 \usage{

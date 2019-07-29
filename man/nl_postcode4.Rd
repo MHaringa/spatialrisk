@@ -7,7 +7,10 @@
 \format{A simple feature object with 4053 rows and 2 variables:
 \describe{
   \item{pc4}{4-digit postal code}
-  \item{pc4_name}{name of corresponding 4-digit postal code}
+  \item{areaname}{name of corresponding 4-digit postal code}
+  \item{city}{name of city}
+  \item{biggest_20cities}{pc4 is in one of the following twenty (biggest) cities in the Netherlands: Amsterdam, Rotterdam, 's-Gravenhage, Utrecht, Eindhoven,
+  Tilburg, Groningen, Almere, Breda, Nijmegen, Enschede, Apeldoorn, Haarlem, Amersfoort, Arnhem, 's-Hertogenbosch, Zoetermeer, Zwolle, Maastricht, Leiden.}
   \item{geometry}{geometry object of postal code}
 }}
 \usage{

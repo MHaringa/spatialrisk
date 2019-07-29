@@ -8,7 +8,7 @@
 \describe{
   \item{id}{id of gemeente}
   \item{code}{code of gemeente}
-  \item{gemeentena}{name of gemeente}
+  \item{areaname}{name of gemeente}
   \item{geometry}{geometry object of gemeente}
 }}
 \usage{

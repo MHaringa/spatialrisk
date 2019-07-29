@@ -7,7 +7,7 @@
 \format{A simple feature object with 40 rows and 3 variables:
 \describe{
   \item{corop_nr}{corop number}
-  \item{corop_name}{corop name}
+  \item{areaname}{corop name}
   \item{geometry}{geometry object of COROP region}
 }}
 \usage{

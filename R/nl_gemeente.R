@@ -8,7 +8,7 @@
 #' \describe{
 #'   \item{id}{id of gemeente}
 #'   \item{code}{code of gemeente}
-#'   \item{gemeentena}{name of gemeente}
+#'   \item{areaname}{name of gemeente}
 #'   \item{geometry}{geometry object of gemeente}
 #' }
 "nl_gemeente"
@@ -21,7 +21,7 @@
 #'
 #' @format A simple feature object with 12 rows and 2 variables:
 #' \describe{
-#'   \item{province_name}{province name}
+#'   \item{areaname}{province name}
 #'   \item{geometry}{geometry object of province}
 #' }
 "nl_provincie"
@@ -37,7 +37,7 @@
 #' @format A simple feature object with 40 rows and 3 variables:
 #' \describe{
 #'   \item{corop_nr}{corop number}
-#'   \item{corop_name}{corop name}
+#'   \item{areaname}{corop name}
 #'   \item{geometry}{geometry object of COROP region}
 #' }
 "nl_corop"
@@ -52,7 +52,7 @@
 #'
 #' @format A simple feature object with 9 rows and 2 variables:
 #' \describe{
-#'   \item{pc1}{1-digit postal code}
+#'   \item{areaname}{1-digit postal code}
 #'   \item{geometry}{geometry object of postal code}
 #' }
 "nl_postcode1"
@@ -67,7 +67,7 @@
 #'
 #' @format A simple feature object with 90 rows and 2 variables:
 #' \describe{
-#'   \item{pc2}{2-digit postal code}
+#'   \item{areaname}{2-digit postal code}
 #'   \item{geometry}{geometry object of postal code}
 #' }
 "nl_postcode2"
@@ -82,7 +82,7 @@
 #'
 #' @format A simple feature object with 799 rows and 2 variables:
 #' \describe{
-#'   \item{pc3}{3-digit postal code}
+#'   \item{areaname}{3-digit postal code}
 #'   \item{geometry}{geometry object of postal code}
 #' }
 "nl_postcode3"
@@ -98,7 +98,10 @@
 #' @format A simple feature object with 4053 rows and 2 variables:
 #' \describe{
 #'   \item{pc4}{4-digit postal code}
-#'   \item{pc4_name}{name of corresponding 4-digit postal code}
+#'   \item{areaname}{name of corresponding 4-digit postal code}
+#'   \item{city}{name of city}
+#'   \item{biggest_20cities}{pc4 is in one of the following twenty (biggest) cities in the Netherlands: Amsterdam, Rotterdam, 's-Gravenhage, Utrecht, Eindhoven,
+#'   Tilburg, Groningen, Almere, Breda, Nijmegen, Enschede, Apeldoorn, Haarlem, Amersfoort, Arnhem, 's-Hertogenbosch, Zoetermeer, Zwolle, Maastricht, Leiden.}
 #'   \item{geometry}{geometry object of postal code}
 #' }
 "nl_postcode4"

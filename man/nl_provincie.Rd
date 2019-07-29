@@ -6,7 +6,7 @@
 \title{Object of class sf for provincies (provinces) in the Netherlands}
 \format{A simple feature object with 12 rows and 2 variables:
 \describe{
-  \item{province_name}{province name}
+  \item{areaname}{province name}
   \item{geometry}{geometry object of province}
 }}
 \usage{
