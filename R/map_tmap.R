@@ -1,4 +1,4 @@
-#' Map object of class sf using tmap
+#' Map object of class sf using tmap (deprecated function; use 'choropleth' instead)
 #'
 #' @description Takes an object produced by \code{choropleth_sf()}, and creates the correspoding choropleth map.
 #'
@@ -10,7 +10,7 @@
 #' @param legend_title title of legend
 #' @param palette palette name or a vector of colors. See tmaptools::palette_explorer() for the named palettes. Use a "-" as prefix to reverse the palette. The default palette is "viridis".
 #'
-#' @return ggplot map
+#' @return tmap
 #' @export choropleth_tmap
 #'
 #' @import sf
@@ -18,46 +18,12 @@
 #' @import viridis
 #'
 #' @author Martin Haringa
-#'
-#' @examples
-#' test <- choropleth_sf(nl_provincie, insurance, sum(amount, na.rm = TRUE))
-#' choropleth_tmap(test)
-#' choropleth_tmap(test, id_name = "areaname", mode = "view")
 choropleth_tmap <- function(sf_object, value = "output", id_name = "areaname",
                             mode = "plot", n = 7, legend_title = "Clustering",
                             palette = "viridis"){
 
-  if (mode == "view"){
-    suppressMessages({
-      tmap_mode("view")
-    })
-
-    output <- tm_shape(sf_object) +
-      tm_polygons(value,
-                  id = id_name,
-                  palette = palette,
-                  style = "fisher",
-                  n = n,
-                  title = legend_title,
-                  alpha = .5) +
-      tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas", "Esri.WorldTopoMap"))
-  }
-
-  else{
-    suppressMessages({
-      tmap_mode("plot")
-    })
-    output <- tm_shape(sf_object) +
-      tm_polygons(value,
-                  id = id_name,
-                  palette = palette,
-                  style = "fisher",
-                  title = legend_title,
-                  n = n,
-                  lwd = .1) +
-      tm_compass(position = c("right", "bottom")) +
-      tm_scale_bar(position = c("left", "bottom"))
-  }
-
-  return(output)
+  .Deprecated("choropleth")
+  choropleth(sf_object = sf_object, value = value, id_name = id_name,
+             mode = mode, n = n, legend_title = legend_title,
+             palette = palette)
 }
