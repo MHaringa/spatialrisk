@@ -22,8 +22,8 @@
 #' @examples
 #' test <- choropleth_sf(nl_provincie, insurance, sum(amount, na.rm = TRUE))
 #' choropleth_tmap(test)
-#' choropleth_tmap(test, id_name = "province_name", mode = "view")
-choropleth_tmap <- function(sf_object, value = "output", id_name = "id",
+#' choropleth_tmap(test, id_name = "areaname", mode = "view")
+choropleth_tmap <- function(sf_object, value = "output", id_name = "areaname",
                             mode = "plot", n = 7, legend_title = "Clustering",
                             palette = "viridis"){
 

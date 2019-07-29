@@ -1,3 +1,9 @@
+# spatialrisk 0.6.2
+
+* Non UTF-8 character removed from column in nl_gemeente data set. 
+* Argument for the number of clusters in maps is added. 
+* The column with the name of the region is now called areaname in all data sets. 
+
 # spatialrisk 0.6.1
 
 * Several message functions are added when points are not within polygons. 
