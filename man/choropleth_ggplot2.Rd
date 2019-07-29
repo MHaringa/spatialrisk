@@ -29,7 +29,7 @@ ggplot map
 Takes an object produced by \code{choropleth_sf()}, and creates the correspoding choropleth map.
 }
 \examples{
-test <- choropleth_sf(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
+test <- points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
 choropleth_ggplot2(test)
 }
 \author{

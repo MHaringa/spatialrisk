@@ -21,7 +21,7 @@
 #' @author Martin Haringa
 #'
 #' @examples
-#' test <- choropleth_sf(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
+#' test <- points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
 #' choropleth_ggplot2(test)
 choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2, legend_title = "Class", option = "D", direction = 1){
 

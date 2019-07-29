@@ -34,6 +34,12 @@ Or the development version from GitHub:
 devtools::install_github("MHaringa/spatialrisk")
 ```
 
+```{r, include = FALSE}
+library(htmltools)
+library(htmlwidgets)
+```
+
+
 ## Example 1
 Find all observations in dataframe `Groningen` within a radius of 50m from the point *(lon,lat) = (6.561561,53.21326)*:
   
@@ -75,31 +81,24 @@ The insurance dataset contains 30,000 postal codes with their sum insured, popul
 
 ```{r example3, eval = TRUE}
 
-gemeente_sf <- choropleth_sf(nl_gemeente, insurance, sum(amount, na.rm = TRUE))
+gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRUE))
 
 ```
 
-The following code shows how to create a choropleth map based on the simple feature object obtained in the previous step. There are three options to create a choropleth map. The first one is using the ggplot2 package:
-
-```{r example3a, eval = TRUE}
-spatialrisk::choropleth_ggplot2(gemeente_sf)
-```
-
-
-The second approach is creating a choropleth map using the tmap package:
+The following code shows how to create a choropleth map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. The first approach:
 
 ```{r example3b, eval = TRUE}
-choropleth_tmap(gemeente_sf, mode = "plot")
+choropleth(gemeente_sf, mode = "plot")
 ```
 
-The third option is to create an interactive map. This can also be achieved using the tmap package.
+The second option is to create an interactive map.
 
 ```{r example3c, eval = FALSE, echo = TRUE}
-choropleth_tmap(gemeente_sf, mode = "view")
+choropleth(gemeente_sf, mode = "view")
 ```
 
 ```{r example3d, eval = TRUE, echo = FALSE}
-gemeente <- choropleth_tmap(gemeente_sf, mode = "view")
+gemeente <- choropleth(gemeente_sf, mode = "view")
 tmap::tmap_leaflet(gemeente)
 ```
 
