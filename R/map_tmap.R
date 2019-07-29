@@ -6,6 +6,7 @@
 #' @param value column name to shade the polygons
 #' @param id_name column name of ids to plot
 #' @param mode choose between static ('plot' is default) and interactive map ('view')
+#' @param n number of clusters (default is 7)
 #' @param legend_title title of legend
 #' @param palette palette name or a vector of colors. See tmaptools::palette_explorer() for the named palettes. Use a "-" as prefix to reverse the palette. The default palette is "viridis".
 #'
@@ -23,7 +24,7 @@
 #' choropleth_tmap(test)
 #' choropleth_tmap(test, id_name = "province_name", mode = "view")
 choropleth_tmap <- function(sf_object, value = "output", id_name = "id",
-                            mode = "plot", legend_title = "Clustering",
+                            mode = "plot", n = 7, legend_title = "Clustering",
                             palette = "viridis"){
 
   if (mode == "view"){
@@ -36,8 +37,10 @@ choropleth_tmap <- function(sf_object, value = "output", id_name = "id",
                   id = id_name,
                   palette = palette,
                   style = "fisher",
+                  n = n,
                   title = legend_title,
-                  alpha = .5)
+                  alpha = .5) +
+      tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas", "Esri.WorldTopoMap"))
   }
 
   else{
@@ -50,6 +53,7 @@ choropleth_tmap <- function(sf_object, value = "output", id_name = "id",
                   palette = palette,
                   style = "fisher",
                   title = legend_title,
+                  n = n,
                   lwd = .1) +
       tm_compass(position = c("right", "bottom")) +
       tm_scale_bar(position = c("left", "bottom"))

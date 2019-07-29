@@ -5,7 +5,8 @@
 \title{Map object of class sf using tmap}
 \usage{
 choropleth_tmap(sf_object, value = "output", id_name = "id",
-  mode = "plot", legend_title = "Clustering", palette = "viridis")
+  mode = "plot", n = 7, legend_title = "Clustering",
+  palette = "viridis")
 }
 \arguments{
 \item{sf_object}{object of class sf}
@@ -15,6 +16,8 @@ choropleth_tmap(sf_object, value = "output", id_name = "id",
 \item{id_name}{column name of ids to plot}
 
 \item{mode}{choose between static ('plot' is default) and interactive map ('view')}
+
+\item{n}{number of clusters (default is 7)}
 
 \item{legend_title}{title of legend}
 
