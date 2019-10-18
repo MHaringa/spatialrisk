@@ -9,9 +9,9 @@ concentration(sub, full, value, lon_sub = lon, lat_sub = lat,
   display_progress = TRUE)
 }
 \arguments{
-\item{sub}{data.frame of locations to calculate concentration risk for.}
+\item{sub}{data.frame of locations to calculate concentration risk for (target points).}
 
-\item{full}{data.frame to find the locations within radius \code{r} from locations in \code{sub}.}
+\item{full}{data.frame to find the locations within radius \code{r} from locations in \code{sub} (reference locations).}
 
 \item{value}{Column with value in \code{full}.}
 

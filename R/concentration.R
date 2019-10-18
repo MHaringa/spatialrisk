@@ -1,7 +1,7 @@
 #' Concentration risk
 #'
-#' @param sub data.frame of locations to calculate concentration risk for.
-#' @param full data.frame to find the locations within radius \code{r} from locations in \code{sub}.
+#' @param sub data.frame of locations to calculate concentration risk for (target points).
+#' @param full data.frame to find the locations within radius \code{r} from locations in \code{sub} (reference locations).
 #' @param value Column with value in \code{full}.
 #' @param lon_sub Column in \code{sub} with longitude (lon is default).
 #' @param lat_sub Column in \code{sub} with latitude (lat is default).
