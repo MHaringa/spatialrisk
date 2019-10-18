@@ -1,9 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Non UTF-8 character removed from column in nl_gemeente data set. 
-* Argument for the number of clusters in maps is added. 
-* The column with the name of the region is now called areaname in all data sets. 
+* Columns with longitude and latitude of centroid of polygon added to data sets.
 
 ## Test environments
 * local OS X install, R 3.6.1

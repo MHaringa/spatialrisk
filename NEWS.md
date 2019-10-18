@@ -1,3 +1,7 @@
+# spatialrisk 0.6.3
+
+* Columns with longitude and latitude of centroid of polygon added to data sets.
+
 # spatialrisk 0.6.2
 
 * Non UTF-8 character removed from column in nl_gemeente data set. 
