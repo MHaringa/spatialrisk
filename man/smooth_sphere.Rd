@@ -18,9 +18,9 @@ smooth_sphere(df, sf_object, value, lon_df = lon, lat_df = lat,
 
 \item{lat_df}{Column in \code{df} with latitude (lat is default).}
 
-\item{lon_sf}{Column in \code{sf} with longitude (lon is default).}
+\item{lon_sf}{Column in \code{sf_object} with longitude (lon is default).}
 
-\item{lat_sf}{Column in \code{sf} with latitude (lat is default).}
+\item{lat_sf}{Column in \code{sf_object} with latitude (lat is default).}
 }
 \value{
 Object equal to object \code{sf_object} including an extra column \code{prediction}.

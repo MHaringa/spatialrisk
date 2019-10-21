@@ -7,8 +7,8 @@
 #' @param value Column with values in \code{df}.
 #' @param lon_df Column in \code{df} with longitude (lon is default).
 #' @param lat_df Column in \code{df} with latitude (lat is default).
-#' @param lon_sf Column in \code{sf} with longitude (lon is default).
-#' @param lat_sf Column in \code{sf} with latitude (lat is default).
+#' @param lon_sf Column in \code{sf_object} with longitude (lon is default).
+#' @param lat_sf Column in \code{sf_object} with latitude (lat is default).
 #'
 #' @details \code{df} should include at least columns for longitude and latitude.
 #' @details \code{sf_object} should include at least columns for longitude, latitude and value of interest to interpolate and smooth.
