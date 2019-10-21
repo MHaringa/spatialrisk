@@ -1,7 +1,7 @@
 Package: spatialrisk
 Type: Package
 Title: Calculating Concentration Risk under Solvency II
-Version: 0.6.3
+Version: 0.6.3.9000
 Author: Martin Haringa
 Maintainer: Martin Haringa <mtharinga@gmail.com>
 Description: Methods for determining spatial risk, in particular calculating the maximum value of insured fire risk policies of all buildings that are partly or fully located within circle of a radius of 200m.
