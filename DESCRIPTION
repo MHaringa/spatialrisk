@@ -12,6 +12,7 @@ Imports:
     classInt,
     dplyr,
     ggplot2,
+    mgcv,
     Rcpp,
     RcppProgress, 
     sf,
