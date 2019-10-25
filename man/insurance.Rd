@@ -4,7 +4,7 @@
 \name{insurance}
 \alias{insurance}
 \title{Sum insured per postal code in the Netherlands}
-\format{A data frame with 30,000 rows and 5 variables:
+\format{A data frame with 29,990 rows and 5 variables:
 \describe{
   \item{postcode}{6-digit postal code}
   \item{population_pc4}{Population per 4-digit postal code}
