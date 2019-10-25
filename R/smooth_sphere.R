@@ -56,7 +56,7 @@ interpolate_spline <- function(observations, targets, value, lon_obs = lon, lat_
       mgcv::gam(f, data = observations)
     },
     error = function(e) {
-      stop("Error: dimension k is chosen too large (default k = 50). Reduce dimension k manually as argument in function call.")
+      stop("Error: dimension k is chosen too large (default k = 50). Reduce dimension k manually as argument in function call.", call. = FALSE)
     })
 
   response <- as.numeric(mgcv::predict.gam(pred_gam, targets, type = "response"))

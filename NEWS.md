@@ -1,6 +1,6 @@
 # spatialrisk 0.6.4
 
-* Methods for interpolation and smoothing on the sphere are added. Interpolation and smoothing is by means of splines or ordinary kriging. 
+* Methods for interpolation and smoothing on the sphere are added. Interpolation is by means of splines or by ordinary kriging. 
 
 # spatialrisk 0.6.3
 
