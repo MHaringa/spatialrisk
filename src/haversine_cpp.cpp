@@ -2,7 +2,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::export]]
 double haversine_cpp(double lat1, double long1,
                      double lat2, double long2,
                      double earth_radius = 6378137){
@@ -15,6 +14,33 @@ double haversine_cpp(double lat1, double long1,
   double term2 = cos(phi1) * cos(phi2) * pow(sin(delta_lambda * .5), 2);
   double delta_sigma = 2 * atan2(sqrt(term1 + term2), sqrt(1 - term1 - term2));
   double distance = earth_radius * delta_sigma;
+  return distance;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::NumericVector haversine_cpp_vec(Rcpp::NumericVector latFrom, Rcpp::NumericVector lonFrom,
+                                            Rcpp::NumericVector latTo, Rcpp::NumericVector lonTo,
+                                            double earth_radius) {
+  int n = latFrom.size();
+  Rcpp::NumericVector distance(n);
+
+  double latf;
+  double latt;
+  double lonf;
+  double lont;
+  double dist = 0;
+
+  for(int i = 0; i < n; i++){
+
+    latf = latFrom[i];
+    lonf = lonFrom[i];
+    latt = latTo[i];
+    lont = lonTo[i];
+    dist = haversine_cpp(latf, lonf, latt, lont, earth_radius);
+
+    distance[i] = dist;
+  }
   return distance;
 }
 

@@ -24,10 +24,10 @@
 #' @export
 haversine <- function(lat_from, lon_from, lat_to, lon_to, r = 6378137){
 
-  if( lat_from > 90 | lat_to > 90) warning('latitude > 90')
-  if( lon_from > 360 | lon_to > 360) warning('longitude > 360')
+  if( any(lat_from > 90) | any(lat_to > 90)) warning('latitude > 90')
+  if( any(lon_from > 360) | any(lon_to > 360)) warning('longitude > 360')
 
-  dist <- haversine_cpp(lat_from, lon_from, lat_to, lon_to, r)
+  dist <- haversine_cpp_vec(lat_from, lon_from, lat_to, lon_to, r)
   return(dist)
 }
 
