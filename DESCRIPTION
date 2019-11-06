@@ -12,8 +12,10 @@ Imports:
     automap,
     classInt,
     dplyr,
+    fs,
     ggplot2,
     gstat,
+    lubridate,
     methods,
     mgcv,
     Rcpp,
@@ -21,7 +23,8 @@ Imports:
     sf,
     sp,
     tmap,
-    viridis
+    viridis, 
+    vroom
 Depends: R (>= 3.3)
 RoxygenNote: 6.1.1
 Suggests: 

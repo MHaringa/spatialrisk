@@ -139,3 +139,22 @@
 #'
 #' @format A simple feature object with 51 rows and 29 variables.
 "europe_countries"
+
+#' KNMI stations
+#'
+#' @description A data frame containing the IDs and meta-data on the official KNMI weather stations.
+#'
+#' @author Martin Haringa
+#'
+#' @format A data frame with 50 rows and 7 variables:
+#' \describe{
+#'   \item{station}{ID of the station (209-391)}
+#'   \item{city}{City where the station is located}
+#'   \item{lon}{Longitude of station (crs = 4326)}
+#'   \item{lat}{Latitude of the station (crs = 4326)}
+#'   \item{altitude}{Altitude of the station (in meters)}
+#'   \item{X}{X coordinate of the station (crs = 32631)}
+#'   \item{Y}{Y coordinate of the station (crs = 32631)}
+#' }
+"knmi_stations"
+
