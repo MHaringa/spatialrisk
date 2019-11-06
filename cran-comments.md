@@ -1,7 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Methods for interpolation and smoothing on the sphere are added. Interpolation is by means of splines or by ordinary kriging. 
+* Meta data for weather stations in the Netherlands is added. 
 
 ## Test environments
 * local OS X install, R 3.6.1

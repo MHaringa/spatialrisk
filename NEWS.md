@@ -1,3 +1,7 @@
+# spatialrisk 0.6.5
+
+* Meta data for weather stations in the Netherlands is added. 
+
 # spatialrisk 0.6.4
 
 * Methods for interpolation and smoothing on the sphere are added. Interpolation is by means of splines or by ordinary kriging. 
