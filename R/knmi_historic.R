@@ -26,6 +26,10 @@
 #' @importFrom lubridate year
 #' @importFrom lubridate today
 #' @importFrom lubridate ymd
+#' @importFrom utils setTxtProgressBar
+#' @importFrom utils txtProgressBar
+#' @importFrom utils data
+#' @importFrom utils download.file
 #' @import vroom
 #'
 #' @author Martin Haringa
@@ -39,7 +43,7 @@
 knmi_historic_data <- function(startyear, endyear){
 
   # get reference data
-  data("knmi_stations", envir=environment())
+  utils::data("knmi_stations", envir = environment())
 
   id_stations <- knmi_stations$station
 
@@ -57,17 +61,17 @@ knmi_historic_data <- function(startyear, endyear){
   tmp <- fs::dir_create(fs::file_temp())
 
   # Set progress bar
-  pb = txtProgressBar(max = length(id_stations), style = 3)
+  pb <- utils::txtProgressBar(max = length(id_stations), style = 3)
 
   # create new files in the new directory
   for (i in 1:length(id_stations)){
 
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
 
     for (j in 1:length(periods)){
       new_file <- fs::file_create(fs::path(tmp, paste0("knmi_", id_stations[i], "_", periods[j], ".zip")))
       knmi_url <- paste0("https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/uurgegevens/uurgeg_", id_stations[i], "_", periods[j], ".zip")
-      download.file(knmi_url, new_file, quiet = TRUE)
+      utils::download.file(knmi_url, new_file, quiet = TRUE)
     }
   }
 
