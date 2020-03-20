@@ -4,14 +4,16 @@
 \name{nl_corop}
 \alias{nl_corop}
 \title{Object of class sf for COROP regions in the Netherlands}
-\format{A simple feature object with 40 rows and 5 variables:
+\format{
+A simple feature object with 40 rows and 5 variables:
 \describe{
   \item{corop_nr}{corop number}
   \item{areaname}{corop name}
   \item{geometry}{geometry object of COROP region}
   \item{lon}{longitude of the corop centroid}
   \item{lat}{latitude of the corop centroid}
-}}
+}
+}
 \usage{
 nl_corop
 }

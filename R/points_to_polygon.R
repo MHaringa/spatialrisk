@@ -38,7 +38,7 @@ points_to_polygon <- function(sf_map, df, oper, crs = 4326, outside_print = FALS
     error = function(e) {
       sf_map %>%
         sf::st_buffer(0) %>% # Make invalid geometries valid
-        st_transform(crs = crs) %>% # Convert coordinates to WGS84
+        st_transform(crs = crs) %>%
         dplyr::mutate(id = 1:nrow(sf_map))
     })
 
@@ -70,7 +70,7 @@ points_to_polygon <- function(sf_map, df, oper, crs = 4326, outside_print = FALS
     dplyr::summarize(output = !! oper) %>%
     dplyr::ungroup()
 
-  out <- dplyr::left_join(shp_wgs84, df_map_sf2, by = "id")
+  out <- merge(shp_wgs84, df_map_sf2, by = "id", all.x = TRUE)
   return(out)
 }
 

@@ -4,9 +4,17 @@
 \alias{concentration}
 \title{Concentration risk}
 \usage{
-concentration(sub, full, value, lon_sub = lon, lat_sub = lat,
-  lon_full = lon, lat_full = lat, radius = 200,
-  display_progress = TRUE)
+concentration(
+  sub,
+  full,
+  value,
+  lon_sub = lon,
+  lat_sub = lat,
+  lon_full = lon,
+  lat_full = lat,
+  radius = 200,
+  display_progress = TRUE
+)
 }
 \arguments{
 \item{sub}{data.frame of locations to calculate concentration risk for (target points).}

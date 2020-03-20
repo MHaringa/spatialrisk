@@ -4,7 +4,8 @@
 \name{nl_postcode4}
 \alias{nl_postcode4}
 \title{Object of class sf for 4-digit postcode regions in the Netherlands}
-\format{A simple feature object with 4053 rows and 7 variables:
+\format{
+A simple feature object with 4053 rows and 7 variables:
 \describe{
   \item{pc4}{4-digit postal code}
   \item{areaname}{name of corresponding 4-digit postal code}
@@ -14,7 +15,8 @@
   \item{geometry}{geometry object of postal code}
   \item{lon}{longitude of the 4-digit postal code centroid}
   \item{lat}{latitude of the 4-digit postal code centroid}
-}}
+}
+}
 \usage{
 nl_postcode4
 }

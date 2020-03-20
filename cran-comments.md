@@ -1,10 +1,10 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Meta data for weather stations in the Netherlands is added. 
+* Updated spatialrisk for failing check. spatialrisk uses dplyr and has problems with the new version of dplyr. See bug join_mutate(x = <sf>) #4917
 
 ## Test environments
-* local OS X install, R 3.6.1
+* local OS X install, R 3.6.2
 * win-builder (devel and release)
 
 ## R CMD check results

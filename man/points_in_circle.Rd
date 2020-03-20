@@ -4,8 +4,14 @@
 \alias{points_in_circle}
 \title{Points in circle}
 \usage{
-points_in_circle(data, lon_center, lat_center, lon = lon, lat = lat,
-  radius = 200)
+points_in_circle(
+  data,
+  lon_center,
+  lat_center,
+  lon = lon,
+  lat = lat,
+  radius = 200
+)
 }
 \arguments{
 \item{data}{A data.frame.}

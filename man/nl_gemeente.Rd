@@ -4,7 +4,8 @@
 \name{nl_gemeente}
 \alias{nl_gemeente}
 \title{Object of class sf for gemeentes (municipalities) in the Netherlands}
-\format{A simple feature object with 380 rows and 6 variables:
+\format{
+A simple feature object with 380 rows and 6 variables:
 \describe{
   \item{id}{id of gemeente}
   \item{code}{code of gemeente}
@@ -12,7 +13,8 @@
   \item{geometry}{geometry object of gemeente}
   \item{lon}{longitude of the gemeente centroid}
   \item{lat}{latitude of the gemeente centroid}
-}}
+}
+}
 \usage{
 nl_gemeente
 }

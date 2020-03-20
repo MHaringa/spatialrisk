@@ -4,7 +4,9 @@
 \name{world_countries}
 \alias{world_countries}
 \title{Object of class sf for countries of the entire world}
-\format{A simple feature object with 234 rows and 29 variables.}
+\format{
+A simple feature object with 234 rows and 29 variables.
+}
 \usage{
 world_countries
 }

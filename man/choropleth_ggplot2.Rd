@@ -4,8 +4,15 @@
 \alias{choropleth_ggplot2}
 \title{Map object of class sf using ggplot2}
 \usage{
-choropleth_ggplot2(sf_object, value = output, n = 7, dig.lab = 2,
-  legend_title = "Class", option = "D", direction = 1)
+choropleth_ggplot2(
+  sf_object,
+  value = output,
+  n = 7,
+  dig.lab = 2,
+  legend_title = "Class",
+  option = "D",
+  direction = 1
+)
 }
 \arguments{
 \item{sf_object}{object of class sf}

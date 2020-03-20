@@ -3,7 +3,8 @@
 \name{knmi_historic_data}
 \alias{knmi_historic_data}
 \title{Retrieve historic weather data for the Netherlands}
-\format{The returned data frame contains the following columns:
+\format{
+The returned data frame contains the following columns:
 \itemize{
   \item station = ID of measurement station;
   \item date = Date;
@@ -15,7 +16,8 @@
   \item city = City where the measurement station is located;
   \item lon = Longitude of station (crs = 4326);
   \item lat = Latitude of station (crs = 4326).
-}}
+}
+}
 \usage{
 knmi_historic_data(startyear, endyear)
 }

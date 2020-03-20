@@ -4,8 +4,15 @@
 \alias{interpolate_krige}
 \title{Ordinary kriging}
 \usage{
-interpolate_krige(observations, targets, value, lon_obs = lon,
-  lat_obs = lat, lon_targets = lon, lat_targets = lat)
+interpolate_krige(
+  observations,
+  targets,
+  value,
+  lon_obs = lon,
+  lat_obs = lat,
+  lon_targets = lon,
+  lat_targets = lat
+)
 }
 \arguments{
 \item{observations}{data.frame of observations.}

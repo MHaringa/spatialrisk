@@ -4,7 +4,8 @@
 \name{knmi_stations}
 \alias{knmi_stations}
 \title{KNMI stations}
-\format{A data frame with 50 rows and 7 variables:
+\format{
+A data frame with 50 rows and 7 variables:
 \describe{
   \item{station}{ID of the station (209-391)}
   \item{city}{City where the station is located}
@@ -13,7 +14,8 @@
   \item{altitude}{Altitude of the station (in meters)}
   \item{X}{X coordinate of the station (crs = 32631)}
   \item{Y}{Y coordinate of the station (crs = 32631)}
-}}
+}
+}
 \usage{
 knmi_stations
 }

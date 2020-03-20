@@ -4,7 +4,8 @@
 \name{Groningen}
 \alias{Groningen}
 \title{Coordinates of houses in Groningen}
-\format{A data frame with 56200 rows and 8 variables:
+\format{
+A data frame with 56200 rows and 8 variables:
 \describe{
   \item{street}{Name of street}
   \item{number}{Number of house}
@@ -15,7 +16,8 @@
   \item{lon}{Longitude (in degrees)}
   \item{lat}{Latitude (in degrees)}
   \item{amount}{Random value}
-}}
+}
+}
 \source{
 The BAG is the Dutch registry for Buildings and adresses (Basisregistratie adressen en gebouwen).
 }

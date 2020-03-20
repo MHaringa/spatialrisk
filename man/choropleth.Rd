@@ -4,9 +4,15 @@
 \alias{choropleth}
 \title{Create choropleth map}
 \usage{
-choropleth(sf_object, value = "output", id_name = "areaname",
-  mode = "plot", n = 7, legend_title = "Clustering",
-  palette = "viridis")
+choropleth(
+  sf_object,
+  value = "output",
+  id_name = "areaname",
+  mode = "plot",
+  n = 7,
+  legend_title = "Clustering",
+  palette = "viridis"
+)
 }
 \arguments{
 \item{sf_object}{object of class sf}

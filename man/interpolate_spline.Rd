@@ -4,8 +4,16 @@
 \alias{interpolate_spline}
 \title{Splines on the sphere}
 \usage{
-interpolate_spline(observations, targets, value, lon_obs = lon,
-  lat_obs = lat, lon_targets = lon, lat_targets = lat, k = 50)
+interpolate_spline(
+  observations,
+  targets,
+  value,
+  lon_obs = lon,
+  lat_obs = lat,
+  lon_targets = lon,
+  lat_targets = lat,
+  k = 50
+)
 }
 \arguments{
 \item{observations}{data.frame of observations.}

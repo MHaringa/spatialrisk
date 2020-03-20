@@ -4,13 +4,15 @@
 \name{nl_provincie}
 \alias{nl_provincie}
 \title{Object of class sf for provincies (provinces) in the Netherlands}
-\format{A simple feature object with 12 rows and 4 variables:
+\format{
+A simple feature object with 12 rows and 4 variables:
 \describe{
   \item{areaname}{province name}
   \item{geometry}{geometry object of province}
   \item{lon}{longitude of the province centroid}
   \item{lat}{latitude of the province centroid}
-}}
+}
+}
 \usage{
 nl_provincie
 }

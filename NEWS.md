@@ -1,3 +1,7 @@
+# spatialrisk 0.6.6
+
+* Bug fix
+
 # spatialrisk 0.6.5
 
 * Meta data for weather stations in the Netherlands is added. 
