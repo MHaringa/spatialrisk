@@ -1,38 +1,42 @@
+# insurancerating 0.6.7
+
+* A package website is added using pkgdown.
+
 # spatialrisk 0.6.6
 
-* Bug fix
+* `points_to_polygon()` is updated to keep spatialrisk and a new version of dplyr working together smoothly.
 
 # spatialrisk 0.6.5
 
-* Meta data for weather stations in the Netherlands is added. 
+* `knmi_historic_data()` and `knmi_stations()` are added to retrieve data from weather stations in the Netherlands.
 
 # spatialrisk 0.6.4
 
-* Methods for interpolation and smoothing on the sphere are added. Interpolation is by means of splines or by ordinary kriging. 
+* `interpolate_krige()` and `interpolate_spline()` are added for interpolation and smoothing on the sphere. 
 
 # spatialrisk 0.6.3
 
-* Columns with longitude and latitude of centroid of polygon added to data sets.
+* Data sets `nl_corop()`, `nl_gemeente()`, `nl_postcode1()`, `nl_postcode2()`, `nl_postcode3()`, `nl_postcode4()`, and `nl_provincie()` now contain columns `longitude` and `latitude` for the centroid of the polygons. 
 
 # spatialrisk 0.6.2
 
-* Non UTF-8 character removed from column in nl_gemeente data set. 
-* Argument for the number of clusters in maps is added. 
-* The column with the name of the region is now called areaname in all data sets. 
+* Non UTF-8 character removed from column `areaname` in data set `nl_gemeente()`.
+* In `choropleth()`, `n` specifies the number of clusters in a map.
+* In data sets `nl_corop()`, `nl_gemeente()`, `nl_postcode1()`, `nl_postcode2()`, `nl_postcode3()`, `nl_postcode4()`, and `nl_provincie`, column `areaname` now refers to the region. 
 
 # spatialrisk 0.6.1
 
-* Several message functions are added when points are not within polygons. 
+* In `points_to_polygon()`, `outside_print` shows the points that are not within any polygon. 
 
 # spatialrisk 0.6.0
 
-* A function to join coordinates (in terms of longitude and latitude) to the polygon level is added. This is useful to shade the areas with the highest risks on a choropleth map. 
-* Several maps are added to the data folder. 
+* `points_to_polygon()` is added.
+* Data sets `europe_countries()` and `world_countries()` are added.
 
 # spatialrisk 0.5.1
 
-* Equation for testing if a point is inside a circle is extended with testing whether point is inside a square diamond inside the square. 
+* In `concentration()` the algorithm for testing if a point is inside a circle is updated by testing whether the point is inside a square diamond inside the square. 
 
 # spatialrisk 0.3.1
 
-* Added a `NEWS.md` file to track changes to the package.
+* `NEWS.md` is added to track changes to the package.

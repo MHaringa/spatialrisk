@@ -3,6 +3,13 @@
 
 # spatialrisk
 
+<!-- badges: start -->
+
+[![CRAN
+Status](https://www.r-pkg.org/badges/version/spatialrisk)](https://cran.r-project.org/package=spatialrisk)
+[![Downloads](https://cranlogs.r-pkg.org/badges/spatialrisk?color=blue)](https://cran.rstudio.com/package=spatialrisk)
+<!-- badges: end -->
+
 spatialrisk is an R-package for spatial risk calculations. In
 particular, it can be used to determine concentration risk in the
 context of Solvency II.
@@ -37,14 +44,14 @@ from the point *(lon,lat) = (6.561561,53.21326)*:
 ``` r
 library(spatialrisk)
 points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
-#> # A tibble: 3 x 10
-#>   street number letter suffix postal_code city    lon   lat amount
-#>   <chr>   <int> <chr>  <chr>  <chr>       <chr> <dbl> <dbl>  <dbl>
-#> 1 Heres…      5 <NA>   <NA>   9711EP      Gron…  6.57  53.2      5
-#> 2 Heres…      3 a      <NA>   9711EP      Gron…  6.57  53.2     36
-#> 3 Heres…     11 <NA>   <NA>   9711ER      Gron…  6.57  53.2     11
-#> # … with 1 more variable: distance_m <dbl>
 ```
+
+    ## # A tibble: 3 x 10
+    ##   street   number letter suffix postal_code city     lon   lat amount distance_m
+    ##   <chr>     <int> <chr>  <chr>  <chr>       <chr>  <dbl> <dbl>  <dbl>      <dbl>
+    ## 1 Heresin…      5 <NA>   <NA>   9711EP      Groni…  6.57  53.2      5       31.4
+    ## 2 Heresin…      3 a      <NA>   9711EP      Groni…  6.57  53.2     36       38.1
+    ## 3 Heresin…     11 <NA>   <NA>   9711ER      Groni…  6.57  53.2     11       47.8
 
 ## Example 2
 
@@ -58,10 +65,11 @@ df <- data.frame(location = c("p1", "p2"),
                  lat = c(53.21369, 53.21326))
 
 concentration(df, Groningen, value = amount, radius = 100)
-#>   location      lon      lat concentration
-#> 1       p1 6.561561 53.21369          2055
-#> 2       p2 6.561398 53.21326          2892
 ```
+
+    ##   location      lon      lat concentration
+    ## 1       p1 6.561561 53.21369          2055
+    ## 2       p2 6.561398 53.21326          2892
 
 ## Example 3
 
@@ -98,13 +106,14 @@ The insurance dataset contains 30,000 postal codes with their sum
 insured, population and the corresponding longitude and latitude. The
 following code shows how to create a simple feature object on the
 municipality (Dutch: *gemeente*) level. The regions are shaded by the
-total sum insured per region.
+total sum insured per
+region.
 
 ``` r
-
 gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRUE))
-#> 33 points fall not within a polygon.
 ```
+
+    ## 33 points fall not within a polygon.
 
 The following code shows how to create a choropleth map based on the
 simple feature object obtained in the previous step. There are two
@@ -112,10 +121,11 @@ options to create a choropleth map. The first approach:
 
 ``` r
 choropleth(gemeente_sf, mode = "plot")
-#> Linking to GEOS 3.6.1, GDAL 2.1.3, PROJ 4.9.3
 ```
 
-![](README-example3b-1.png)<!-- -->
+    ## Linking to GEOS 3.7.2, GDAL 2.4.2, PROJ 5.2.0
+
+![](man/figures/example3b-1.png)<!-- -->
 
 The second option is to create an interactive map.
 
@@ -123,4 +133,4 @@ The second option is to create an interactive map.
 choropleth(gemeente_sf, mode = "view")
 ```
 
-![](README-example3d-1.png)<!-- -->
+![](man/figures/example3d-1.png)<!-- -->

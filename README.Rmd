@@ -4,16 +4,19 @@
 ---
   
   <!-- README.md is generated from README.Rmd. Please edit that file -->
-  
-```{r, echo = FALSE}
+
+```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
+  fig.path = "man/figures/"
 )
 ```
 
 # spatialrisk
+
+<!-- badges: start -->
+[![CRAN Status](https://www.r-pkg.org/badges/version/spatialrisk)](https://cran.r-project.org/package=spatialrisk)
+[![Downloads](https://cranlogs.r-pkg.org/badges/spatialrisk?color=blue)](https://cran.rstudio.com/package=spatialrisk)
+<!-- badges: end -->
 
 spatialrisk is an R-package for spatial risk calculations. In particular, it can be used to determine concentration risk in the context of Solvency II. 
 

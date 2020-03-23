@@ -1,0 +1,37 @@
+navbar:
+  structure:
+    left:  [home, reference, news]
+    right: [github]
+reference:
+  - title: "Spatial risk"
+    contents:
+      - concentration
+      - points_in_circle
+      - haversine
+  - title: "Create maps"
+    contents:
+      - points_to_polygon
+      - choropleth
+      - choropleth_ggplot2
+      - choropleth_tmap
+      - choropleth_sf
+  - title: "Spatial interpolation"
+    contents:
+      - interpolate_krige
+      - interpolate_spline
+  - title: "Maps"
+    desc: >
+      Objects of class sf
+    contents:
+      - matches("nl_")
+      - matches("_countries")
+  - title: "Weather data"
+    contents:
+      - knmi_historic_data
+      - knmi_stations
+  - title: "Other data sets"
+    contents:
+      - Groningen
+      - insurance
+
+
