@@ -1,4 +1,4 @@
-# insurancerating 0.6.7
+# spatialrisk 0.6.7
 
 * A package website is added using pkgdown.
 
