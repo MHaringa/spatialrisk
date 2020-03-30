@@ -43,6 +43,8 @@ concentration <- function(sub, full, value,
   if(!(radius > 0)) stop('radius should be positive')
 
   # Turn into character vector
+  sub_name <- deparse(substitute(sub))
+  full_name <- deparse(substitute(full))
   lon_sub <- deparse(substitute(lon_sub))
   lat_sub <- deparse(substitute(lat_sub))
   lon_full <- deparse(substitute(lon_full))
@@ -50,11 +52,15 @@ concentration <- function(sub, full, value,
   value <- deparse(substitute(value))
 
   if ( !all(c(lon_sub, lat_sub) %in% names(sub))) {
-    stop(paste0("sub does not contain columns ", lon_sub, " and ", lat_sub))
+    stop(paste0(sub_name, " does not contain columns ", lon_sub, " and ", lat_sub))
   }
 
   if ( !all(c(lon_full, lat_full) %in% names(full))) {
-    stop(paste0("full does not contain columns ", lon_full, " and ", lat_full))
+    stop(paste0(full_name, " does not contain columns ", lon_full, " and ", lat_full))
+  }
+
+  if ( !all(is.numeric(c(sub[[lon_sub]], sub[[lat_sub]], full[[lon_full]], full[[lat_full]], full[[value]]))) ){
+    stop(paste0("the following variables should be numeric: ", lon_sub, ", ", lat_sub, ", ", lon_full, ", ", lat_full, ", ", value))
   }
 
   sub_df <- data.frame("lon" = sub[[lon_sub]], "lat" = sub[[lat_sub]])
