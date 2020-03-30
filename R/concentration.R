@@ -49,6 +49,14 @@ concentration <- function(sub, full, value,
   lat_full <- deparse(substitute(lat_full))
   value <- deparse(substitute(value))
 
+  if ( !all(c(lon_sub, lat_sub) %in% names(sub))) {
+    stop(paste0("sub does not contain columns ", lon_sub, " and ", lat_sub))
+  }
+
+  if ( !all(c(lon_full, lat_full) %in% names(full))) {
+    stop(paste0("full does not contain columns ", lon_full, " and ", lat_full))
+  }
+
   sub_df <- data.frame("lon" = sub[[lon_sub]], "lat" = sub[[lat_sub]])
   full_df <- data.frame("lon" = full[[lon_full]], "lat" = full[[lat_full]], "value" = full[[value]])
 

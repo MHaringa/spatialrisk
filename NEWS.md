@@ -1,6 +1,7 @@
 # spatialrisk 0.6.7
 
 * A package website is added using pkgdown.
+* `concentration()` and `points_in_circle()` now give error messages when the data does not contain columns for `lon` and `lat`.
 
 # spatialrisk 0.6.6
 

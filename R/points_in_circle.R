@@ -26,6 +26,10 @@ points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat,
   lon <- deparse(substitute(lon))
   lat <- deparse(substitute(lat))
 
+  if ( !all(c(lon, lat) %in% names(data))) {
+    stop(paste0("data does not contain columns ", lon, " and ", lat))
+  }
+
   df <- data.frame("lon" = data[[lon]], "lat" = data[[lat]])
 
   incircle <- haversine_loop_cpp(df, lat_center, lon_center, radius)
