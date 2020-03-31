@@ -1,5 +1,10 @@
 #' Haversine great circle distance
 #'
+#' @description The shortest distance between two points (i.e., the 'great-circle-distance' or 'as the crow flies'),
+#' according to the 'haversine method'. This method assumes a spherical earth, ignoring ellipsoidal effects. Note
+#' that this version is implemented in C++. A quick benchmark to the version of geosphere showed it to be a non-insignificant speed enhancement.
+#' The algorithm converges in one-twentieth of the original time.
+#'
 #' @param lat_from Latitude of point.
 #' @param lon_from Longitude of point.
 #' @param lat_to Latitude of point.
@@ -9,10 +14,6 @@
 #' @references Sinnott, R.W, 1984. Virtues of the Haversine. Sky and Telescope 68(2): 159.
 #'
 #' @return Vector of distances in the same unit as \code{r} (default in meters).
-#' @description The shortest distance between two points (i.e., the 'great-circle-distance' or 'as the crow flies'),
-#' according to the 'haversine method'. This method assumes a spherical earth, ignoring ellipsoidal effects. Note
-#' that this version is implemented in C++. A quick benchmark to the version of geosphere showed it to be a non-insignificant speed enhancement.
-#' The algorithm converges in one-twentieth of the original time.
 #'
 #' @author Martin Haringa
 #'
@@ -24,10 +25,18 @@
 #' @export
 haversine <- function(lat_from, lon_from, lat_to, lon_to, r = 6378137){
 
-  if( any(lat_from > 90) | any(lat_to > 90)) warning('latitude > 90')
-  if( any(lon_from > 360) | any(lon_to > 360)) warning('longitude > 360')
+  if (!all(unlist(lapply(list(lat_from, lon_from, lat_to, lon_to), is.numeric)))) {
+    stop("lat_from, lon_from, lat_to, lon_to should be numeric")
+  }
 
   dist <- haversine_cpp_vec(lat_from, lon_from, lat_to, lon_to, r)
+
+  na_output <- sum(is.na(dist))
+
+  if ( na_output > 0 ){
+    message("Ignoring missing coordinates: ", sum(is.na(dist)), " NA's returned")
+  }
+
   return(dist)
 }
 

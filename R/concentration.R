@@ -40,7 +40,7 @@ concentration <- function(sub, full, value,
                           lon_full = lon, lat_full = lat,
                           radius = 200, display_progress = TRUE){
 
-  if(!(radius > 0)) stop('radius should be positive')
+  if( radius < 0 ){ stop('radius should be positive') }
 
   # Turn into character vector
   sub_name <- deparse(substitute(sub))

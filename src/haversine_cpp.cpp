@@ -5,15 +5,22 @@ using namespace Rcpp;
 double haversine_cpp(double lat1, double long1,
                      double lat2, double long2,
                      double earth_radius = 6378137){
-  double deg_to_rad = 0.0174532925199432957; // i.e. pi/180 (multiplication is faster than division)
-  double delta_phi = (lat2 - lat1) * deg_to_rad;
-  double delta_lambda = (long2 - long1) * deg_to_rad;
-  double phi1 = lat1 * deg_to_rad;
-  double phi2 = lat2 * deg_to_rad;
-  double term1 = pow(sin(delta_phi * .5), 2);
-  double term2 = cos(phi1) * cos(phi2) * pow(sin(delta_lambda * .5), 2);
-  double delta_sigma = 2 * atan2(sqrt(term1 + term2), sqrt(1 - term1 - term2));
-  double distance = earth_radius * delta_sigma;
+
+  double distance;
+
+  if (!((long1 > 360) || (long2 > 360) || (lat1 > 90) || (lat2 > 90))){
+    double deg_to_rad = 0.0174532925199432957; // i.e. pi/180 (multiplication is faster than division)
+    double delta_phi = (lat2 - lat1) * deg_to_rad;
+    double delta_lambda = (long2 - long1) * deg_to_rad;
+    double phi1 = lat1 * deg_to_rad;
+    double phi2 = lat2 * deg_to_rad;
+    double term1 = pow(sin(delta_phi * .5), 2);
+    double term2 = cos(phi1) * cos(phi2) * pow(sin(delta_lambda * .5), 2);
+    double delta_sigma = 2 * atan2(sqrt(term1 + term2), sqrt(1 - term1 - term2));
+    distance = earth_radius * delta_sigma;
+  } else {
+    distance = NAN;
+  }
   return distance;
 }
 
