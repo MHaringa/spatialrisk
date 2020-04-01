@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 spatialrisk is an R-package for spatial risk calculations. In particular, it can be used to determine concentration risk in the context of Solvency II. 
 
-The package offers an effective approach to calculate the *standard formula* under Solvency II. The *standard formula* under Solvency II asks companies to report their largest fire concentration in respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of buildings fully or partly located within this radius. 
+The package offers an effective approach to calculate the *standard formula* under Solvency II. The *standard formula* under Solvency II asks insurance companies to report their largest fire concentration in respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of buildings fully or partly located within this radius. 
 
 ## Installation
 
@@ -33,8 +33,8 @@ install.packages("spatialrisk")
 Or the development version from GitHub:
 
 ```{r gh-installation, eval = FALSE}
-# install.packages("devtools")
-devtools::install_github("MHaringa/spatialrisk")
+# install.packages("remotes")
+remotes::install_github("MHaringa/spatialrisk")
 ```
 
 ```{r, include = FALSE}
@@ -46,7 +46,7 @@ library(webshot)
 
 
 ## Example 1
-Find all observations in dataframe `Groningen` within a radius of 50m from the point *(lon,lat) = (6.561561,53.21326)*:
+Find all observations in dataframe `Groningen` within a radius of 50m from the point (lon,lat) = (6.561561,53.21326):
   
 ```{r example, eval = TRUE, message = FALSE, warning = FALSE}
 library(spatialrisk)
@@ -66,7 +66,7 @@ concentration(df, Groningen, value = amount, radius = 100)
 ```
 
 ## Example 3
-The package also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. The functions presented here attempt to elegantly solve this problem.
+`spatialrisk` also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. The functions presented here attempt to elegantly solve this problem.
 
 The common approach is to first aggregate the data on the level of the regions in the shapefile and then merging the aggregated data with the shapefile. This is done by joining on the name. This approach is often problematic. For example, in case of municipality names in the Netherlands it is not easy to merge municipality names in the shapefile with the names in the data set. This is hard because of municipal reorganizations or differences in punctuation marks in municipality names. To solve this problem the data is not aggregated on the level of the regions in the shapefile. Contrary, the functions in this package detect directly the region containing the coordinates of the underlying object. This flexible approach makes it easy to create choropleth maps on different region levels.
 
@@ -82,7 +82,7 @@ The package has the following build-in choropleth maps:
 - world_countries
 - europe_countries
 
-The insurance dataset contains 30,000 postal codes with their sum insured, population and the corresponding longitude and latitude. The following code shows how to create a simple feature object on the municipality (Dutch: *gemeente*) level. The regions are shaded by the total sum insured per region.
+Data set `insurance` contains 30,000 postal codes with their sum insured, population and the corresponding longitude and latitude. The following code shows how to create a simple feature object on the municipality (Dutch: *gemeente*) level. The regions are shaded by the total sum insured per region.
 
 ```{r example3, eval = TRUE}
 
@@ -90,13 +90,13 @@ gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRU
 
 ```
 
-The following code shows how to create a choropleth map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. The first approach:
+`choropleth()` creates a map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. When `mode` is set to `plot` a static map is created:
 
 ```{r example3b, eval = TRUE}
 choropleth(gemeente_sf, mode = "plot")
 ```
 
-The second option is to create an interactive map.
+If `mode` is set to `view` an interactive map is created:
 
 ```{r example3c, eval = FALSE, echo = TRUE}
 choropleth(gemeente_sf, mode = "view")

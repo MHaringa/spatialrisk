@@ -41,6 +41,18 @@
 #' @export
 interpolate_krige <- function(observations, targets, value, lon_obs = lon, lat_obs = lat, lon_targets = lon, lat_targets = lat) {
 
+  if (!requireNamespace("gstat", quietly = TRUE)) {
+    stop("gstat is needed for this function to work. Install it via install.packages(\"gstat\")", call. = FALSE)
+  }
+
+  if (!requireNamespace("automap", quietly = TRUE)) {
+    stop("automap is needed for this function to work. Install it via install.packages(\"automap\")", call. = FALSE)
+  }
+
+  if (!requireNamespace("sf", quietly = TRUE)) {
+    stop("sf is needed for this function to work. Install it via install.packages(\"sf\")", call. = FALSE)
+  }
+
   value <- deparse(substitute(value))
   lon_obs <- deparse(substitute(lon_obs))
   lat_obs <- deparse(substitute(lat_obs))

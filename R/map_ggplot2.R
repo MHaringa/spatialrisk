@@ -25,31 +25,35 @@
 #' choropleth_ggplot2(test)
 choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2, legend_title = "Class", option = "D", direction = 1){
 
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("ggplot2 is needed for this function to work. Install it via install.packages(\"ggplot2\")", call. = FALSE)
+  }
+
   value <- deparse(substitute(value))
   vector_value <- sf_object[[value]]
 
   result <- tryCatch(
     {
       suppressWarnings({
-        cluster <- classIntervals(vector_value, n = n, style = 'fisher', intervalClosure = 'right')[[2]]
+        cluster <- classInt::classIntervals(vector_value, n = n, style = 'fisher', intervalClosure = 'right')[[2]]
         sf_object$clustering <- cut(vector_value, breaks = cluster, include.lowest = TRUE, dig.lab = dig.lab)
       })
 
-      ggplot(sf_object) +
-        geom_sf(aes(fill = clustering), size = .1, color = "grey85")  +
-        coord_sf(datum = NA) +
-        scale_fill_viridis_d(direction = direction, option = option) +
-        theme_void() +
-        labs(fill = legend_title)
+      ggplot2::ggplot(sf_object) +
+        ggplot2::geom_sf(aes(fill = clustering), size = .1, color = "grey85")  +
+        ggplot2::coord_sf(datum = NA) +
+        ggplot2::scale_fill_viridis_d(direction = direction, option = option) +
+        ggplot2::theme_void() +
+        ggplot2::labs(fill = legend_title)
     },
     error = function(e) {
 
-      ggplot(sf_object) +
-        geom_sf(aes(fill = vector_value), size = .1, color = "grey85")  +
-        coord_sf(datum = NA) +
-        scale_fill_viridis_c(direction = direction, option = option) +
-        theme_void() +
-        labs(fill = legend_title)
+      ggplot2::ggplot(sf_object) +
+        ggplot2::geom_sf(aes(fill = vector_value), size = .1, color = "grey85")  +
+        ggplot2::coord_sf(datum = NA) +
+        ggplot2::scale_fill_viridis_c(direction = direction, option = option) +
+        ggplot2::theme_void() +
+        ggplot2::labs(fill = legend_title)
     })
 
   return(result)

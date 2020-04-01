@@ -16,10 +16,10 @@ context of Solvency II.
 
 The package offers an effective approach to calculate the *standard
 formula* under Solvency II. The *standard formula* under Solvency II
-asks companies to report their largest fire concentration in respect of
-the fire peril within a radius of 200m. This is the maximum gross sum
-insured of the set of buildings fully or partly located within this
-radius.
+asks insurance companies to report their largest fire concentration in
+respect of the fire peril within a radius of 200m. This is the maximum
+gross sum insured of the set of buildings fully or partly located within
+this radius.
 
 ## Installation
 
@@ -32,14 +32,14 @@ install.packages("spatialrisk")
 Or the development version from GitHub:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("MHaringa/spatialrisk")
+# install.packages("remotes")
+remotes::install_github("MHaringa/spatialrisk")
 ```
 
 ## Example 1
 
 Find all observations in dataframe `Groningen` within a radius of 50m
-from the point *(lon,lat) = (6.561561,53.21326)*:
+from the point (lon,lat) = (6.561561,53.21326):
 
 ``` r
 library(spatialrisk)
@@ -73,9 +73,9 @@ concentration(df, Groningen, value = amount, radius = 100)
 
 ## Example 3
 
-The package also contains functionality to create choropleths. Typically
-in R it is difficult to create choropleths. The functions presented here
-attempt to elegantly solve this problem.
+`spatialrisk` also contains functionality to create choropleths.
+Typically in R it is difficult to create choropleths. The functions
+presented here attempt to elegantly solve this problem.
 
 The common approach is to first aggregate the data on the level of the
 regions in the shapefile and then merging the aggregated data with the
@@ -102,7 +102,7 @@ The package has the following build-in choropleth maps:
   - world\_countries
   - europe\_countries
 
-The insurance dataset contains 30,000 postal codes with their sum
+Data set `insurance` contains 30,000 postal codes with their sum
 insured, population and the corresponding longitude and latitude. The
 following code shows how to create a simple feature object on the
 municipality (Dutch: *gemeente*) level. The regions are shaded by the
@@ -115,9 +115,9 @@ gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRU
 
     ## 33 points fall not within a polygon.
 
-The following code shows how to create a choropleth map based on the
-simple feature object obtained in the previous step. There are two
-options to create a choropleth map. The first approach:
+`choropleth()` creates a map based on the simple feature object obtained
+in the previous step. There are two options to create a choropleth map.
+When `mode` is set to `plot` a static map is created:
 
 ``` r
 choropleth(gemeente_sf, mode = "plot")
@@ -127,7 +127,7 @@ choropleth(gemeente_sf, mode = "plot")
 
 ![](man/figures/example3b-1.png)<!-- -->
 
-The second option is to create an interactive map.
+If `mode` is set to `view` an interactive map is created:
 
 ``` r
 choropleth(gemeente_sf, mode = "view")

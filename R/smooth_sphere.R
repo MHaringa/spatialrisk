@@ -37,6 +37,10 @@
 #' @export
 interpolate_spline <- function(observations, targets, value, lon_obs = lon, lat_obs = lat, lon_targets = lon, lat_targets = lat, k = 50) {
 
+  if (!requireNamespace("mgcv", quietly = TRUE)) {
+    stop("mgcv is needed for this function to work. Install it via install.packages(\"mgcv\")", call. = FALSE)
+  }
+
   lon_targets <- deparse(substitute(lon_targets))
   lat_targets <- deparse(substitute(lat_targets))
   lon_obs <- deparse(substitute(lon_obs))

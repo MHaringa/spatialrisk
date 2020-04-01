@@ -32,13 +32,13 @@ points_to_polygon <- function(sf_map, df, oper, crs = 4326, outside_print = FALS
   shp_wgs84 <- tryCatch(
     {
       sf_map %>%
-        st_transform(crs = crs) %>% # Convert coordinates to WGS84
+        sf::st_transform(crs = crs) %>% # Convert coordinates to WGS84
         dplyr::mutate(id = 1:nrow(sf_map))
     },
     error = function(e) {
       sf_map %>%
         sf::st_buffer(0) %>% # Make invalid geometries valid
-        st_transform(crs = crs) %>%
+        sf::st_transform(crs = crs) %>%
         dplyr::mutate(id = 1:nrow(sf_map))
     })
 
