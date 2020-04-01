@@ -1,5 +1,5 @@
 library(spatialrisk)
-context("Points_in_circle")
+context("points_in_circle")
 
 test_that("distance in output from points in circle is equal to distance from haversine", {
 
