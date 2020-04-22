@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# spatialrisk
+# spatialrisk <img src="logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 [![CRAN Status](https://www.r-pkg.org/badges/version/spatialrisk)](https://cran.r-project.org/package=spatialrisk)

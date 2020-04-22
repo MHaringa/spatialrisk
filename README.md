@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# spatialrisk
+# spatialrisk <img src="logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 
