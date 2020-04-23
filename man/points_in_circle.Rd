@@ -14,23 +14,23 @@ points_in_circle(
 )
 }
 \arguments{
-\item{data}{A data.frame.}
+\item{data}{data.frame with at least columns for longitude and latitude.}
 
-\item{lon_center}{Longitude of center point.}
+\item{lon_center}{numeric value referencing to the longitude of the center of the circle}
 
-\item{lat_center}{Latitude of center point.}
+\item{lat_center}{numeric value referencing to the latitude of the center of the circle}
 
-\item{lon}{Name of column in \code{data} with longitudes (lon is default).}
+\item{lon}{column name in \code{data} with longitudes (\code{lon} is default).}
 
-\item{lat}{Name of column in \code{data} with latitudes (lat is default).}
+\item{lat}{column name in \code{data} with latitudes (\code{lat} is default).}
 
-\item{radius}{Radius (in meters) (default is 200m).}
+\item{radius}{radius (in meters) (defaults to 200m).}
 }
 \value{
-A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}. The column \code{distance_m} gives the distance from the center point (in meters).
+data.frame. Column \code{distance_m} gives the distance to the center of the circle (in meters).
 }
 \description{
-The observations within radius from the center point.
+All observations within circle of a certain radius.
 }
 \examples{
 points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)

@@ -1,13 +1,13 @@
 #' Points in circle
 #'
-#' @param data A data.frame.
-#' @param lon_center Longitude of center point.
-#' @param lat_center Latitude of center point.
-#' @param lon Name of column in \code{data} with longitudes (lon is default).
-#' @param lat Name of column in \code{data} with latitudes (lat is default).
-#' @param radius Radius (in meters) (default is 200m).
+#' @description All observations within circle of a certain radius.
 #'
-#' @description The observations within radius from the center point.
+#' @param data data.frame with at least columns for longitude and latitude.
+#' @param lon_center numeric value referencing to the longitude of the center of the circle
+#' @param lat_center numeric value referencing to the latitude of the center of the circle
+#' @param lon column name in \code{data} with longitudes (\code{lon} is default).
+#' @param lat column name in \code{data} with latitudes (\code{lat} is default).
+#' @param radius radius (in meters) (defaults to 200m).
 #'
 #' @author Martin Haringa
 #'
@@ -17,7 +17,7 @@
 #' @examples
 #' points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
 #'
-#' @return A data.frame of coordinates within \code{radius} around \code{(lon_center, lat_center)}. The column \code{distance_m} gives the distance from the center point (in meters).
+#' @return data.frame. Column \code{distance_m} gives the distance to the center of the circle (in meters).
 #'
 #' @export points_in_circle
 points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat, radius = 200){

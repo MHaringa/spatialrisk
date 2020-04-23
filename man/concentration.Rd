@@ -17,39 +17,41 @@ concentration(
 )
 }
 \arguments{
-\item{sub}{data.frame of locations to calculate concentration risk for (target points).}
+\item{sub}{data.frame of locations to calculate concentration risk for (target points). \code{sub} should include at least
+columns for longitude and latitude.}
 
-\item{full}{data.frame to find the locations within radius \code{r} from locations in \code{sub} (reference locations).}
+\item{full}{data.frame to find the locations within radius \code{r} from locations in \code{sub} (reference locations). \code{full}
+should include at least columns for longitude, latitude and value of interest to summarize.}
 
-\item{value}{Column with value in \code{full}.}
+\item{value}{column name with value of interest to summarize in \code{full}.}
 
-\item{lon_sub}{Column in \code{sub} with longitude (lon is default).}
+\item{lon_sub}{column name in \code{sub} with longitude (lon is default).}
 
-\item{lat_sub}{Column in \code{sub} with latitude (lat is default).}
+\item{lat_sub}{column name in \code{sub} with latitude (lat is default).}
 
-\item{lon_full}{Column in \code{full} with longitude in \code{full} (lon is default).}
+\item{lon_full}{column name in \code{full} with longitude in \code{full} (lon is default).}
 
-\item{lat_full}{Column in \code{full} with latitude in \code{full} (lat is default).}
+\item{lat_full}{column name in \code{full} with latitude in \code{full} (lat is default).}
 
-\item{radius}{Radius (in meters) (default is 200m).}
+\item{radius}{radius (in meters) (default is 200m).}
 
-\item{display_progress}{Show progress bar (TRUE/FALSE).}
+\item{display_progress}{show progress bar (TRUE/FALSE). Defaults to TRUE.}
 }
 \value{
 A data.frame equal to data.frame \code{sub} including an extra column \code{concentration}.
 }
 \description{
-The sum of all observations within a radius from center point(s). In particular,
-it can be used to determine concentration risk in the context of the EU insurance regulation framework (Solvency II).
-The function offers an effective approach to calculate the 'standard formula' under Solvency II.
-The 'standard formula' under Solvency II asks companies to report their largest fire concentration in
-respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of
-buildings fully or partly located within this radius (Commission Delegated Regulation (EU), 2015, Article 132).
+The sum of all observations within circle of a certain radius.
 }
 \details{
-The data.frame \code{sub} should include at least columns for longitude and latitude.
-
-The data.frame \code{full} should include at least columns for longitude, latitude and value of interest to summarize.
+A recently European Commission regulation requires insurance companies to determine the maximum value of insured fire
+risk policies of all buildings that are partly or fully located within circle of a radius of 200m
+(Commission Delegated Regulation (EU), 2015, Article 132). This problem can be stated as: "find the centre coordinates of a circle
+with a fixed radius that maximizes the coverage of total fire risk insured". This problem can be viewed as a particular instance
+of the Maximal Covering Location Problem (MCLP) with fixed radius. The computational performance of \code{concentration()} is
+investigated to overcome the long times the MCLP algorithm is taking. \code{concentration()} is written in C++, and for 500,000 buildings it
+needs about five minutes to determine the value of insured fire risk policies that are partly or fully located within
+circle of a radius of 200m.
 }
 \examples{
 df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
