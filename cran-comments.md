@@ -1,7 +1,10 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Updated spatialrisk for failing check. spatialrisk uses dplyr and has problems with the new version of dplyr. See bug join_mutate(x = <sf>) #4917
+* A package website is added using pkgdown.
+* `concentration()` and `points_in_circle()` now return error messages when the data does not contain columns for `lon` and `lat`.
+* `concentration()` and `points_in_circle()` have updated documentation.
+* `haversine()` now returns NA when coordinates are missing.
 
 ## Test environments
 * local OS X install, R 3.6.3

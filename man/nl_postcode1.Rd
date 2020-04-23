@@ -3,7 +3,7 @@
 \docType{data}
 \name{nl_postcode1}
 \alias{nl_postcode1}
-\title{Object of class sf for 1-digit postcode regions in the Netherlands}
+\title{Object of class \code{sf} for 1-digit postcode regions in the Netherlands}
 \format{
 A simple feature object with 9 rows and 4 variables:
 \describe{
@@ -17,7 +17,7 @@ A simple feature object with 9 rows and 4 variables:
 nl_postcode1
 }
 \description{
-An object of class sf (simple feature) for 1-digit postcode (English: postal code) regions in the Netherlands.
+An object of class \code{sf} (simple feature) for 1-digit postal codes (Dutch: postcode) regions in the Netherlands.
 }
 \details{
 Postal codes in the Netherlands, known as postcodes, are alphanumeric, consisting of four digits followed by two uppercase letters. The first two digits indicate a city and a region, the second two digits and the two letters indicate a range of house numbers, usually on the same street.

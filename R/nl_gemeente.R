@@ -1,6 +1,6 @@
-#' Object of class sf for gemeentes (municipalities) in the Netherlands
+#' Object of class \code{sf} for municipalities in the Netherlands
 #'
-#' @description An object of class sf (simple feature) for gemeentes (English: municipalities) in the Netherlands in the year 2018.
+#' @description An object of class \code{sf} (simple feature) for municipalities (Dutch: gemeentes) in the Netherlands in the year 2018.
 #'
 #' @author Martin Haringa
 #'
@@ -15,9 +15,9 @@
 #' }
 "nl_gemeente"
 
-#' Object of class sf for provincies (provinces) in the Netherlands
+#' Object of class \code{sf} for provinces in the Netherlands
 #'
-#' @description An object of class sf (simple feature) for provincies (English: provinces) in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for provinces (Dutch: provincies) in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
@@ -30,9 +30,9 @@
 #' }
 "nl_provincie"
 
-#' Object of class sf for COROP regions in the Netherlands
+#' Object of class \code{sf} for COROP regions in the Netherlands
 #'
-#' @description An object of class sf (simple feature) for COROP regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for COROP regions in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
@@ -48,9 +48,9 @@
 #' }
 "nl_corop"
 
-#' Object of class sf for 1-digit postcode regions in the Netherlands
+#' Object of class \code{sf} for 1-digit postcode regions in the Netherlands
 #'
-#' @description An object of class sf (simple feature) for 1-digit postcode (English: postal code) regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for 1-digit postal codes (Dutch: postcode) regions in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
@@ -65,9 +65,9 @@
 #' }
 "nl_postcode1"
 
-#' Object of class sf for 2-digit postcode regions in the Netherlands
+#' Object of class \code{sf} for 2-digit postcode regions in the Netherlands
 #'
-#' @description An object of class sf (simple feature) for 2-digit postcode (English: postal code) regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for 2-digit postal codes (Dutch: postcode) regions in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
@@ -82,9 +82,9 @@
 #' }
 "nl_postcode2"
 
-#' Object of class sf for 3-digit postcode regions in the Netherlands
+#' Object of class \code{sf} for 3-digit postcode regions in the Netherlands
 #'
-#' @description An object of class sf (simple feature) for 3-digit postcode (English: postal code) regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for 3-digit postal codes (Dutch: postcode) regions in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
@@ -99,9 +99,9 @@
 #' }
 "nl_postcode3"
 
-#' Object of class sf for 4-digit postcode regions in the Netherlands
+#' Object of class \code{sf} for 4-digit postcode regions in the Netherlands
 #'
-#' @description An object of class sf (simple feature) for 4-digit postcode (English: postal code) regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for 4-digit postal codes (Dutch: postcode) regions in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
@@ -120,18 +120,18 @@
 #' }
 "nl_postcode4"
 
-#' Object of class sf for countries of the entire world
+#' Object of class \code{sf} for countries of the entire world
 #'
-#' @description An object of class sf (simple feature) for countries of the entire world.
+#' @description An object of class \code{sf} (simple feature) for countries of the entire world.
 #'
 #' @author Martin Haringa
 #'
 #' @format A simple feature object with 234 rows and 29 variables.
 "world_countries"
 
-#' Object of class sf for countries of Europe
+#' Object of class \code{sf} for countries of Europe
 #'
-#' @description An object of class sf (simple feature) for countries of Europe
+#' @description An object of class \code{sf} (simple feature) for countries of Europe
 #'
 #' @author Martin Haringa
 #'

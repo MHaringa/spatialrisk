@@ -47,12 +47,7 @@
 
 
 <meta property="og:title" content="Concentration risk — concentration" />
-<meta property="og:description" content="The sum of all observations within a radius from center point(s). In particular,
-it can be used to determine concentration risk in the context of the EU insurance regulation framework (Solvency II).
-The function offers an effective approach to calculate the 'standard formula' under Solvency II.
-The 'standard formula' under Solvency II asks companies to report their largest fire concentration in
-respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of
-buildings fully or partly located within this radius (Commission Delegated Regulation (EU), 2015, Article 132)." />
+<meta property="og:description" content="The sum of all observations within a circle of a certain radius." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -85,7 +80,7 @@ buildings fully or partly located within this radius (Commission Delegated Regul
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.7</span>
       </span>
     </div>
 
@@ -130,12 +125,7 @@ buildings fully or partly located within this radius (Commission Delegated Regul
     </div>
 
     <div class="ref-description">
-    <p>The sum of all observations within a radius from center point(s). In particular,
-it can be used to determine concentration risk in the context of the EU insurance regulation framework (Solvency II).
-The function offers an effective approach to calculate the 'standard formula' under Solvency II.
-The 'standard formula' under Solvency II asks companies to report their largest fire concentration in
-respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of
-buildings fully or partly located within this radius (Commission Delegated Regulation (EU), 2015, Article 132).</p>
+    <p>The sum of all observations within a circle of a certain radius.</p>
     </div>
 
     <pre class="usage"><span class='fu'>concentration</span>(
@@ -155,39 +145,41 @@ buildings fully or partly located within this radius (Commission Delegated Regul
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sub</th>
-      <td><p>data.frame of locations to calculate concentration risk for (target points).</p></td>
+      <td><p>data.frame of locations to calculate concentration risk for (target points). <code>sub</code> should include at least
+columns for longitude and latitude.</p></td>
     </tr>
     <tr>
       <th>full</th>
-      <td><p>data.frame to find the locations within radius <code>r</code> from locations in <code>sub</code> (reference locations).</p></td>
+      <td><p>data.frame to find the locations within radius <code>r</code> from locations in <code>sub</code> (reference locations). <code>full</code>
+should include at least columns for longitude, latitude and value of interest to summarize.</p></td>
     </tr>
     <tr>
       <th>value</th>
-      <td><p>Column with value in <code>full</code>.</p></td>
+      <td><p>column name with value of interest to summarize in <code>full</code>.</p></td>
     </tr>
     <tr>
       <th>lon_sub</th>
-      <td><p>Column in <code>sub</code> with longitude (lon is default).</p></td>
+      <td><p>column name in <code>sub</code> with longitude (lon is default).</p></td>
     </tr>
     <tr>
       <th>lat_sub</th>
-      <td><p>Column in <code>sub</code> with latitude (lat is default).</p></td>
+      <td><p>column name in <code>sub</code> with latitude (lat is default).</p></td>
     </tr>
     <tr>
       <th>lon_full</th>
-      <td><p>Column in <code>full</code> with longitude in <code>full</code> (lon is default).</p></td>
+      <td><p>column name in <code>full</code> with longitude in <code>full</code> (lon is default).</p></td>
     </tr>
     <tr>
       <th>lat_full</th>
-      <td><p>Column in <code>full</code> with latitude in <code>full</code> (lat is default).</p></td>
+      <td><p>column name in <code>full</code> with latitude in <code>full</code> (lat is default).</p></td>
     </tr>
     <tr>
       <th>radius</th>
-      <td><p>Radius (in meters) (default is 200m).</p></td>
+      <td><p>radius (in meters) (default is 200m).</p></td>
     </tr>
     <tr>
       <th>display_progress</th>
-      <td><p>Show progress bar (TRUE/FALSE).</p></td>
+      <td><p>show progress bar (TRUE/FALSE). Defaults to TRUE.</p></td>
     </tr>
     </table>
 
@@ -196,8 +188,14 @@ buildings fully or partly located within this radius (Commission Delegated Regul
     <p>A data.frame equal to data.frame <code>sub</code> including an extra column <code>concentration</code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The data.frame <code>sub</code> should include at least columns for longitude and latitude.</p>
-<p>The data.frame <code>full</code> should include at least columns for longitude, latitude and value of interest to summarize.</p>
+    <p>A recently European Commission regulation requires insurance companies to determine the maximum value of insured fire
+risk policies of all buildings that are partly or fully located within circle of a radius of 200m
+(Commission Delegated Regulation (EU), 2015, Article 132). The problem can be stated as: "find the centre coordinates of a circle
+with a fixed radius that maximizes the coverage of total fire risk insured". This can be viewed as a particular instance
+of the Maximal Covering Location Problem (MCLP) with fixed radius. The computational performance of <code>concentration()</code> is
+investigated to overcome the long times the MCLP algorithm is taking. <code>concentration()</code> is written in C++, and for 500,000 buildings it
+needs about five minutes to determine the value of insured fire risk policies that are partly or fully located within
+circle of a radius of 200m.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Commission Delegated Regulation (EU) (2015). Solvency II Delegated Act 2015/35. Official Journal of the European Union, 58:124.</p>
@@ -205,8 +203,8 @@ buildings fully or partly located within this radius (Commission Delegated Regul
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>location</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"p1"</span>, <span class='st'>"p2"</span>), <span class='kw'>lon</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>6.561561</span>, <span class='fl'>6.561398</span>), <span class='kw'>lat</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>53.21369</span>, <span class='fl'>53.21326</span>))
 <span class='fu'>concentration</span>(<span class='no'>df</span>, <span class='no'>Groningen</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>amount</span>, <span class='kw'>radius</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt;   location      lon      lat concentration
-#&gt; 1       p1 6.561561 53.21369          2055
-#&gt; 2       p2 6.561398 53.21326          2892</div><div class='input'>
+#&gt; 1       p1 6.561561 53.21369           775
+#&gt; 2       p2 6.561398 53.21326          2271</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

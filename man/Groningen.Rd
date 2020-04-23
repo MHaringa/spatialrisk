@@ -5,7 +5,7 @@
 \alias{Groningen}
 \title{Coordinates of houses in Groningen}
 \format{
-A data frame with 56200 rows and 8 variables:
+A data frame with 25000 rows and 8 variables:
 \describe{
   \item{street}{Name of street}
   \item{number}{Number of house}

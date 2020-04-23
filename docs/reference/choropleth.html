@@ -47,7 +47,9 @@
 
 
 <meta property="og:title" content="Create choropleth map — choropleth" />
-<meta property="og:description" content="Takes an object produced by points_to_polygon(), and creates the corresponding choropleth map." />
+<meta property="og:description" content="Takes an object produced by points_to_polygon(), and creates the corresponding choropleth map.
+The given clustering is according to the Fisher-Jenks algorithm. This commonly used method for choropleths seeks to reduce
+the variance within classes and maximize the variance between classes." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -80,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.7</span>
       </span>
     </div>
 
@@ -125,7 +127,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Takes an object produced by <code><a href='points_to_polygon.html'>points_to_polygon()</a></code>, and creates the corresponding choropleth map.</p>
+    <p>Takes an object produced by <code><a href='points_to_polygon.html'>points_to_polygon()</a></code>, and creates the corresponding choropleth map.
+The given clustering is according to the Fisher-Jenks algorithm. This commonly used method for choropleths seeks to reduce
+the variance within classes and maximize the variance between classes.</p>
     </div>
 
     <pre class="usage"><span class='fu'>choropleth</span>(

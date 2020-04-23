@@ -1,6 +1,6 @@
 #' Concentration risk
 #'
-#' @description The sum of all observations within circle of a certain radius.
+#' @description The sum of all observations within a circle of a certain radius.
 #'
 #' @param sub data.frame of locations to calculate concentration risk for (target points). \code{sub} should include at least
 #' columns for longitude and latitude.
@@ -16,8 +16,8 @@
 #'
 #' @details A recently European Commission regulation requires insurance companies to determine the maximum value of insured fire
 #' risk policies of all buildings that are partly or fully located within circle of a radius of 200m
-#' (Commission Delegated Regulation (EU), 2015, Article 132). This problem can be stated as: "find the centre coordinates of a circle
-#' with a fixed radius that maximizes the coverage of total fire risk insured". This problem can be viewed as a particular instance
+#' (Commission Delegated Regulation (EU), 2015, Article 132). The problem can be stated as: "find the centre coordinates of a circle
+#' with a fixed radius that maximizes the coverage of total fire risk insured". This can be viewed as a particular instance
 #' of the Maximal Covering Location Problem (MCLP) with fixed radius. The computational performance of \code{concentration()} is
 #' investigated to overcome the long times the MCLP algorithm is taking. \code{concentration()} is written in C++, and for 500,000 buildings it
 #' needs about five minutes to determine the value of insured fire risk policies that are partly or fully located within

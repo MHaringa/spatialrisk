@@ -18,7 +18,7 @@ points_to_polygon(sf_map, df, oper, crs = 4326, outside_print = FALSE)
 \item{outside_print}{print points that are not within a polygon (default is FALSE).}
 }
 \value{
-an object of class sf
+an object of class \code{sf}
 }
 \description{
 A data.frame containing coordinates (in terms of longitude and latitude) is joined to the polygon level.
@@ -27,7 +27,7 @@ A data.frame containing coordinates (in terms of longitude and latitude) is join
 \examples{
 points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
 \dontrun{
-shp_read <- sf::st_read(~/path/to/file.shp)
+shp_read <- sf::st_read("~/path/to/file.shp")
 points_to_polygon(shp_read, insurance, sum(amount, na.rm = TRUE))
 }
 }

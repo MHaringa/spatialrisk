@@ -1,7 +1,8 @@
 # spatialrisk 0.6.7
 
 * A package website is added using pkgdown.
-* `concentration()` and `points_in_circle()` now give error messages when the data does not contain columns for `lon` and `lat`.
+* `concentration()` and `points_in_circle()` now return error messages when the data does not contain columns for `lon` and `lat`.
+* `concentration()` and `points_in_circle()` have updated documentation.
 * `haversine()` now returns NA when coordinates are missing.
 
 # spatialrisk 0.6.6

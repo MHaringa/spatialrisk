@@ -1,6 +1,8 @@
 #' Create choropleth map
 #'
 #' @description Takes an object produced by \code{points_to_polygon()}, and creates the corresponding choropleth map.
+#' The given clustering is according to the Fisher-Jenks algorithm. This commonly used method for choropleths seeks to reduce
+#' the variance within classes and maximize the variance between classes.
 #'
 #' @param sf_object object of class sf
 #' @param value column name to shade the polygons
@@ -60,7 +62,8 @@ choropleth <- function(sf_object, value = "output", id_name = "areaname",
                         n = n,
                         lwd = .1) +
       tmap::tm_compass(position = c("right", "bottom")) +
-      tmap::tm_scale_bar(position = c("left", "bottom"))
+      tmap::tm_scale_bar(position = c("left", "bottom")) +
+      tmap::tm_layout(frame = FALSE)
   }
 
   return(output)

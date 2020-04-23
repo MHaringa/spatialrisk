@@ -15,16 +15,16 @@
 #' @import dplyr
 #' @importFrom utils capture.output
 #'
-#' @return an object of class sf
+#' @return an object of class \code{sf}
 #'
 #' @author Martin Haringa
 #'
 #' @examples
 #' points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
 #' \dontrun{
-#' shp_read <- sf::st_read(~/path/to/file.shp)
+#' shp_read <- sf::st_read("~/path/to/file.shp")
 #' points_to_polygon(shp_read, insurance, sum(amount, na.rm = TRUE))
-#'}
+#' }
 points_to_polygon <- function(sf_map, df, oper, crs = 4326, outside_print = FALSE){
 
   oper <- enquo(oper)

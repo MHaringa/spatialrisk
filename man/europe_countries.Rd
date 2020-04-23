@@ -3,7 +3,7 @@
 \docType{data}
 \name{europe_countries}
 \alias{europe_countries}
-\title{Object of class sf for countries of Europe}
+\title{Object of class \code{sf} for countries of Europe}
 \format{
 A simple feature object with 51 rows and 29 variables.
 }
@@ -11,7 +11,7 @@ A simple feature object with 51 rows and 29 variables.
 europe_countries
 }
 \description{
-An object of class sf (simple feature) for countries of Europe
+An object of class \code{sf} (simple feature) for countries of Europe
 }
 \details{
 The epsg (SRID) is set to 102013 (Europe Albers Equal Area Conic).

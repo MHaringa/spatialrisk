@@ -3,7 +3,7 @@
 \docType{data}
 \name{nl_provincie}
 \alias{nl_provincie}
-\title{Object of class sf for provincies (provinces) in the Netherlands}
+\title{Object of class \code{sf} for provinces in the Netherlands}
 \format{
 A simple feature object with 12 rows and 4 variables:
 \describe{
@@ -17,7 +17,7 @@ A simple feature object with 12 rows and 4 variables:
 nl_provincie
 }
 \description{
-An object of class sf (simple feature) for provincies (English: provinces) in the Netherlands.
+An object of class \code{sf} (simple feature) for provinces (Dutch: provincies) in the Netherlands.
 }
 \author{
 Martin Haringa

@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.7</span>
       </span>
     </div>
 
@@ -159,10 +159,30 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an object of class sf</p>
+    <p>an object of class <code>sf</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='fu'>points_to_polygon</span>(<span class='no'>nl_postcode2</span>, <span class='no'>insurance</span>, <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>amount</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; <span class='message'>80 points fall not within a polygon.</span></div><div class='output co'>#&gt; Simple feature collection with 90 features and 5 fields
+#&gt; geometry type:  GEOMETRY
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 3.358524 ymin: 50.7526 xmax: 7.226687 ymax: 53.55053
+#&gt; epsg (SRID):    4326
+#&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
+#&gt; First 10 features:
+#&gt;    id areaname      lon      lat    output                       geometry
+#&gt; 1   1       10 4.879542 52.38225 129893079 POLYGON ((5.012625 52.34479...
+#&gt; 2   2       11 4.964842 52.32814  59755600 MULTIPOLYGON (((5.109895 52...
+#&gt; 3   3       12 5.155867 52.23687  48687601 MULTIPOLYGON (((5.317405 52...
+#&gt; 4   4       13 5.196764 52.35673  60964213 MULTIPOLYGON (((5.007205 52...
+#&gt; 5   5       14 4.942569 52.51892  45739347 MULTIPOLYGON (((4.826908 52...
+#&gt; 6   6       15 4.798242 52.46970  29442124 POLYGON ((4.863114 52.43076...
+#&gt; 7   7       16 5.087324 52.68566  29082847 MULTIPOLYGON (((5.029327 52...
+#&gt; 8   8       17 4.864428 52.85513  52473036 MULTIPOLYGON (((4.822374 53...
+#&gt; 9   9       18 4.740657 52.64247  37757398 POLYGON ((4.751882 52.59302...
+#&gt; 10 10       19 4.663460 52.52935  37393849 POLYGON ((4.682128 52.4188,...</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>shp_read</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/sf/man/st_read.html'>st_read</a></span>(<span class='st'>"~/path/to/file.shp"</span>)
+<span class='fu'>points_to_polygon</span>(<span class='no'>shp_read</span>, <span class='no'>insurance</span>, <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>amount</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

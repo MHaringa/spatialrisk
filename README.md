@@ -10,20 +10,16 @@ Status](https://www.r-pkg.org/badges/version/spatialrisk)](https://cran.r-projec
 [![Downloads](https://cranlogs.r-pkg.org/badges/spatialrisk?color=blue)](https://cran.rstudio.com/package=spatialrisk)
 <!-- badges: end -->
 
-spatialrisk is an R-package for spatial risk calculations. In
-particular, it can be used to determine concentration risk in the
-context of Solvency II.
-
-The package offers an effective approach to calculate the *standard
-formula* under Solvency II. The *standard formula* under Solvency II
-asks insurance companies to report their largest fire concentration in
-respect of the fire peril within a radius of 200m. This is the maximum
-gross sum insured of the set of buildings fully or partly located within
-this radius.
+`spatialrisk` is a R-package for spatial risk calculations. It offers an
+efficient approach to determine the sum of all observations within a
+circle of a certain radius. This might be beneficial for insurers who
+are required (by a recent European Commission regulation) to determine
+the maximum value of insured fire risk policies of all buildings that
+are partly or fully located within a circle of a radius of 200m.
 
 ## Installation
 
-Install spatialrisk from CRAN:
+Install `spatialrisk` from CRAN:
 
 ``` r
 install.packages("spatialrisk")
@@ -38,7 +34,7 @@ remotes::install_github("MHaringa/spatialrisk")
 
 ## Example 1
 
-Find all observations in dataframe `Groningen` within a radius of 50m
+Find all observations in `Groningen` within a circle of a radius of 50m
 from the point (lon,lat) = (6.561561,53.21326):
 
 ``` r
@@ -55,9 +51,8 @@ points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius
 
 ## Example 2
 
-Find for each row in dataframe `df` the observations in dataframe
-`Groningen` within a radius of 100m from the lon/lat pair. Subsequently,
-the sum of the column `amount` is taken for the obtained observations.
+Find for each row in `df` the sum of all observations in `Groningen`
+within a circle of a radius of 100m from the lon/lat pair:
 
 ``` r
 df <- data.frame(location = c("p1", "p2"), 
@@ -74,63 +69,50 @@ concentration(df, Groningen, value = amount, radius = 100)
 ## Example 3
 
 `spatialrisk` also contains functionality to create choropleths.
-Typically in R it is difficult to create choropleths. The functions
-presented here attempt to elegantly solve this problem.
+Typically in R it is difficult to create choropleths.
+`points_to_polygon()` attempts to elegantly solve this problem.
 
 The common approach is to first aggregate the data on the level of the
-regions in the shapefile and then merging the aggregated data with the
-shapefile. This is done by joining on the name. This approach is often
-problematic. For example, in case of municipality names in the
-Netherlands it is not easy to merge municipality names in the shapefile
-with the names in the data set. This is hard because of municipal
-reorganizations or differences in punctuation marks in municipality
-names. To solve this problem the data is not aggregated on the level of
-the regions in the shapefile. Contrary, the functions in this package
-detect directly the region containing the coordinates of the underlying
-object. This flexible approach makes it easy to create choropleth maps
-on different region levels.
+regions in the shapefile, and then merging the aggregated data with the
+shapefile. Despite it being common, it is problematic in case the names
+in the data and the names in the shapefile do not match. This is for
+example the case when there are differences in punctuation marks in the
+area names. Therefore, `points_to_polygon()` uses the longitude and
+latitude of a point to map this point to a region. This approach makes
+it easy to create choropleth maps on different region levels.
 
-The package has the following build-in choropleth maps:
-
-  - nl\_provincie
-  - nl\_corop
-  - nl\_gemeente
-  - nl\_postcode1
-  - nl\_postcode2
-  - nl\_postcode3
-  - nl\_postcode4
-  - world\_countries
-  - europe\_countries
-
-Data set `insurance` contains 30,000 postal codes with their sum
-insured, population and the corresponding longitude and latitude. The
-following code shows how to create a simple feature object on the
-municipality (Dutch: *gemeente*) level. The regions are shaded by the
-total sum insured per
-region.
+This example shows how `points_to_polygon()` is used to map the total
+sum insured on the municipality level in the
+Netherlands:
 
 ``` r
 gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRUE))
 ```
 
-    ## 33 points fall not within a polygon.
-
 `choropleth()` creates a map based on the simple feature object obtained
 in the previous step. There are two options to create a choropleth map.
-When `mode` is set to `plot` a static map is created:
+When `mode` is set to `plot` a static map is created. The given
+clustering is according to the Fisher-Jenks algorithm. This commonly
+used classification method for choropleths seeks to reduce the variance
+within classes and maximize the variance between
+classes.
 
 ``` r
-choropleth(gemeente_sf, mode = "plot")
+choropleth(gemeente_sf, mode = "plot", legend_title = "Sum insured (EUR)", n = 5)
 ```
-
-    ## Linking to GEOS 3.7.2, GDAL 2.4.2, PROJ 5.2.0
 
 ![](man/figures/example3b-1.png)<!-- -->
 
-If `mode` is set to `view` an interactive map is created:
+If `mode` is set to `view` an interactive map is
+created:
 
 ``` r
-choropleth(gemeente_sf, mode = "view")
+choropleth(gemeente_sf, mode = "view", legend_title = "Sum insured (EUR)")
 ```
 
 ![](man/figures/example3d-1.png)<!-- -->
+
+The following simple feature objects are available in `spatialrisk`:
+`nl_provincie`, `nl_corop`, `nl_gemeente`, `nl_postcode1`,
+`nl_postcode2`, `nl_postcode3`, `nl_postcode4`, `world_countries`, and
+`europe_countries`.

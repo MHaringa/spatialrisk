@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculating Concentration Risk under Solvency II • spatialrisk</title>
+<title>Calculating Spatial Risk • spatialrisk</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -17,9 +17,10 @@
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Calculating Concentration Risk under Solvency II">
-<meta property="og:description" content="Methods for determining spatial risk, in particular calculating the maximum value of insured fire risk policies of 
-    all buildings that are partly or fully located within circle of a radius of 200m.">
+<script src="pkgdown.js"></script><meta property="og:title" content="Calculating Spatial Risk">
+<meta property="og:description" content="Methods for spatial risk calculations. It offers an efficient approach to determine the sum of all observations within a 
+    circle of a certain radius. This might be beneficial for insurers who are required (by a recent European Commission regulation) to determine 
+    the maximum value of insured fire risk policies of all buildings that are partly or fully located within a circle of a radius of 200m. ">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -39,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.7</span>
       </span>
     </div>
 
@@ -83,12 +84,11 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>spatialrisk is an R-package for spatial risk calculations. In particular, it can be used to determine concentration risk in the context of Solvency II.</p>
-<p>The package offers an effective approach to calculate the <em>standard formula</em> under Solvency II. The <em>standard formula</em> under Solvency II asks insurance companies to report their largest fire concentration in respect of the fire peril within a radius of 200m. This is the maximum gross sum insured of the set of buildings fully or partly located within this radius.</p>
+<p><code>spatialrisk</code> is a R-package for spatial risk calculations. It offers an efficient approach to determine the sum of all observations within a circle of a certain radius. This might be beneficial for insurers who are required (by a recent European Commission regulation) to determine the maximum value of insured fire risk policies of all buildings that are partly or fully located within a circle of a radius of 200m.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>Install spatialrisk from CRAN:</p>
+<p>Install <code>spatialrisk</code> from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"spatialrisk"</span>)</pre></div>
 <p>Or the development version from GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="co"># install.packages("remotes")</span>
@@ -97,7 +97,7 @@
 <div id="example-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-1" class="anchor"></a>Example 1</h2>
-<p>Find all observations in dataframe <code>Groningen</code> within a radius of 50m from the point (lon,lat) = (6.561561,53.21326):</p>
+<p>Find all observations in <code>Groningen</code> within a circle of a radius of 50m from the point (lon,lat) = (6.561561,53.21326):</p>
 <div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">spatialrisk</span>)
 <span class="fu"><a href="reference/points_in_circle.html">points_in_circle</a></span>(<span class="no">Groningen</span>, <span class="kw">lon_center</span> <span class="kw">=</span> <span class="fl">6.571561</span>, <span class="kw">lat_center</span> <span class="kw">=</span> <span class="fl">53.21326</span>, <span class="kw">radius</span> <span class="kw">=</span> <span class="fl">50</span>)</pre></div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## # A tibble: 3 x 10</span></a>
@@ -110,7 +110,7 @@
 <div id="example-2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-2" class="anchor"></a>Example 2</h2>
-<p>Find for each row in dataframe <code>df</code> the observations in dataframe <code>Groningen</code> within a radius of 100m from the lon/lat pair. Subsequently, the sum of the column <code>amount</code> is taken for the obtained observations.</p>
+<p>Find for each row in <code>df</code> the sum of all observations in <code>Groningen</code> within a circle of a radius of 100m from the lon/lat pair:</p>
 <div class="sourceCode" id="cb5"><pre class="r"><span class="no">df</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">location</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"p1"</span>, <span class="st">"p2"</span>),
                  <span class="kw">lon</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">6.561561</span>, <span class="fl">6.561398</span>),
                  <span class="kw">lat</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">53.21369</span>, <span class="fl">53.21326</span>))
@@ -123,30 +123,17 @@
 <div id="example-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-3" class="anchor"></a>Example 3</h2>
-<p><code>spatialrisk</code> also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. The functions presented here attempt to elegantly solve this problem.</p>
-<p>The common approach is to first aggregate the data on the level of the regions in the shapefile and then merging the aggregated data with the shapefile. This is done by joining on the name. This approach is often problematic. For example, in case of municipality names in the Netherlands it is not easy to merge municipality names in the shapefile with the names in the data set. This is hard because of municipal reorganizations or differences in punctuation marks in municipality names. To solve this problem the data is not aggregated on the level of the regions in the shapefile. Contrary, the functions in this package detect directly the region containing the coordinates of the underlying object. This flexible approach makes it easy to create choropleth maps on different region levels.</p>
-<p>The package has the following build-in choropleth maps:</p>
-<ul>
-<li>nl_provincie</li>
-<li>nl_corop</li>
-<li>nl_gemeente</li>
-<li>nl_postcode1</li>
-<li>nl_postcode2</li>
-<li>nl_postcode3</li>
-<li>nl_postcode4</li>
-<li>world_countries</li>
-<li>europe_countries</li>
-</ul>
-<p>Data set <code>insurance</code> contains 30,000 postal codes with their sum insured, population and the corresponding longitude and latitude. The following code shows how to create a simple feature object on the municipality (Dutch: <em>gemeente</em>) level. The regions are shaded by the total sum insured per region.</p>
+<p><code>spatialrisk</code> also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> attempts to elegantly solve this problem.</p>
+<p>The common approach is to first aggregate the data on the level of the regions in the shapefile, and then merging the aggregated data with the shapefile. Despite it being common, it is problematic in case the names in the data and the names in the shapefile do not match. This is for example the case when there are differences in punctuation marks in the area names. Therefore, <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> uses the longitude and latitude of a point to map this point to a region. This approach makes it easy to create choropleth maps on different region levels.</p>
+<p>This example shows how <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> is used to map the total sum insured on the municipality level in the Netherlands:</p>
 <div class="sourceCode" id="cb7"><pre class="r"><span class="no">gemeente_sf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/points_to_polygon.html">points_to_polygon</a></span>(<span class="no">nl_gemeente</span>, <span class="no">insurance</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">amount</span>, <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>))</pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">## 33 points fall not within a polygon.</span></a></code></pre></div>
-<p><code><a href="reference/choropleth.html">choropleth()</a></code> creates a map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. When <code>mode</code> is set to <code>plot</code> a static map is created:</p>
-<div class="sourceCode" id="cb9"><pre class="r"><span class="fu"><a href="reference/choropleth.html">choropleth</a></span>(<span class="no">gemeente_sf</span>, <span class="kw">mode</span> <span class="kw">=</span> <span class="st">"plot"</span>)</pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co">## Linking to GEOS 3.7.2, GDAL 2.4.2, PROJ 5.2.0</span></a></code></pre></div>
+<p><code><a href="reference/choropleth.html">choropleth()</a></code> creates a map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. When <code>mode</code> is set to <code>plot</code> a static map is created. The given clustering is according to the Fisher-Jenks algorithm. This commonly used classification method for choropleths seeks to reduce the variance within classes and maximize the variance between classes.</p>
+<div class="sourceCode" id="cb8"><pre class="r"><span class="fu"><a href="reference/choropleth.html">choropleth</a></span>(<span class="no">gemeente_sf</span>, <span class="kw">mode</span> <span class="kw">=</span> <span class="st">"plot"</span>, <span class="kw">legend_title</span> <span class="kw">=</span> <span class="st">"Sum insured (EUR)"</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">5</span>)</pre></div>
 <p><img src="reference/figures/example3b-1.png"><!-- --></p>
 <p>If <code>mode</code> is set to <code>view</code> an interactive map is created:</p>
-<div class="sourceCode" id="cb11"><pre class="r"><span class="fu"><a href="reference/choropleth.html">choropleth</a></span>(<span class="no">gemeente_sf</span>, <span class="kw">mode</span> <span class="kw">=</span> <span class="st">"view"</span>)</pre></div>
+<div class="sourceCode" id="cb9"><pre class="r"><span class="fu"><a href="reference/choropleth.html">choropleth</a></span>(<span class="no">gemeente_sf</span>, <span class="kw">mode</span> <span class="kw">=</span> <span class="st">"view"</span>, <span class="kw">legend_title</span> <span class="kw">=</span> <span class="st">"Sum insured (EUR)"</span>)</pre></div>
 <p><img src="reference/figures/example3d-1.png"><!-- --></p>
+<p>The following simple feature objects are available in <code>spatialrisk</code>: <code>nl_provincie</code>, <code>nl_corop</code>, <code>nl_gemeente</code>, <code>nl_postcode1</code>, <code>nl_postcode2</code>, <code>nl_postcode3</code>, <code>nl_postcode4</code>, <code>world_countries</code>, and <code>europe_countries</code>.</p>
 </div>
 </div>
   </div>

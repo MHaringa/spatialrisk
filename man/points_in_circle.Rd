@@ -30,7 +30,7 @@ points_in_circle(
 data.frame. Column \code{distance_m} gives the distance to the center of the circle (in meters).
 }
 \description{
-All observations within circle of a certain radius.
+All observations within a circle of a certain radius.
 }
 \examples{
 points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)

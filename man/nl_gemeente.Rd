@@ -3,7 +3,7 @@
 \docType{data}
 \name{nl_gemeente}
 \alias{nl_gemeente}
-\title{Object of class sf for gemeentes (municipalities) in the Netherlands}
+\title{Object of class \code{sf} for municipalities in the Netherlands}
 \format{
 A simple feature object with 380 rows and 6 variables:
 \describe{
@@ -19,7 +19,7 @@ A simple feature object with 380 rows and 6 variables:
 nl_gemeente
 }
 \description{
-An object of class sf (simple feature) for gemeentes (English: municipalities) in the Netherlands in the year 2018.
+An object of class \code{sf} (simple feature) for municipalities (Dutch: gemeentes) in the Netherlands in the year 2018.
 }
 \author{
 Martin Haringa

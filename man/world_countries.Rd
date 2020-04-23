@@ -3,7 +3,7 @@
 \docType{data}
 \name{world_countries}
 \alias{world_countries}
-\title{Object of class sf for countries of the entire world}
+\title{Object of class \code{sf} for countries of the entire world}
 \format{
 A simple feature object with 234 rows and 29 variables.
 }
@@ -11,7 +11,7 @@ A simple feature object with 234 rows and 29 variables.
 world_countries
 }
 \description{
-An object of class sf (simple feature) for countries of the entire world.
+An object of class \code{sf} (simple feature) for countries of the entire world.
 }
 \author{
 Martin Haringa

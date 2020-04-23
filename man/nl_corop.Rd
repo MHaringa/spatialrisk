@@ -3,7 +3,7 @@
 \docType{data}
 \name{nl_corop}
 \alias{nl_corop}
-\title{Object of class sf for COROP regions in the Netherlands}
+\title{Object of class \code{sf} for COROP regions in the Netherlands}
 \format{
 A simple feature object with 40 rows and 5 variables:
 \describe{
@@ -18,7 +18,7 @@ A simple feature object with 40 rows and 5 variables:
 nl_corop
 }
 \description{
-An object of class sf (simple feature) for COROP regions in the Netherlands.
+An object of class \code{sf} (simple feature) for COROP regions in the Netherlands.
 }
 \details{
 A COROP region is a regional area within the Netherlands. These regions are used for analytical purposes by, among others, Statistics Netherlands. The Dutch abbreviation stands for Coordinatiecommissie Regionaal Onderzoeksprogramma, literally the Coordination Commission Regional Research Programme.

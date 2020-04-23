@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Points in circle — points_in_circle" />
-<meta property="og:description" content="The observations within radius from the center point." />
+<meta property="og:description" content="All observations within a circle of a certain radius." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.7</span>
       </span>
     </div>
 
@@ -125,7 +125,7 @@
     </div>
 
     <div class="ref-description">
-    <p>The observations within radius from the center point.</p>
+    <p>All observations within a circle of a certain radius.</p>
     </div>
 
     <pre class="usage"><span class='fu'>points_in_circle</span>(
@@ -142,41 +142,40 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A data.frame.</p></td>
+      <td><p>data.frame with at least columns for longitude and latitude.</p></td>
     </tr>
     <tr>
       <th>lon_center</th>
-      <td><p>Longitude of center point.</p></td>
+      <td><p>numeric value referencing to the longitude of the center of the circle</p></td>
     </tr>
     <tr>
       <th>lat_center</th>
-      <td><p>Latitude of center point.</p></td>
+      <td><p>numeric value referencing to the latitude of the center of the circle</p></td>
     </tr>
     <tr>
       <th>lon</th>
-      <td><p>Name of column in <code>data</code> with longitudes (lon is default).</p></td>
+      <td><p>column name in <code>data</code> with longitudes (<code>lon</code> is default).</p></td>
     </tr>
     <tr>
       <th>lat</th>
-      <td><p>Name of column in <code>data</code> with latitudes (lat is default).</p></td>
+      <td><p>column name in <code>data</code> with latitudes (<code>lat</code> is default).</p></td>
     </tr>
     <tr>
       <th>radius</th>
-      <td><p>Radius (in meters) (default is 200m).</p></td>
+      <td><p>radius (in meters) (defaults to 200m).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data.frame of coordinates within <code>radius</code> around <code>(lon_center, lat_center)</code>. The column <code>distance_m</code> gives the distance from the center point (in meters).</p>
+    <p>data.frame. Column <code>distance_m</code> gives the distance to the center of the circle (in meters).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>points_in_circle</span>(<span class='no'>Groningen</span>, <span class='kw'>lon_center</span> <span class='kw'>=</span> <span class='fl'>6.571561</span>, <span class='kw'>lat_center</span> <span class='kw'>=</span> <span class='fl'>53.21326</span>, <span class='kw'>radius</span> <span class='kw'>=</span> <span class='fl'>50</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 10</span><span>
+    <pre class="examples"><div class='input'><span class='fu'>points_in_circle</span>(<span class='no'>Groningen</span>, <span class='kw'>lon_center</span> <span class='kw'>=</span> <span class='fl'>6.571561</span>, <span class='kw'>lat_center</span> <span class='kw'>=</span> <span class='fl'>53.21326</span>, <span class='kw'>radius</span> <span class='kw'>=</span> <span class='fl'>50</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 10</span><span>
 #&gt;   street   number letter suffix postal_code city     lon   lat amount distance_m
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>1</span><span> Heresin…      5 </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     9711EP      Groni…  6.57  53.2      5       31.4
-#&gt; </span><span style='color: #555555;'>2</span><span> Heresin…      3 a      </span><span style='color: #BB0000;'>NA</span><span>     9711EP      Groni…  6.57  53.2     36       38.1
-#&gt; </span><span style='color: #555555;'>3</span><span> Heresin…     11 </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     9711ER      Groni…  6.57  53.2     11       47.8</div><div class='input'>
+#&gt; </span><span style='color: #555555;'>2</span><span> Heresin…     11 </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     9711ER      Groni…  6.57  53.2     11       47.8</div><div class='input'>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

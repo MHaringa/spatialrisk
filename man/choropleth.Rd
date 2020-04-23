@@ -34,6 +34,8 @@ tmap
 }
 \description{
 Takes an object produced by \code{points_to_polygon()}, and creates the corresponding choropleth map.
+The given clustering is according to the Fisher-Jenks algorithm. This commonly used method for choropleths seeks to reduce
+the variance within classes and maximize the variance between classes.
 }
 \examples{
 test <- points_to_polygon(nl_provincie, insurance, sum(amount, na.rm = TRUE))
