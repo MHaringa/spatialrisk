@@ -71,29 +71,33 @@ knmi_historic_data <- function(startyear, endyear){
     for (j in 1:length(periods)){
       new_file <- fs::file_create(fs::path(tmp, paste0("knmi_", id_stations[i], "_", periods[j], ".zip")))
       knmi_url <- paste0("https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/uurgegevens/uurgeg_", id_stations[i], "_", periods[j], ".zip")
-      utils::download.file(knmi_url, new_file, quiet = TRUE)
+      tryCatch(utils::download.file(knmi_url, new_file, quiet = TRUE),
+               error = function(e) print(paste(knmi_url, 'is not found')))
     }
   }
 
   files <- fs::dir_ls(tmp, glob = "*zip")
 
   # Select existing files
-  files_exist <- files[as.logical(fs::file_size(files) > "1KB")]
+  files_exist <- files[as.logical(fs::file_size(files) > "50KB")]
 
   # Read files into R
   suppressMessages(
     df <- vroom::vroom(files_exist, skip = 31, delim = ",",
-                       col_select = list(station = 1, date = YYYYMMDD, HH, DD, FH, FF, FX, T, T10, TD, DR, RH))[-1,]
+                       col_select = list(station = 1, date = YYYYMMDD, HH, DD, FH, FF, FX, T, DR, RH, Y))[-1,]
   )
 
   # Delete directory
   fs::dir_delete(tmp)
 
-  df$date <- lubridate::ymd(df$date)
-  df_selection <- dplyr::filter(df, lubridate::year(date) >= startyear, lubridate::year(date) <= endyear)
+  # Filter selected years
+  df$year <- as.numeric(substr(as.character(df$date), start = 1, stop = 4))
+  df_selection <- subset(df, year >= startyear & year <= endyear)
 
   # Add metadata
   df_meta <- dplyr::left_join(df_selection, knmi_stations[, c("station", "city", "lon", "lat")], by = "station")
 
   return(df_meta)
 }
+
+
