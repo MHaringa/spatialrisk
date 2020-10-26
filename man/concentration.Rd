@@ -48,10 +48,12 @@ A recently European Commission regulation requires insurance companies to determ
 risk policies of all buildings that are partly or fully located within circle of a radius of 200m
 (Commission Delegated Regulation (EU), 2015, Article 132). The problem can be stated as: "find the centre coordinates of a circle
 with a fixed radius that maximizes the coverage of total fire risk insured". This can be viewed as a particular instance
-of the Maximal Covering Location Problem (MCLP) with fixed radius. The computational performance of \code{concentration()} is
-investigated to overcome the long times the MCLP algorithm is taking. \code{concentration()} is written in C++, and for 500,000 buildings it
-needs about five minutes to determine the value of insured fire risk policies that are partly or fully located within
-circle of a radius of 200m.
+of the Maximal Covering Location Problem (MCLP) with fixed radius. See Gomes (2018) for a solution to the maximum fire risk insured capital problem using a
+multi-start local search meta-heuristic.
+
+The computational performance of \code{concentration()} is investigated to overcome the long times the MCLP algorithm is taking.
+\code{concentration()} is written in C++, and for 500,000 buildings it needs about five minutes to determine the value of insured fire risk policies
+that are partly or fully located within circle of a radius of 200m.
 }
 \examples{
 df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
@@ -60,6 +62,8 @@ concentration(df, Groningen, value = amount, radius = 100)
 }
 \references{
 Commission Delegated Regulation (EU) (2015). Solvency II Delegated Act 2015/35. Official Journal of the European Union, 58:124.
+
+Gomes M.I., Afonso L.B., Chibeles-Martins N., Fradinho J.M. (2018) Multi-start Local Search Procedure for the Maximum Fire Risk Insured Capital Problem. In: Lee J., Rinaldi G., Mahjoub A. (eds) Combinatorial Optimization. ISCO 2018. Lecture Notes in Computer Science, vol 10856. Springer, Cham. https://doi.org/10.1007/978-3-319-96151-4_19
 }
 \author{
 Martin Haringa

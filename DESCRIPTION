@@ -29,7 +29,7 @@ Imports:
     viridis, 
     vroom
 Depends: R (>= 3.3)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: 
     knitr,
     rmarkdown, 

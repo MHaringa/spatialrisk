@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Aggregate attributes of coordinates to area level (deprecated function; use 'points_to_polygon' instead) — choropleth_sf • spatialrisk</title>
+<title>Given a bounding box, returns the box buffered by a given distance. Buffer in meters. — cheap_bufferBBox • spatialrisk</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,8 @@
 
 
 
-<meta property="og:title" content="Aggregate attributes of coordinates to area level (deprecated function; use 'points_to_polygon' instead) — choropleth_sf" />
-<meta property="og:description" content="A data.frame containing coordinates (in terms of longitude and latitude) is joined to the polygon level.
-   Then arithmetic operations on the attributes of the coordinates are applied to obtain aggregated values for each polygon." />
+<meta property="og:title" content="Given a bounding box, returns the box buffered by a given distance. Buffer in meters. — cheap_bufferBBox" />
+<meta property="og:description" content="Given a bounding box, returns the box buffered by a given distance. Buffer in meters." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -120,49 +119,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Aggregate attributes of coordinates to area level (deprecated function; use 'points_to_polygon' instead)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mharinga/spatialrisk/blob/master/R/nlchoropleth.R'><code>R/nlchoropleth.R</code></a></small>
-    <div class="hidden name"><code>choropleth_sf.Rd</code></div>
+    <h1>Given a bounding box, returns the box buffered by a given distance. Buffer in meters.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mharinga/spatialrisk/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>cheap_bufferBBox.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A data.frame containing coordinates (in terms of longitude and latitude) is joined to the polygon level.
-   Then arithmetic operations on the attributes of the coordinates are applied to obtain aggregated values for each polygon.</p>
+    <p>Given a bounding box, returns the box buffered by a given distance. Buffer in meters.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>choropleth_sf</span><span class='op'>(</span><span class='va'>sf_map</span>, <span class='va'>df</span>, <span class='va'>oper</span>, crs <span class='op'>=</span> <span class='fl'>4326</span>, outside_print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cheap_bufferBBox</span><span class='op'>(</span><span class='va'>w</span>, <span class='va'>s</span>, <span class='va'>e</span>, <span class='va'>n</span>, <span class='va'>buffer</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>sf_map</th>
-      <td><p>object of class sf</p></td>
-    </tr>
-    <tr>
-      <th>df</th>
-      <td><p>data.frame containing coordinates (column names should be 'lon' and 'lat')</p></td>
-    </tr>
-    <tr>
-      <th>oper</th>
-      <td><p>an arithmetic operation on the polygon level</p></td>
-    </tr>
-    <tr>
-      <th>crs</th>
-      <td><p>coordinate reference system: integer with the EPSG code, or character with proj4string</p></td>
-    </tr>
-    <tr>
-      <th>outside_print</th>
-      <td><p>print points that are not within a polygon (default is FALSE).</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>an object of class sf</p>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Martin Haringa</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

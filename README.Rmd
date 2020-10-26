@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 [![Downloads](https://cranlogs.r-pkg.org/badges/spatialrisk?color=blue)](https://cran.rstudio.com/package=spatialrisk)
 <!-- badges: end -->
 
-`spatialrisk` is a R-package for spatial risk calculations. It offers an efficient approach to determine the sum of all observations within a circle of a certain radius. This might be beneficial for insurers who are required (by a recent European Commission regulation) to determine the maximum value of insured fire risk policies of all buildings that are partly or fully located within a circle of a radius of 200m.  
+`spatialrisk` is a R-package for spatial risk calculations. It offers an efficient approach to determine the sum of all observations within a circle of a certain radius. This might be beneficial for insurers who are required (by a recent European Commission regulation) to determine the maximum value of insured fire risk policies of all buildings that are partly or fully located within a circle of a radius of 200m. The key functions in `spatialrisk` are written in C++ (using Rcpp), and are therefore very fast.
 
 ## Installation
 
@@ -44,24 +44,48 @@ library(webshot)
 
 
 ## Example 1
-Find all observations in `Groningen` within a circle of a radius of 50m from the point (lon,lat) = (6.561561,53.21326):
-  
+
+Find all observations in data.frame `Groningen` that are located within circle of a radius of 100m from the point `(lon,lat) = (6.561561,53.21326)`:
+
 ```{r example, eval = TRUE, message = FALSE, warning = FALSE}
 library(spatialrisk)
-points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
+circle <- points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 100)
+circle
 ```
+The sum of all observations within a circle of a radius of 100m is equal to: 
+
+```{r}
+
+sum(circle$amount)
+
+```
+
+The next example shows how to determine the sum of all observations within a circle with a certain radius for multiple points. 
 
 ## Example 2
-Find for each row in `df` the sum of all observations in `Groningen` within a circle of a radius of 100m from the lon/lat pair:
+
+`concentration()` determines the sum of all observations within a circle of a certain radius for multiple points. Find for each row in `df` the sum of all observations in `Groningen` within a circle of a radius of 100m from the `(lon,lat)` pair:
 
 ```{r example2, eval = TRUE}
-df <- data.frame(location = c("p1", "p2"), 
-                 lon = c(6.561561, 6.561398), 
-                 lat = c(53.21369, 53.21326))
 
-concentration(df, Groningen, value = amount, radius = 100)
+df <- data.frame(location = c("p1", "p2", "p3"), 
+                 lon = c(6.561561, 6.561398, 6.571561), 
+                 lat = c(53.21369, 53.21326, 53.21326))
+
+conc <- concentration(df, Groningen, value = amount, radius = 100)
+conc
 
 ```
+
+Show that result is indeed equal to the result from Example 1:
+
+```{r}
+
+isTRUE(sum(circle$amount) == conc$concentration[3])
+
+```
+
+
 
 ## Example 3
 `spatialrisk` also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. `points_to_polygon()` attempts to elegantly solve this problem.

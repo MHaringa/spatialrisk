@@ -1,6 +1,6 @@
 #' Points in circle
 #'
-#' @description All observations within a circle of a certain radius.
+#' @description Find all observations in a data.frame within a circle of a certain radius.
 #'
 #' @param data data.frame with at least columns for longitude and latitude.
 #' @param lon_center numeric value referencing to the longitude of the center of the circle
