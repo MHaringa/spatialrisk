@@ -54,10 +54,9 @@ multi-start local search meta-heuristic. The computational performance of \code{
 that are partly or fully located within circle of a radius of 200m.
 }
 \examples{
-\dontrun{
 df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
 concentration(df, Groningen, value = amount, radius = 100)
-}
+
 }
 \references{
 Commission Delegated Regulation (EU) (2015). Solvency II Delegated Act 2015/35. Official Journal of the European Union, 58:124.

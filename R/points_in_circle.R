@@ -19,7 +19,7 @@
 #'
 #' @return data.frame. Column \code{distance_m} gives the distance to the center of the circle (in meters).
 #'
-#' @export points_in_circle
+#' @export
 points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat, radius = 200){
 
   # Turn into character vector

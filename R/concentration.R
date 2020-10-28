@@ -30,15 +30,15 @@
 #'
 #' @useDynLib spatialrisk
 #' @importFrom Rcpp sourceCpp
+#' @importFrom Rcpp evalCpp
 #' @import RcppProgress
 #'
 #' @author Martin Haringa
 #'
 #' @examples
-#' \dontrun{
 #' df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
 #' concentration(df, Groningen, value = amount, radius = 100)
-#' }
+#'
 #' @export
 concentration <- function(sub, full, value,
                           lon_sub = lon, lat_sub = lat,
