@@ -28,11 +28,11 @@ points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat,
   data_name <- deparse(substitute(data))
 
   if ( !all(c(lon, lat) %in% names(data))) {
-    stop(paste0(data_name, " does not contain columns ", lon, " and ", lat))
+    stop(paste0(data_name, " does not contain columns ", lon, " and ", lat), call. = FALSE)
   }
 
   if ( !all(is.numeric(c(data[[lon]], data[[lat]]))) ){
-    stop(paste0(lon, ", ", lat, " should be numeric"))
+    stop(paste0(lon, ", ", lat, " should be numeric"), call. = FALSE)
   }
 
   df <- data.frame("lon" = data[[lon]], "lat" = data[[lat]])

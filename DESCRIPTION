@@ -15,17 +15,22 @@ LinkingTo: Rcpp, RcppProgress
 Imports: 
     automap,
     classInt,
+    data.table, 
     dplyr,
     fs,
+    GenSA,
+    geohashTools,
     ggplot2,
     gstat,
     lubridate,
+    mapview,
     methods,
     mgcv,
     Rcpp,
     RcppProgress, 
     sf,
     tmap,
+    units,
     viridis, 
     vroom
 Depends: R (>= 3.3)

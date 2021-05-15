@@ -13,3 +13,7 @@ concentration_loop_cpp <- function(sub, ref, radius = 200, display_progress = TR
     .Call('_spatialrisk_concentration_loop_cpp', PACKAGE = 'spatialrisk', sub, ref, radius, display_progress)
 }
 
+block_loop_cpp <- function(sub, ref, radius = 200, display_progress = TRUE) {
+    .Call('_spatialrisk_block_loop_cpp', PACKAGE = 'spatialrisk', sub, ref, radius, display_progress)
+}
+

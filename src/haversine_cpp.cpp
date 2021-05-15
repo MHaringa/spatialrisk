@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+
 double haversine_cpp(double lat1, double long1,
                      double lat2, double long2,
                      double earth_radius = 6378137){
@@ -157,6 +158,61 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
 
       else {
         ind_ref[i] = false;
+      }
+    }
+
+    NumericVector value_id = value_ref[ind_ref];
+    cumulation[j] = sum(value_id);
+  }
+
+  DataFrame NDF = DataFrame::create(Named("id") = id_sub,
+                                    Named("cumulation") = cumulation);
+  return(NDF);
+}
+
+
+// [[Rcpp::export]]
+DataFrame block_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool display_progress = true) {
+
+  // extracting each column into a vector
+  IntegerVector id_sub = seq(1, sub.nrows());
+  NumericVector value_ref = ref["value"];
+  NumericVector lon_sub = sub["lon"];
+  NumericVector lat_sub = sub["lat"];
+  NumericVector lon_ref = ref["lon"];
+  NumericVector lat_ref = ref["lat"];
+  NumericVector delta_lon_sub = sub["delta_longitude"];
+  NumericVector delta_lat_sub = sub["delta_latitude"];
+
+  // length of one latitude is the same everywhere
+  int one_lat_in_meters = 111319;
+
+  int n_sub = sub.nrows();
+  NumericVector cumulation(n_sub);
+
+  int n_ref = ref.nrows();
+  LogicalVector ind_ref(n_ref);
+
+  // determine cumulation per row
+  for ( int j = 0; j < n_sub; ++j ) {
+
+    // length of longitude depends on latitude
+    double one_lon_in_meters = one_lat_in_meters * cos(lat_sub[j] * 0.01745329);
+    double south_lat = lat_sub[j] - delta_lat_sub[j] - radius / one_lat_in_meters;
+    double north_lat = lat_sub[j] + delta_lat_sub[j] + radius / one_lat_in_meters;
+    double west_lon = lon_sub[j] - delta_lon_sub[j] - radius / one_lon_in_meters;
+    double east_lon = lon_sub[j] + delta_lon_sub[j] + radius / one_lon_in_meters;
+
+    // apply "pre-subsetting" before using haversine method
+    for ( int i = 0; i < n_ref; i++ ){
+
+      // check whether coordinates are in square
+      if ( ((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat)) ) {
+        ind_ref[i] = false;
+      }
+
+      else {
+        ind_ref[i] = true;
       }
     }
 
