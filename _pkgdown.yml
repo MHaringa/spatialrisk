@@ -6,6 +6,10 @@ reference:
   - title: "Spatial risk"
     contents:
       - concentration
+      - highest_concentration
+      - neighborhood_gh_search
+      - plot.concentration
+      - plot.neighborhood
       - points_in_circle
       - haversine
   - title: "Create maps"

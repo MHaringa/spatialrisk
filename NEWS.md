@@ -1,7 +1,7 @@
 # spatialrisk 0.6.8
 
-* `highest_concentration()` is added to do a fast search for the highest concentration. See vignette for a description of the method.
-* `neighborhood_search()` is added to do a neighborhood search for higher concentrations. 
+* `highest_concentration()` is added to do a fast search for the coordinates of the highest concentration
+* `neighborhood_gh_search()` is added to look for even higher concentrations in the neighborhood of the coordinates found by `highest_concentration()`
 
 # spatialrisk 0.6.7
 

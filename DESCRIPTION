@@ -1,7 +1,7 @@
 Package: spatialrisk
 Type: Package
 Title: Calculating Spatial Risk
-Version: 0.6.7.9000
+Version: 0.6.8
 Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), email = "mtharinga@gmail.com"))
 Maintainer: Martin Haringa <mtharinga@gmail.com>
 Description: Methods for spatial risk calculations. It offers an efficient approach to determine the sum of all observations within a 
@@ -26,6 +26,7 @@ Imports:
     mapview,
     methods,
     mgcv,
+    RColorBrewer,
     Rcpp,
     RcppProgress, 
     sf,
@@ -34,6 +35,7 @@ Imports:
     viridis, 
     vroom
 Depends: R (>= 3.3)
+Encoding: UTF-8
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

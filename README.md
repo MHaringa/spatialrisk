@@ -37,8 +37,8 @@ remotes::install_github("MHaringa/spatialrisk")
 ## Example 1
 
 Find all observations in data.frame `Groningen` that are located within
-circle of a radius of 100m from the point `(lon,lat) =
-(6.561561,53.21326)`:
+circle of a radius of 100m from the point
+`(lon,lat) = (6.561561,53.21326)`:
 
 ``` r
 library(spatialrisk)
@@ -107,6 +107,123 @@ isTRUE(sum(circle$amount) == conc$concentration[3])
 
 ## Example 3
 
+Example 2 shows how to determine the sum of all observations within a
+circle of certain radius for multiple points. `highest_concentration()`
+can be used to find the coordinates of the center of a circle for which
+the sum of the observations within the circle is the highest. This
+example gives an application to data set `Groningen`.
+`highest_concentration()` uses Gustavo Niemeyer’s wonderful and elegant
+geohash coordinate system. Niemeyer’s Geohash method encodes latitude
+and longitude as binary string where each binary value derived from a
+decision as to where the point lies in a bisected region of latitude or
+longitudinal space.
+
+Note that all functions are written in C++, and are therefore very fast.
+It takes about 5-10 seconds to find the highest concentration for a
+portfolio with 500,000 objects.
+
+Show all points in data set `Groningen`:
+
+``` r
+library(mapview)
+Groningen_sf <- sf::st_as_sf(Groningen, coords = c("lon", "lat"), crs = 4326)
+mapview::mapview(Groningen_sf, zcol = "amount")
+```
+
+![](man/figures/example3a-1.png)<!-- -->
+
+Find the highest concentration:
+
+``` r
+hconc <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 50)
+```
+
+For a portfolio of about 25,000 it takes about 0.5 second to find the
+highest concentration.
+
+``` r
+microbenchmark::microbenchmark(
+  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50, display_progress = FALSE), 
+  times = 10)
+```
+
+    ## Unit: milliseconds
+    ##                                                                                                       expr
+    ##  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50,      display_progress = FALSE)
+    ##       min       lq     mean   median       uq      max neval
+    ##  561.7991 563.0108 568.4865 569.2444 570.8848 579.1623    10
+
+The two highest concentrations are found in geohash *u1kwug*:
+
+``` r
+head(hconc)
+```
+
+    ##    concentration      lon      lat geohash
+    ## 1:         63485 6.547372 53.23650  u1kwug
+    ## 2:         61075 6.547372 53.23695  u1kwug
+    ## 3:         57121 6.523147 53.23101  u1kwu6
+    ## 4:         57009 6.589809 53.20534  u1kwtv
+    ## 5:         56148 6.589809 53.20579  u1kwtv
+    ## 6:         55631 6.523897 53.23145  u1kwu6
+
+The following gives an illustration of this. The yellow parts show the
+areas with the highest concentrations.
+
+``` r
+plot(hconc) 
+```
+
+![](man/figures/example3d-1.png)<!-- -->
+
+`highest_concentration()` returns the highest concentration within a
+portfolio based on a grid. However, higher concentrations can be found
+within two grid points. `neighborhood_gh_search()` looks for even higher
+concentrations in the neighborhood of the grid points with the highest
+concentrations. This optimization is done by means of Simulated
+Annealing.
+
+Look for higher concentrations in the geohash with the highest
+concentration found by `highest_concentration()`:
+
+``` r
+hconc_nghb <- neighborhood_gh_search(hconc, max.call = 7000)
+```
+
+The highest concentration is found in:
+
+``` r
+hconc_nghb
+```
+
+    ##   highest_concentration      lon      lat geohash
+    ## 1                 64438 6.547329 53.23658  u1kwug
+
+The concentration 64,438 is higher than the highest concentration of
+63,485 on the grid points. This concentration is the highest in data set
+Groningen.
+
+Show the highest concentration on a map (the highest concentration
+includes two apartment buildings with many objects):
+
+``` r
+plot(hconc_nghb)
+```
+
+![](man/figures/unnamed-chunk-12-1.png)<!-- -->
+
+Its also possible to show the coordinates with for example the three
+highest concentrations:
+
+``` r
+neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) %>%
+  plot()
+```
+
+![](man/figures/unnamed-chunk-14-1.png)<!-- -->
+
+## Example 4
+
 `spatialrisk` also contains functionality to create choropleths.
 Typically in R it is difficult to create choropleths.
 `points_to_polygon()` attempts to elegantly solve this problem.
@@ -138,7 +255,7 @@ within classes and maximize the variance between classes.
 choropleth(gemeente_sf, mode = "plot", legend_title = "Sum insured (EUR)", n = 5)
 ```
 
-![](man/figures/example3b-1.png)<!-- -->
+![](man/figures/example4b-1.png)<!-- -->
 
 If `mode` is set to `view` an interactive map is created:
 
@@ -146,7 +263,7 @@ If `mode` is set to `view` an interactive map is created:
 choropleth(gemeente_sf, mode = "view", legend_title = "Sum insured (EUR)")
 ```
 
-![](man/figures/example3d-1.png)<!-- -->
+![](man/figures/example4d-1.png)<!-- -->
 
 The following simple feature objects are available in `spatialrisk`:
 `nl_provincie`, `nl_corop`, `nl_gemeente`, `nl_postcode1`,

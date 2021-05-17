@@ -39,7 +39,7 @@ remotes::install_github("MHaringa/spatialrisk")
 library(htmltools)
 library(htmlwidgets)
 library(webshot)
-#install_phantomjs(version = "2.1.1", baseURL = "https://github.com/wch/webshot/releases/download/v0.3.1/")
+# install_phantomjs(version = "2.1.1", baseURL = "https://github.com/wch/webshot/releases/download/v0.3.1/")
 ```
 
 
@@ -52,6 +52,7 @@ library(spatialrisk)
 circle <- points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 100)
 circle
 ```
+
 The sum of all observations within a circle of a radius of 100m is equal to: 
 
 ```{r}
@@ -85,16 +86,131 @@ isTRUE(sum(circle$amount) == conc$concentration[3])
 
 ```
 
-
-
 ## Example 3
+
+Example 2 shows how to determine the sum of all observations within a circle of certain radius for multiple points. `highest_concentration()` can be used to find the coordinates of the center of a circle for which the sum of the observations within the circle is the highest. This example gives an application to data set `Groningen`. `highest_concentration()` uses Gustavo Niemeyer's wonderful and elegant geohash coordinate system. Niemeyer's Geohash method encodes latitude and longitude as binary string where each binary value derived from a decision as to where the point lies in a bisected region of latitude or longitudinal
+space. 
+
+Note that all functions are written in C++, and are therefore very fast. It takes about 5-10 seconds to find the highest concentration for a portfolio 
+with 500,000 objects. 
+
+Show all points in data set `Groningen`:
+
+```{r, include = FALSE}
+
+library(mapview)
+mapviewOptions(fgb = FALSE)
+
+```
+
+```{r example3a, eval = TRUE, message = FALSE, warning = FALSE}
+
+library(mapview)
+Groningen_sf <- sf::st_as_sf(Groningen, coords = c("lon", "lat"), crs = 4326)
+mapview::mapview(Groningen_sf, zcol = "amount")
+
+```
+
+Find the highest concentration:
+
+```{r, eval = FALSE, echo = TRUE}
+
+hconc <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 50)
+
+```
+
+```{r example3b, eval = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+hconc <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 50, display_progress = FALSE)
+
+```
+
+For a portfolio of about 25,000 it takes about 0.5 second to find the highest concentration. 
+
+```{r}
+
+microbenchmark::microbenchmark(
+  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50, display_progress = FALSE), 
+  times = 10)
+
+```
+
+
+The two highest concentrations are found in geohash *u1kwug*:
+
+```{r example3c}
+
+head(hconc)
+
+```
+
+The following gives an illustration of this. The yellow parts show the areas with the highest concentrations. 
+
+```{r example3d}
+
+plot(hconc) 
+
+```
+
+`highest_concentration()` returns the highest concentration within a portfolio based on a grid. However, higher concentrations can be found within two grid points. `neighborhood_gh_search()` looks for even higher concentrations in the neighborhood of the grid points with the highest concentrations. This optimization is done by means of Simulated Annealing.
+
+Look for higher concentrations in the geohash with the highest concentration found by `highest_concentration()`:
+
+```{r, eval = FALSE, echo = TRUE}
+
+hconc_nghb <- neighborhood_gh_search(hconc, max.call = 7000)
+
+```
+
+```{r, eval = TRUE, echo = FALSE}
+
+hconc_nghb <- neighborhood_gh_search(hconc, max.call = 7000, verbose = FALSE)
+
+```
+
+The highest concentration is found in:
+
+```{r}
+
+hconc_nghb
+
+```
+The concentration 64,438 is higher than the highest concentration of 63,485 on the grid points. This concentration is the highest in data set Groningen.  
+
+Show the highest concentration on a map (the highest concentration includes two apartment buildings with many objects):
+
+```{r}
+
+plot(hconc_nghb)
+
+```
+
+Its also possible to show the coordinates with for example the three highest concentrations:
+
+```{r, eval = FALSE, echo = TRUE}
+
+neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) %>%
+  plot()
+
+```
+
+```{r, eval = TRUE, echo = FALSE}
+
+neighborhood_gh_search(hconc, max.call = 7000, verbose = FALSE, highest_geohash = 3) %>%
+  plot()
+
+```
+
+
+## Example 4
+
 `spatialrisk` also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. `points_to_polygon()` attempts to elegantly solve this problem.
 
 The common approach is to first aggregate the data on the level of the regions in the shapefile, and then merging the aggregated data with the shapefile. Despite it being common, it is problematic in case the names in the data and the names in the shapefile do not match. This is for example the case when there are differences in punctuation marks in the area names. Therefore, `points_to_polygon()` uses the longitude and latitude of a point to map this point to a region. This approach makes it easy to create choropleth maps on different region levels.
 
 This example shows how `points_to_polygon()` is used to map the total sum insured on the municipality level in the Netherlands: 
 
-```{r example3, eval = TRUE, message = FALSE, warning = FALSE}
+```{r example4, eval = TRUE, message = FALSE, warning = FALSE}
 
 gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRUE))
 
@@ -102,17 +218,17 @@ gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRU
 
 `choropleth()` creates a map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. When `mode` is set to `plot` a static map is created. The given clustering is according to the Fisher-Jenks algorithm. This commonly used classification method for choropleths seeks to reduce the variance within classes and maximize the variance between classes.
 
-```{r example3b, eval = TRUE, message = FALSE, warning = FALSE}
+```{r example4b, eval = TRUE, message = FALSE, warning = FALSE}
 choropleth(gemeente_sf, mode = "plot", legend_title = "Sum insured (EUR)", n = 5)
 ```
 
 If `mode` is set to `view` an interactive map is created:
 
-```{r example3c, eval = FALSE, echo = TRUE}
+```{r example4c, eval = FALSE, echo = TRUE}
 choropleth(gemeente_sf, mode = "view", legend_title = "Sum insured (EUR)")
 ```
 
-```{r example3d, eval = TRUE, echo = FALSE}
+```{r example4d, eval = TRUE, echo = FALSE}
 gemeente <- choropleth(gemeente_sf, mode = "view")
 tmap::tmap_leaflet(gemeente)
 ```

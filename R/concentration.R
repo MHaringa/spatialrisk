@@ -4,7 +4,8 @@
 #'
 #' @param sub data.frame of locations to calculate concentration risk for (target points). \code{sub} should include at least
 #' columns for longitude and latitude.
-#' @param full data.frame to find the locations within radius \code{r} from locations in \code{sub} (reference locations). \code{full}
+#' @param full data.frame to find the locations within radius \code{r} from
+#' locations in \code{sub} (reference locations). \code{full}
 #' should include at least columns for longitude, latitude and value of interest to summarize.
 #' @param value column name with value of interest to summarize in \code{full}.
 #' @param lon_sub column name in \code{sub} with longitude (lon is default).
@@ -13,18 +14,6 @@
 #' @param lat_full column name in \code{full} with latitude in \code{full} (lat is default).
 #' @param radius radius (in meters) (default is 200m).
 #' @param display_progress show progress bar (TRUE/FALSE). Defaults to TRUE.
-#'
-#' @details A recently European Commission regulation requires insurance companies to determine the maximum value of insured fire
-#' risk policies of all buildings that are partly or fully located within circle of a radius of 200m
-#' (Commission Delegated Regulation (EU), 2015, Article 132). The problem can be stated as: "find the centre coordinates of a circle
-#' with a fixed radius that maximizes the coverage of total fire risk insured". This can be viewed as a particular instance
-#' of the Maximal Covering Location Problem (MCLP) with fixed radius. See Gomes (2018) for a solution to the maximum fire risk insured capital problem using a
-#' multi-start local search meta-heuristic. The computational performance of \code{concentration()} is investigated to overcome the long times the MCLP algorithm is taking.
-#' \code{concentration()} is written in C++, and for 500,000 buildings it needs about five minutes to determine the value of insured fire risk policies
-#' that are partly or fully located within circle of a radius of 200m.
-#'
-#' @references Commission Delegated Regulation (EU) (2015). Solvency II Delegated Act 2015/35. Official Journal of the European Union, 58:124.
-#' @references Gomes M.I., Afonso L.B., Chibeles-Martins N., Fradinho J.M. (2018). Multi-start Local Search Procedure for the Maximum Fire Risk Insured Capital Problem. In: Lee J., Rinaldi G., Mahjoub A. (eds) Combinatorial Optimization. ISCO 2018. Lecture Notes in Computer Science, vol 10856. Springer, Cham. <doi:10.1007/978-3-319-96151-4_19>
 #'
 #' @return A data.frame equal to data.frame \code{sub} including an extra column \code{concentration}.
 #'
@@ -57,15 +46,15 @@ concentration <- function(sub, full, value,
   value <- deparse(substitute(value))
 
   if ( !all(c(lon_sub, lat_sub) %in% names(sub))) {
-    stop(paste0(sub_name, " does not contain columns ", lon_sub, " and ", lat_sub))
+    stop(paste0(sub_name, " does not contain columns ", lon_sub, " and ", lat_sub), call. = FALSE)
   }
 
   if ( !all(c(lon_full, lat_full) %in% names(full))) {
-    stop(paste0(full_name, " does not contain columns ", lon_full, " and ", lat_full))
+    stop(paste0(full_name, " does not contain columns ", lon_full, " and ", lat_full), call. = FALSE)
   }
 
   if ( !all(is.numeric(c(sub[[lon_sub]], sub[[lat_sub]], full[[lon_full]], full[[lat_full]], full[[value]]))) ){
-    stop(paste0("the following variables should be numeric: ", lon_sub, ", ", lat_sub, ", ", lon_full, ", ", lat_full, ", ", value))
+    stop(paste0("the following variables should be numeric: ", lon_sub, ", ", lat_sub, ", ", lon_full, ", ", lat_full, ", ", value), call. = FALSE)
   }
 
   sub_df <- data.frame("lon" = sub[[lon_sub]], "lat" = sub[[lat_sub]])

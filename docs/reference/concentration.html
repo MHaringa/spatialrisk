@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.8</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -102,7 +102,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mharinga/spatialrisk/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -150,7 +150,8 @@ columns for longitude and latitude.</p></td>
     </tr>
     <tr>
       <th>full</th>
-      <td><p>data.frame to find the locations within radius <code>r</code> from locations in <code>sub</code> (reference locations). <code>full</code>
+      <td><p>data.frame to find the locations within radius <code>r</code> from
+locations in <code>sub</code> (reference locations). <code>full</code>
 should include at least columns for longitude, latitude and value of interest to summarize.</p></td>
     </tr>
     <tr>
@@ -186,20 +187,6 @@ should include at least columns for longitude, latitude and value of interest to
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data.frame equal to data.frame <code>sub</code> including an extra column <code>concentration</code>.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>A recently European Commission regulation requires insurance companies to determine the maximum value of insured fire
-risk policies of all buildings that are partly or fully located within circle of a radius of 200m
-(Commission Delegated Regulation (EU), 2015, Article 132). The problem can be stated as: "find the centre coordinates of a circle
-with a fixed radius that maximizes the coverage of total fire risk insured". This can be viewed as a particular instance
-of the Maximal Covering Location Problem (MCLP) with fixed radius. See Gomes (2018) for a solution to the maximum fire risk insured capital problem using a
-multi-start local search meta-heuristic. The computational performance of <code>concentration()</code> is investigated to overcome the long times the MCLP algorithm is taking.
-<code>concentration()</code> is written in C++, and for 500,000 buildings it needs about five minutes to determine the value of insured fire risk policies
-that are partly or fully located within circle of a radius of 200m.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Commission Delegated Regulation (EU) (2015). Solvency II Delegated Act 2015/35. Official Journal of the European Union, 58:124.</p>
-<p>Gomes M.I., Afonso L.B., Chibeles-Martins N., Fradinho J.M. (2018). Multi-start Local Search Procedure for the Maximum Fire Risk Insured Capital Problem. In: Lee J., Rinaldi G., Mahjoub A. (eds) Combinatorial Optimization. ISCO 2018. Lecture Notes in Computer Science, vol 10856. Springer, Cham. &lt;doi:10.1007/978-3-319-96151-4_19&gt;</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Martin Haringa</p>

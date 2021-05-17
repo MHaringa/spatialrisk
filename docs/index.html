@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.8</span>
       </span>
     </div>
 
@@ -49,7 +49,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -63,7 +63,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/mharinga/spatialrisk/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -90,80 +90,138 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>Install <code>spatialrisk</code> from CRAN:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"spatialrisk"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"spatialrisk"</span><span class="op">)</span></code></pre></div>
 <p>Or the development version from GitHub:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"MHaringa/spatialrisk"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"MHaringa/spatialrisk"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="example-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-1" class="anchor"></a>Example 1</h2>
 <p>Find all observations in data.frame <code>Groningen</code> that are located within circle of a radius of 100m from the point <code>(lon,lat) = (6.561561,53.21326)</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mharinga/spatialrisk">spatialrisk</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mharinga/spatialrisk">spatialrisk</a></span><span class="op">)</span>
 <span class="va">circle</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/points_in_circle.html">points_in_circle</a></span><span class="op">(</span><span class="va">Groningen</span>, lon_center <span class="op">=</span> <span class="fl">6.571561</span>, lat_center <span class="op">=</span> <span class="fl">53.21326</span>, radius <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
-<span class="va">circle</span></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">## # A tibble: 14 x 10</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co">##    street  number letter suffix postal_code city     lon   lat amount distance_m</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="co">##    &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">##  1 Heresi…      5 &lt;NA&gt;   &lt;NA&gt;   9711EP      Groni…  6.57  53.2      5       31.4</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co">##  2 Heresi…     11 &lt;NA&gt;   &lt;NA&gt;   9711ER      Groni…  6.57  53.2     11       47.8</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">##  3 Zuider…   1003 &lt;NA&gt;   &lt;NA&gt;   9724AK      Groni…  6.57  53.2   1003       57.6</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co">##  4 Heresi…     13 &lt;NA&gt;   &lt;NA&gt;   9711ER      Groni…  6.57  53.2     13       68.1</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="co">##  5 Herepl…     10 &lt;NA&gt;   &lt;NA&gt;   9711GA      Groni…  6.57  53.2     10       74.6</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="co">##  6 Heresi…     16 &lt;NA&gt;   &lt;NA&gt;   9711ES      Groni…  6.57  53.2     16       84.1</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="co">##  7 Heresi…      6 &lt;NA&gt;   &lt;NA&gt;   9711ES      Groni…  6.57  53.2      6       86.2</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="co">##  8 Heresi…      6 a      &lt;NA&gt;   9711ES      Groni…  6.57  53.2      6       87.8</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="co">##  9 Heresi…      6 b      &lt;NA&gt;   9711ES      Groni…  6.57  53.2      6       90.9</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="co">## 10 Heresi…     20 &lt;NA&gt;   &lt;NA&gt;   9711ET      Groni…  6.57  53.2     20       91.5</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="co">## 11 Heresi…     20 a      &lt;NA&gt;   9711ET      Groni…  6.57  53.2     20       93.0</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="co">## 12 Heresi…     15 a      &lt;NA&gt;   9711ER      Groni…  6.57  53.2     15       95.1</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="co">## 13 Zuider…   1007 &lt;NA&gt;   &lt;NA&gt;   9724AK      Groni…  6.57  53.2   1007       97.2</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="co">## 14 Zuider…     25 a      &lt;NA&gt;   9724AJ      Groni…  6.57  53.2     25       97.8</span></span></code></pre></div>
+<span class="va">circle</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 14 x 10</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">##    street  number letter suffix postal_code city     lon   lat amount distance_m</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Heresi…      5 &lt;NA&gt;   &lt;NA&gt;   9711EP      Groni…  6.57  53.2      5       31.4</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Heresi…     11 &lt;NA&gt;   &lt;NA&gt;   9711ER      Groni…  6.57  53.2     11       47.8</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 Zuider…   1003 &lt;NA&gt;   &lt;NA&gt;   9724AK      Groni…  6.57  53.2   1003       57.6</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 Heresi…     13 &lt;NA&gt;   &lt;NA&gt;   9711ER      Groni…  6.57  53.2     13       68.1</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 Herepl…     10 &lt;NA&gt;   &lt;NA&gt;   9711GA      Groni…  6.57  53.2     10       74.6</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 Heresi…     16 &lt;NA&gt;   &lt;NA&gt;   9711ES      Groni…  6.57  53.2     16       84.1</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 Heresi…      6 &lt;NA&gt;   &lt;NA&gt;   9711ES      Groni…  6.57  53.2      6       86.2</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 Heresi…      6 a      &lt;NA&gt;   9711ES      Groni…  6.57  53.2      6       87.8</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 Heresi…      6 b      &lt;NA&gt;   9711ES      Groni…  6.57  53.2      6       90.9</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 Heresi…     20 &lt;NA&gt;   &lt;NA&gt;   9711ET      Groni…  6.57  53.2     20       91.5</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 Heresi…     20 a      &lt;NA&gt;   9711ET      Groni…  6.57  53.2     20       93.0</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 Heresi…     15 a      &lt;NA&gt;   9711ER      Groni…  6.57  53.2     15       95.1</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 Zuider…   1007 &lt;NA&gt;   &lt;NA&gt;   9724AK      Groni…  6.57  53.2   1007       97.2</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 Zuider…     25 a      &lt;NA&gt;   9724AJ      Groni…  6.57  53.2     25       97.8</span></span></code></pre></div>
 <p>The sum of all observations within a circle of a radius of 100m is equal to:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">circle</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## [1] 2163</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">circle</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 2163</span></span></code></pre></div>
 <p>The next example shows how to determine the sum of all observations within a circle with a certain radius for multiple points.</p>
 </div>
 <div id="example-2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-2" class="anchor"></a>Example 2</h2>
 <p><code><a href="reference/concentration.html">concentration()</a></code> determines the sum of all observations within a circle of a certain radius for multiple points. Find for each row in <code>df</code> the sum of all observations in <code>Groningen</code> within a circle of a radius of 100m from the <code>(lon,lat)</code> pair:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"p1"</span>, <span class="st">"p2"</span>, <span class="st">"p3"</span><span class="op">)</span>, 
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"p1"</span>, <span class="st">"p2"</span>, <span class="st">"p3"</span><span class="op">)</span>, 
                  lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6.561561</span>, <span class="fl">6.561398</span>, <span class="fl">6.571561</span><span class="op">)</span>, 
                  lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">53.21369</span>, <span class="fl">53.21326</span>, <span class="fl">53.21326</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">conc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/concentration.html">concentration</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">Groningen</span>, value <span class="op">=</span> <span class="va">amount</span>, radius <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
-<span class="va">conc</span></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">##   location      lon      lat concentration</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="co">## 1       p1 6.561561 53.21369           775</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="co">## 2       p2 6.561398 53.21326          2271</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="co">## 3       p3 6.571561 53.21326          2163</span></span></code></pre></div>
+<span class="va">conc</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">##   location      lon      lat concentration</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1       p1 6.561561 53.21369           775</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2       p2 6.561398 53.21326          2271</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3       p3 6.571561 53.21326          2163</span></span></code></pre></div>
 <p>Show that result is indeed equal to the result from Example 1:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Logic.html">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">circle</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span> <span class="op">==</span> <span class="va">conc</span><span class="op">$</span><span class="va">concentration</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">## [1] TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Logic.html">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">circle</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span> <span class="op">==</span> <span class="va">conc</span><span class="op">$</span><span class="va">concentration</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
 </div>
 <div id="example-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-3" class="anchor"></a>Example 3</h2>
+<p>Example 2 shows how to determine the sum of all observations within a circle of certain radius for multiple points. <code><a href="reference/highest_concentration.html">highest_concentration()</a></code> can be used to find the coordinates of the center of a circle for which the sum of the observations within the circle is the highest. This example gives an application to data set <code>Groningen</code>. <code><a href="reference/highest_concentration.html">highest_concentration()</a></code> uses Gustavo Niemeyer’s wonderful and elegant geohash coordinate system. Niemeyer’s Geohash method encodes latitude and longitude as binary string where each binary value derived from a decision as to where the point lies in a bisected region of latitude or longitudinal space.</p>
+<p>Note that all functions are written in C++, and are therefore very fast. It takes about 5-10 seconds to find the highest concentration for a portfolio with 500,000 objects.</p>
+<p>Show all points in data set <code>Groningen</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/mapview">mapview</a></span><span class="op">)</span>
+<span class="va">Groningen_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">Groningen</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span>
+<span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html">mapview</a></span><span class="op">(</span><span class="va">Groningen_sf</span>, zcol <span class="op">=</span> <span class="st">"amount"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/example3a-1.png"><!-- --></p>
+<p>Find the highest concentration:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">hconc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/highest_concentration.html">highest_concentration</a></span><span class="op">(</span><span class="va">Groningen</span>, <span class="va">amount</span>, radius <span class="op">=</span> <span class="fl">200</span>, grid_distance <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></code></pre></div>
+<p>For a portfolio of about 25,000 it takes about 0.5 second to find the highest concentration.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>
+  <span class="fu"><a href="reference/highest_concentration.html">highest_concentration</a></span><span class="op">(</span><span class="va">Groningen</span>, <span class="va">amount</span>, radius <span class="op">=</span> <span class="fl">200</span>, grid_distance <span class="op">=</span> <span class="fl">50</span>, display_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, 
+  times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Unit: milliseconds</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                                                                       expr</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50,      display_progress = FALSE)</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">##       min       lq     mean   median       uq      max neval</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  561.7991 563.0108 568.4865 569.2444 570.8848 579.1623    10</span></span></code></pre></div>
+<p>The two highest concentrations are found in geohash <em>u1kwug</em>:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">hconc</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">##    concentration      lon      lat geohash</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:         63485 6.547372 53.23650  u1kwug</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:         61075 6.547372 53.23695  u1kwug</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:         57121 6.523147 53.23101  u1kwu6</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:         57009 6.589809 53.20534  u1kwtv</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:         56148 6.589809 53.20579  u1kwtv</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:         55631 6.523897 53.23145  u1kwu6</span></span></code></pre></div>
+<p>The following gives an illustration of this. The yellow parts show the areas with the highest concentrations.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">hconc</span><span class="op">)</span> </code></pre></div>
+<p><img src="reference/figures/example3d-1.png"><!-- --></p>
+<p><code><a href="reference/highest_concentration.html">highest_concentration()</a></code> returns the highest concentration within a portfolio based on a grid. However, higher concentrations can be found within two grid points. <code><a href="reference/neighborhood_gh_search.html">neighborhood_gh_search()</a></code> looks for even higher concentrations in the neighborhood of the grid points with the highest concentrations. This optimization is done by means of Simulated Annealing.</p>
+<p>Look for higher concentrations in the geohash with the highest concentration found by <code><a href="reference/highest_concentration.html">highest_concentration()</a></code>:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">hconc_nghb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/neighborhood_gh_search.html">neighborhood_gh_search</a></span><span class="op">(</span><span class="va">hconc</span>, max.call <span class="op">=</span> <span class="fl">7000</span><span class="op">)</span></code></pre></div>
+<p>The highest concentration is found in:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">hconc_nghb</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">##   highest_concentration      lon      lat geohash</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                 64438 6.547329 53.23658  u1kwug</span></span></code></pre></div>
+<p>The concentration 64,438 is higher than the highest concentration of 63,485 on the grid points. This concentration is the highest in data set Groningen.</p>
+<p>Show the highest concentration on a map (the highest concentration includes two apartment buildings with many objects):</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">hconc_nghb</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/unnamed-chunk-12-1.png"><!-- --></p>
+<p>Its also possible to show the coordinates with for example the three highest concentrations:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/neighborhood_gh_search.html">neighborhood_gh_search</a></span><span class="op">(</span><span class="va">hconc</span>, max.call <span class="op">=</span> <span class="fl">7000</span>, highest_geohash <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/unnamed-chunk-14-1.png"><!-- --></p>
+</div>
+<div id="example-4" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-4" class="anchor"></a>Example 4</h2>
 <p><code>spatialrisk</code> also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> attempts to elegantly solve this problem.</p>
 <p>The common approach is to first aggregate the data on the level of the regions in the shapefile, and then merging the aggregated data with the shapefile. Despite it being common, it is problematic in case the names in the data and the names in the shapefile do not match. This is for example the case when there are differences in punctuation marks in the area names. Therefore, <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> uses the longitude and latitude of a point to map this point to a region. This approach makes it easy to create choropleth maps on different region levels.</p>
 <p>This example shows how <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> is used to map the total sum insured on the municipality level in the Netherlands:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="va">gemeente_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/points_to_polygon.html">points_to_polygon</a></span><span class="op">(</span><span class="va">nl_gemeente</span>, <span class="va">insurance</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">amount</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gemeente_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/points_to_polygon.html">points_to_polygon</a></span><span class="op">(</span><span class="va">nl_gemeente</span>, <span class="va">insurance</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">amount</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><code><a href="reference/choropleth.html">choropleth()</a></code> creates a map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. When <code>mode</code> is set to <code>plot</code> a static map is created. The given clustering is according to the Fisher-Jenks algorithm. This commonly used classification method for choropleths seeks to reduce the variance within classes and maximize the variance between classes.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="fu"><a href="reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">gemeente_sf</span>, mode <span class="op">=</span> <span class="st">"plot"</span>, legend_title <span class="op">=</span> <span class="st">"Sum insured (EUR)"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></pre></div>
-<p><img src="reference/figures/example3b-1.png"><!-- --></p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">gemeente_sf</span>, mode <span class="op">=</span> <span class="st">"plot"</span>, legend_title <span class="op">=</span> <span class="st">"Sum insured (EUR)"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/example4b-1.png"><!-- --></p>
 <p>If <code>mode</code> is set to <code>view</code> an interactive map is created:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="fu"><a href="reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">gemeente_sf</span>, mode <span class="op">=</span> <span class="st">"view"</span>, legend_title <span class="op">=</span> <span class="st">"Sum insured (EUR)"</span><span class="op">)</span></pre></div>
-<p><img src="reference/figures/example3d-1.png"><!-- --></p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">gemeente_sf</span>, mode <span class="op">=</span> <span class="st">"view"</span>, legend_title <span class="op">=</span> <span class="st">"Sum insured (EUR)"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/example4d-1.png"><!-- --></p>
 <p>The following simple feature objects are available in <code>spatialrisk</code>: <code>nl_provincie</code>, <code>nl_corop</code>, <code>nl_gemeente</code>, <code>nl_postcode1</code>, <code>nl_postcode2</code>, <code>nl_postcode3</code>, <code>nl_postcode4</code>, <code>world_countries</code>, and <code>europe_countries</code>.</p>
 </div>
 </div>
