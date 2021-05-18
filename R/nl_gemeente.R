@@ -121,16 +121,6 @@
 "nl_postcode4"
 
 
-#' Object of class \code{sf} for countries of Europe
-#'
-#' @description An object of class \code{sf} (simple feature) for countries of Europe
-#'
-#' @author Martin Haringa
-#'
-#' @details The epsg (SRID) is set to 102013 (Europe Albers Equal Area Conic).
-#'
-#' @format A simple feature object with 51 rows and 29 variables.
-"europe_countries"
 
 #' KNMI stations
 #'
