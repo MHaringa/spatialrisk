@@ -111,31 +111,22 @@ add_gh_bbox_sum <- function(hash_decode, full, lon_nm, lat_nm, radius){
 #' @importFrom data.table rbindlist
 #'
 #' @keywords internal
-create_grid_points <- function(df, meters, hash = geohash,
-                               lon = longitude, lat = latitude,
-                               delta_lon = delta_longitude,
-                               delta_lat = delta_latitude){
-
-  hash_nm <- deparse(substitute(hash))
-  lon_nm <- deparse(substitute(longitude))
-  lat_nm <- deparse(substitute(latitude))
-  delta_lat_nm <- deparse(substitute(delta_latitude))
-  delta_lon_nm <- deparse(substitute(delta_longitude))
+create_grid_points <- function(df, meters){
 
   circumference_earth_in_meters <- 40075000
   one_lat_in_meters <- circumference_earth_in_meters * 0.002777778
 
   uit <- vector("list", nrow(df))
   for (i in 1:nrow(df)){
-    lat_step <- seq(df[[lat_nm]][i] - df[[delta_lat_nm]][i],
-                    df[[lat_nm]][i] + df[[delta_lat_nm]][i],
+    lat_step <- seq(df[["latitude"]][i] - df[["delta_latitude"]][i],
+                    df[["latitude"]][i] + df[["delta_latitude"]][i],
                     by = meters / one_lat_in_meters)
-    one_lon_in_meters <- circumference_earth_in_meters * cos(df[[lat_nm]][i] * 0.01745329) * 0.002777778
-    lon_step <- seq(df[[lon_nm]][i] - df[[delta_lon_nm]][i],
-                    df[[lon_nm]][i] + df[[delta_lon_nm]][i],
+    one_lon_in_meters <- circumference_earth_in_meters * cos(df[["latitude"]][i] * 0.01745329) * 0.002777778
+    lon_step <- seq(df[["longitude"]][i] - df[["delta_longitude"]][i],
+                    df[["longitude"]][i] + df[["delta_longitude"]][i],
                     by = meters / one_lon_in_meters)
     eg <- expand.grid(lon = lon_step, lat = lat_step)
-    eg[[hash_nm]] <- df[[hash_nm]][i]
+    eg[["geohash"]] <- df[["geohash"]][i]
     uit[[i]] <- eg
   }
   data.table::rbindlist(uit)

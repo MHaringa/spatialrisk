@@ -1,6 +1,6 @@
 # spatialrisk 0.6.9
 
-
+* `highest_concentration()` now returns correct highest concentration when the circle of the highest concentration overlaps more than one geohash
 
 # spatialrisk 0.6.8
 

@@ -1,9 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Size of tarball is now <5MB
-* `highest_concentration()` is added to do a fast search for the coordinates of the highest concentration
-* `neighborhood_gh_search()` is added to look for even higher concentrations in the neighborhood of the coordinates found by `highest_concentration()`
+* `highest_concentration()` now returns correct highest concentration when the circle of the highest concentration overlaps more than one geohash
 
 ## Test environments
 * local OS X install, R 4.0.5

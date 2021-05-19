@@ -27,8 +27,8 @@ double haversine_cpp(double lat1, double long1,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector haversine_cpp_vec(Rcpp::NumericVector latFrom, Rcpp::NumericVector lonFrom,
-                                            Rcpp::NumericVector latTo, Rcpp::NumericVector lonTo,
-                                            double earth_radius) {
+                                      Rcpp::NumericVector latTo, Rcpp::NumericVector lonTo,
+                                      double earth_radius) {
   int n = latFrom.size();
   Rcpp::NumericVector distance(n);
 
@@ -87,7 +87,7 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   // apply haversine method to find points within radius from center
   NumericVector result(n1);
   for ( int i = 0; i < n1; ++i ) {
-     result[i] = haversine_cpp(lat_center, lon_center, lat_sub[i], lon_sub[i]);
+    result[i] = haversine_cpp(lat_center, lon_center, lat_sub[i], lon_sub[i]);
   }
 
   // create indicator whether coordinates are within radius
@@ -207,12 +207,19 @@ DataFrame block_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool
     for ( int i = 0; i < n_ref; i++ ){
 
       // check whether coordinates are in square
-      if ( ((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat)) ) {
-        ind_ref[i] = false;
+      // if ( ((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat)) ) {
+      //  ind_ref[i] = false;
+      //}
+
+      if ( !((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat)) ){
+        ind_ref[i] = true;
       }
 
+      //else {
+      //  ind_ref[i] = true;
+    //  }
       else {
-        ind_ref[i] = true;
+        ind_ref[i] = false;
       }
     }
 

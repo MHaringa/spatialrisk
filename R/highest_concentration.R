@@ -154,8 +154,12 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
   # Remove geohashes with a total sum insured lower than the lower bound
   gh_remaining <- gh_sum_nghbrs[gh_nghbrs_sum >= lowerbound]
 
+  # Determine neighbors for remaining geohashes
+  gh_remaining_nbs_lst <- geohashTools::gh_neighbors(gh_remaining$geohash, self = TRUE)
+  gh_remaining_nbs <- as.vector(unlist(gh_remaining_nbs_lst))
+
   # Coordinates or remaining points in portfolio within remaining geohashes
-  pts_remaining <- portfolio_dt[geohash %in% gh_remaining$geohash]
+  pts_remaining <- portfolio_dt[geohash %in% gh_remaining_nbs]
   names(pts_remaining)[names(pts_remaining) == value_nm] <- "_sum_insured"
 
   # Determine centre point for each remaining geohash (delta is distance to bound)
@@ -175,8 +179,12 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
   # Remove (again) geohashes with a total sum insured lower than the lower bound
   gh_remaining_bbox <- gh_sum_bbox[sum_bbox >= lowerbound]
 
+  # Determine neighbors for remaining geohashes
+  gh_remaining_bbox_lst <- geohashTools::gh_neighbors(gh_remaining_bbox$geohash, self = TRUE)
+  gh_remaining_bbox_vec <- as.vector(unlist(gh_remaining_bbox_lst))
+
   # Coordinates or remaining points in portfolio within remaining geohashes
-  pts_remaining2 <- portfolio_dt[geohash %in% gh_remaining_bbox$geohash]
+  pts_remaining2 <- portfolio_dt[geohash %in% gh_remaining_bbox_vec]
 
   # Create grid points in remaining geohashes
   gh_grid <- create_grid_points(gh_remaining_bbox, meters = grid_distance)
@@ -433,12 +441,23 @@ plot.neighborhood <- function(x, buffer = 0, legend_title = NULL, ...){
     sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
     sf::st_transform(3035) %>%
     sf::st_buffer(dist = units::set_units(radius, "meters")) %>%
-    sf::st_transform(4326) #%>%
-  #  sf::st_geometry()
+    sf::st_transform(4326)
 
   suppressWarnings({
+    if ( nrow(circle_sf) > 2){
+      reds <- rev(RColorBrewer::brewer.pal(nrow(circle_sf), "Reds"))
+    }
+
+    if ( nrow(circle_sf) == 2){
+      reds <- RColorBrewer::brewer.pal(nrow(circle_sf), "Reds")
+    }
+
+    if ( nrow(circle) == 1){
+      reds <- "red"
+    }
+
     mapview::mapview(circle_sf,
-                     col.regions = rev(RColorBrewer::brewer.pal(nrow(circle_sf), "Reds")),
+                     col.regions = reds,
                      zcol = "highest_concentration",
                      legend = TRUE,
                      layer.name = "Highest concentration") +
