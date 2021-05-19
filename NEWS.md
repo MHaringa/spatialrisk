@@ -1,3 +1,7 @@
+# spatialrisk 0.6.9
+
+
+
 # spatialrisk 0.6.8
 
 * `highest_concentration()` is added to do a fast search for the coordinates of the highest concentration
