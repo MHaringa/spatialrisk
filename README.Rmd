@@ -96,20 +96,17 @@ with 500,000 objects.
 
 Show all points in data set `Groningen`:
 
-```{r, include = FALSE}
+```{r example3a, eval = FALSE, message = FALSE, warning = FALSE}
 
-library(mapview)
-mapviewOptions(fgb = FALSE)
-
-```
-
-```{r example3a, eval = TRUE, message = FALSE, warning = FALSE}
-
-library(mapview)
-Groningen_sf <- sf::st_as_sf(Groningen, coords = c("lon", "lat"), crs = 4326)
-mapview::mapview(Groningen_sf, zcol = "amount")
+plot_points(Groningen, value = amount)
 
 ```
+
+![](man/figures/pts_groningen.png)
+
+<br>
+
+-----
 
 Find the highest concentration:
 
@@ -127,14 +124,21 @@ hconc <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 
 
 For a portfolio of about 25,000 it takes about 0.5 second to find the highest concentration. 
 
-```{r}
+```{r, eval = FALSE, echo = TRUE}
 
 microbenchmark::microbenchmark(
-  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50, display_progress = FALSE), 
+  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50), 
   times = 10)
 
 ```
 
+```{r, eval = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+microbenchmark::microbenchmark(
+  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50), 
+  times = 10)
+
+```
 
 The two highest concentrations are found in geohash *u1kwug*:
 
@@ -146,11 +150,18 @@ head(hconc)
 
 The following gives an illustration of this. The yellow parts show the areas with the highest concentrations. 
 
-```{r example3d}
+```{r, eval = FALSE, echo = TRUE}
 
 plot(hconc) 
 
 ```
+
+
+![](man/figures/gh_groningen.png)
+
+<br>
+
+-----
 
 `highest_concentration()` returns the highest concentration within a portfolio based on a grid. However, higher concentrations can be found within two grid points. `neighborhood_gh_search()` looks for even higher concentrations in the neighborhood of the grid points with the highest concentrations. This optimization is done by means of Simulated Annealing.
 
@@ -179,11 +190,15 @@ The concentration 64,438 is higher than the highest concentration of 63,485 on t
 
 Show the highest concentration on a map (the highest concentration includes two apartment buildings with many objects):
 
-```{r}
+```{r, eval = FALSE, echo = TRUE}
 
 plot(hconc_nghb)
 
 ```
+
+![](man/figures/n1_groningen.png)
+
+<br>
 
 Its also possible to show the coordinates with for example the three highest concentrations:
 
@@ -194,12 +209,9 @@ neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) %>%
 
 ```
 
-```{r, eval = TRUE, echo = FALSE}
+![](man/figures/n3_groningen.png)
 
-neighborhood_gh_search(hconc, max.call = 7000, verbose = FALSE, highest_geohash = 3) %>%
-  plot()
-
-```
+<br>
 
 
 ## Example 4

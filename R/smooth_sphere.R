@@ -20,7 +20,6 @@
 #'
 #' @author Martin Haringa
 #'
-#' @import mgcv
 #' @importFrom stats as.formula
 #'
 #' @references \code{\link[mgcv:smooth.construct.sos.smooth.spec]{Splines on the sphere}}

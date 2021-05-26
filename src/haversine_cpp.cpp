@@ -206,18 +206,10 @@ DataFrame block_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool
     // apply "pre-subsetting" before using haversine method
     for ( int i = 0; i < n_ref; i++ ){
 
-      // check whether coordinates are in square
-      // if ( ((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat)) ) {
-      //  ind_ref[i] = false;
-      //}
-
       if ( !((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat)) ){
         ind_ref[i] = true;
       }
 
-      //else {
-      //  ind_ref[i] = true;
-    //  }
       else {
         ind_ref[i] = false;
       }

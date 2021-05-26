@@ -13,31 +13,33 @@ URL: https://github.com/mharinga/spatialrisk, https://mharinga.github.io/spatial
 LazyData: true
 LinkingTo: Rcpp, RcppProgress
 Imports: 
-    automap,
     classInt,
+    colourvalues,
     data.table, 
     dplyr,
     fs,
     GenSA,
     geohashTools,
     ggplot2,
-    gstat,
+    leafem,
+    leafgl,
+    leaflet,
     lubridate,
-    mapview,
     methods,
-    mgcv,
-    RColorBrewer,
     Rcpp,
     RcppProgress, 
     sf,
     tmap,
     units,
-    viridis, 
-    vroom
+    viridis
 Depends: R (>= 3.3)
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 Suggests: 
+    automap, 
+    gstat, 
     knitr,
+    mgcv,
     rmarkdown, 
-    testthat
+    testthat, 
+    vroom

@@ -10,7 +10,7 @@
 #' @param lat column name with latitude (defaults to `lat`)
 #' @param lowerbound set lower bound for outcome (defaults to NULL)
 #' @param radius radius (in meters) (default is 200m)
-#' @param grid_distance distance (in meters) for precision of concentration risk (default is 20m).
+#' @param grid_distance distance (in meters) for precision of concentration risk (default is 25m).
 #'     `neighborhood_search()` can be used to search for coordinates with even higher concentrations
 #'     in the neighborhood of the highest concentrations.
 #' @param gh_precision positive integer to define geohash precision. See details.
@@ -90,7 +90,7 @@
 #' @export
 highest_concentration <- function(df, value, lon = lon, lat = lat,
                                   lowerbound = NULL, radius = 200,
-                                  grid_distance = 20, gh_precision = 6,
+                                  grid_distance = 25, gh_precision = 6,
                                   display_progress = TRUE){
 
   value_nm <- deparse(substitute(value))
@@ -258,6 +258,12 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000, ver
     stop("Input must be of class concentration. Use highest_concentration() first.", call. = FALSE)
   }
 
+  if ( length(unique(hc$geohash)) < highest_geohash ){
+    highest_geohash <- length(unique(hc$geohash))
+    warning("highest_geohash must be equal or lower than the length of unique input geohashes. highest_geohash is set to ",
+            highest_geohash, call. = FALSE)
+  }
+
   value_nm <- attr(hc, "value_nm")
   pts_remaining <- attr(hc, "pts_remaining")
   radius <- attr(hc, "radius")
@@ -318,20 +324,35 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000, ver
 #' @param x object of class `concentration` obtained from `highest_concentration()`
 #' @param grid_points show grid points (TRUE), or objects (FALSE)
 #' @param legend_title title of legend
+#' @param palette palette for grid points (defaults to "viridis")
+#' @param legend_position legend position for grid points legend (defaults to "bottomleft")
 #' @param ... additional arguments affecting the interactive map produced
 #'
 #' @return Interactive view of geohashes with highest concentrations
 #'
 #' @author Martin Haringa
 #'
-#' @importFrom dplyr group_by
-#' @importFrom dplyr summarise
 #' @importFrom sf st_as_sf
-#' @importFrom sf st_cast
-#' @importFrom mapview mapview
+#' @importFrom colourvalues colour_values
+#' @importFrom leaflet colorNumeric
+#' @importFrom leaflet leaflet
+#' @importFrom leaflet addTiles
+#' @importFrom leaflet addProviderTiles
+#' @importFrom leaflet addRectangles
+#' @importFrom leaflet addLegend
+#' @importFrom leaflet addLayersControl
+#' @importFrom leaflet hideGroup
+#' @importFrom leaflet layersControlOptions
+#' @importFrom leafgl addGlPoints
+#' @importFrom leafem addMouseCoordinates
+#'
 #'
 #' @export
-plot.concentration <- function(x, grid_points = TRUE, legend_title = NULL, ...){
+plot.concentration <- function(x,
+                               grid_points = TRUE,
+                               legend_title = NULL,
+                               palette = "viridis",
+                               legend_position = "bottomleft", ...){
 
   if (!inherits(x, "concentration")) {
     stop("plot.concentration requires an object of class concentration", call. = FALSE)
@@ -368,22 +389,45 @@ plot.concentration <- function(x, grid_points = TRUE, legend_title = NULL, ...){
         , east := longitude + delta_longitude][
           , west := longitude - delta_longitude]
 
-  ne <- geohashes[, .(geohash, lon = east, lat = north)]
-  nw <- geohashes[, .(geohash, lon = west, lat = north)]
-  sw <- geohashes[, .(geohash, lon = west, lat = south)]
-  se <- geohashes[, .(geohash, lon = east, lat = south)]
+  cols <- colourvalues::colour_values(pts_sf[[value_nm]], palette = palette)
+  qpal <- leaflet::colorNumeric(palette, pts_sf[[value_nm]])
 
-  dir_comb <- rbind(ne, nw, sw, se)
-  dir_comb_sf <- sf::st_as_sf(dir_comb, coords = c("lon", "lat"), crs = 4326)
+  leaflet::leaflet() %>%
 
-  rect_sf <- dir_comb_sf %>%
-    dplyr::group_by(geohash) %>%
-    dplyr::summarise(geometry = sf::st_combine(geometry)) %>%
-    sf::st_cast("POLYGON")
+    # Base groups
+    leaflet::addTiles(group = "OSM") %>%
+    leaflet::addProviderTiles(providers$CartoDB.Positron, group = "Positron (default)") %>%
+    leaflet::addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
 
-  mapview::mapview(rect_sf, col.regions = "skyblue", legend = FALSE,
-                   alpha.regions = .2) +
-    mapview::mapview(pts_sf, zcol = value_nm, layer.name = legend_nm)
+    # Overlay groups
+    leaflet::addRectangles(lng1 = geohashes$west,
+                           lat1 = geohashes$south,
+                           lng2 = geohashes$east,
+                           lat2 = geohashes$north,
+                           label = geohashes$geohash,
+                           opacity = 1,
+                           weight = 2,
+                           fillOpacity = 0,
+                           group = "Geohash") %>%
+    leafgl::addGlPoints(data = pts_sf,
+                        fillColor = cols,
+                        popup = TRUE,
+                        group = "Points") %>%
+    leaflet::addLegend(data = pts_sf,
+                       pal = qpal,
+                       title = value_nm,
+                       values = pts_sf[[value_nm]],
+                       position = legend_position,
+                       group = "Points") %>%
+    leafem::addMouseCoordinates() %>%
+
+    # Layers control
+    leaflet::addLayersControl(
+      baseGroups = c("Positron (default)", "OSM", "Toner Lite"),
+      overlayGroups = c("Points", "Geohash"),
+      options = leaflet::layersControlOptions(collapsed = FALSE)
+    ) %>%
+    leaflet::hideGroup("Geohash")
 }
 
 
@@ -395,6 +439,11 @@ plot.concentration <- function(x, grid_points = TRUE, legend_title = NULL, ...){
 #' @param x object neighborhood object produced by `neighborhood_gh_search()`
 #' @param buffer numeric value, show objects within buffer (in meters) from circle (defaults to 0)
 #' @param legend_title title of legend
+#' @param palette palette for points (defaults to "viridis")
+#' @param legend_position legend position for points legend (defaults to "bottomleft")
+#' @param palette_circle palette for circles (default to "YlOrRd")
+#' @param legend_position_circle legend position for circles legend (defaults to "bottomright")
+#' @param legend_title_circle title of legend for circles
 #' @param ... additional arguments affecting the interactive map produced
 #'
 #' @return Interactive view of highest concentration on map
@@ -405,13 +454,30 @@ plot.concentration <- function(x, grid_points = TRUE, legend_title = NULL, ...){
 #' @importFrom sf st_transform
 #' @importFrom sf st_buffer
 #' @importFrom sf st_geometry
-#' @importFrom mapview mapview
-#' @importFrom RColorBrewer brewer.pal
+#' @importFrom leaflet colorNumeric
+#' @importFrom leaflet leaflet
+#' @importFrom leaflet addTiles
+#' @importFrom leaflet addProviderTiles
+#' @importFrom leaflet addCircleMarkers
+#' @importFrom leaflet addLegend
+#' @importFrom leaflet addLayersControl
+#' @importFrom leaflet layersControlOptions
+#' @importFrom leafem addMouseCoordinates
+#' @importFrom leaflet hideGroup
+#' @importFrom leaflet labelOptions
 #'
 #' @rdname plot
 #'
 #' @export
-plot.neighborhood <- function(x, buffer = 0, legend_title = NULL, ...){
+plot.neighborhood <- function(x,
+                              buffer = 0,
+                              legend_title = NULL,
+                              palette = "viridis",
+                              legend_position = "bottomleft",
+                              palette_circle = "YlOrRd",
+                              legend_position_circle = "bottomright",
+                              legend_title_circle = "Highest concentration",
+                              ...){
 
   if (!inherits(x, "neighborhood")) {
     stop("plot.neighborhood requires an object of class neighborhood", call. = FALSE)
@@ -425,6 +491,17 @@ plot.neighborhood <- function(x, buffer = 0, legend_title = NULL, ...){
   if ( !is.null(legend_title) ){
     legend_nm <- legend_title
   }
+
+  xgh <- unique(x[["geohash"]])
+  gh_center_lst <- geohashTools::gh_decode(xgh, include_delta = TRUE)
+  gh_center0 <- data.table::as.data.table(gh_center_lst)
+  gh_center0$geohash <- xgh
+
+  gh_center <- gh_center0[
+    , north := latitude + delta_latitude][
+      , south := latitude - delta_latitude][
+        , east := longitude + delta_longitude][
+          , west := longitude - delta_longitude]
 
   pts_lst <- vector("list", nrow(x))
   for ( i in 1:nrow(x)){
@@ -443,26 +520,82 @@ plot.neighborhood <- function(x, buffer = 0, legend_title = NULL, ...){
     sf::st_buffer(dist = units::set_units(radius, "meters")) %>%
     sf::st_transform(4326)
 
-  suppressWarnings({
-    if ( nrow(circle_sf) > 2){
-      reds <- rev(RColorBrewer::brewer.pal(nrow(circle_sf), "Reds"))
-    }
+  circle_sf$idrow <- 1:nrow(circle_sf)
 
-    if ( nrow(circle_sf) == 2){
-      reds <- RColorBrewer::brewer.pal(nrow(circle_sf), "Reds")
-    }
+  pal_points <- leaflet::colorNumeric(palette, pts_sf[[value_nm]])
+  pal_circles <- leaflet::colorNumeric(palette_circle, circle_sf[["highest_concentration"]])
 
-    if ( nrow(circle) == 1){
-      reds <- "red"
-    }
+  popuptxt <- NULL
+  for ( i in 1:ncol(pts)){
+    x <- paste0("<b>", names(pts)[i], ": ", "</b>", pts[[names(pts)[i]]], "<br>")
+    popuptxt <- paste(popuptxt, x)
+  }
 
-    mapview::mapview(circle_sf,
-                     col.regions = reds,
-                     zcol = "highest_concentration",
-                     legend = TRUE,
-                     layer.name = "Highest concentration") +
-      mapview::mapview(pts_sf, zcol = value_nm, layer.name = legend_nm)
-  })
+  m <- leaflet::leaflet() %>%
+
+    # Base groups
+    leaflet::addTiles(group = "OSM") %>%
+    leaflet::addProviderTiles(providers$CartoDB.Positron, group = "Positron (default)") %>%
+    leaflet::addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+
+    # Overlay groups with 200m circles
+    leaflet::addPolygons(data = circle_sf,
+                         color = "red",
+                         label = paste0(format(circle_sf[["highest_concentration"]],
+                                               decimal.mark=".", big.mark=" "),
+                                        " (", circle_sf[["idrow"]], ")"),
+                         fillColor = pal_circles(circle_sf[["highest_concentration"]]),
+                         labelOptions = leaflet::labelOptions(noHide = T, textsize = "15px"),
+                         stroke = TRUE,
+                         weight = 1,
+                         group = "Circle") %>%
+
+    # Overlay groups with geohashes
+    leaflet::addRectangles(lng1 = gh_center$west,
+                           lat1 = gh_center$south,
+                           lng2 = gh_center$east,
+                           lat2 = gh_center$north,
+                           label = gh_center$geohash,
+                           opacity = 1,
+                           weight = 2,
+                           fillOpacity = 0,
+                           group = "Geohash") %>%
+
+    # Overlay groups with points
+    leaflet::addCircleMarkers(data = pts_sf,
+                              color = pal_points(pts_sf[[value_nm]]),
+                              stroke = TRUE,
+                              popup = popuptxt,
+                              group = "Points") %>%
+    leaflet::addLegend(data = pts_sf,
+                       pal = pal_points,
+                       title = value_nm,
+                       values = pts_sf[[value_nm]],
+                       position = legend_position,
+                       group = "Points") %>%
+    leafem::addMouseCoordinates() %>%
+
+    # Layers control
+    leaflet::addLayersControl(
+      baseGroups = c("Positron (default)", "OSM", "Toner Lite"),
+      overlayGroups = c("Points", "Circle", "Geohash"),
+      options = leaflet::layersControlOptions(collapsed = FALSE)
+    ) %>%
+    leaflet::hideGroup("Geohash")
+
+  if ( nrow(circle_sf) > 1 ){
+
+    m <- m %>%
+      leaflet::addLegend(data = circle_sf,
+                         pal = pal_circles,
+                         title = legend_title_circle,
+                         position = legend_position_circle,
+                         values = circle_sf[["highest_concentration"]],
+                         group = "Circle")
+  }
+
+  m
 }
+
 
 

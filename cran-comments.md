@@ -1,7 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* `highest_concentration()` now returns correct highest concentration when the circle of the highest concentration overlaps more than one geohash
+* `highest_concentration()` now returns correct highest concentration when the circle of the highest concentration overlaps more than one geohash (bug). 
 
 ## Test environments
 * local OS X install, R 4.0.5

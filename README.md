@@ -125,12 +125,14 @@ portfolio with 500,000 objects.
 Show all points in data set `Groningen`:
 
 ``` r
-library(mapview)
-Groningen_sf <- sf::st_as_sf(Groningen, coords = c("lon", "lat"), crs = 4326)
-mapview::mapview(Groningen_sf, zcol = "amount")
+plot_points(Groningen, value = amount)
 ```
 
-![](man/figures/example3a-1.png)<!-- -->
+![](man/figures/pts_groningen.png)
+
+<br>
+
+------------------------------------------------------------------------
 
 Find the highest concentration:
 
@@ -143,15 +145,15 @@ highest concentration.
 
 ``` r
 microbenchmark::microbenchmark(
-  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50, display_progress = FALSE), 
+  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50), 
   times = 10)
 ```
 
     ## Unit: milliseconds
-    ##                                                                                                       expr
-    ##  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50,      display_progress = FALSE)
-    ##       min       lq     mean   median       uq      max neval
-    ##  561.7991 563.0108 568.4865 569.2444 570.8848 579.1623    10
+    ##                                                                        expr
+    ##  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50)
+    ##       min      lq     mean   median      uq      max neval
+    ##  607.2644 610.643 621.2857 614.1885 616.193 696.9701    10
 
 The two highest concentrations are found in geohash *u1kwug*:
 
@@ -164,7 +166,7 @@ head(hconc)
     ## 2:         61075 6.547372 53.23695  u1kwug
     ## 3:         57121 6.523147 53.23101  u1kwu6
     ## 4:         57009 6.589809 53.20534  u1kwtv
-    ## 5:         56148 6.589809 53.20579  u1kwtv
+    ## 5:         56336 6.589809 53.20579  u1kwtv
     ## 6:         55631 6.523897 53.23145  u1kwu6
 
 The following gives an illustration of this. The yellow parts show the
@@ -174,7 +176,11 @@ areas with the highest concentrations.
 plot(hconc) 
 ```
 
-![](man/figures/example3d-1.png)<!-- -->
+![](man/figures/gh_groningen.png)
+
+<br>
+
+------------------------------------------------------------------------
 
 `highest_concentration()` returns the highest concentration within a
 portfolio based on a grid. However, higher concentrations can be found
@@ -210,7 +216,9 @@ includes two apartment buildings with many objects):
 plot(hconc_nghb)
 ```
 
-![](man/figures/unnamed-chunk-12-1.png)<!-- -->
+![](man/figures/n1_groningen.png)
+
+<br>
 
 Its also possible to show the coordinates with for example the three
 highest concentrations:
@@ -220,7 +228,9 @@ neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) %>%
   plot()
 ```
 
-![](man/figures/unnamed-chunk-14-1.png)<!-- -->
+![](man/figures/n3_groningen.png)
+
+<br>
 
 ## Example 4
 

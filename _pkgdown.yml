@@ -19,6 +19,7 @@ reference:
       - choropleth_ggplot2
       - choropleth_tmap
       - choropleth_sf
+      - plot_points
   - title: "Spatial interpolation"
     contents:
       - interpolate_krige

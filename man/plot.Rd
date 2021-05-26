@@ -4,7 +4,17 @@
 \alias{plot.neighborhood}
 \title{Automatically create a plot for objects obtained from neighborhood_gh_search()}
 \usage{
-\method{plot}{neighborhood}(x, buffer = 0, legend_title = NULL, ...)
+\method{plot}{neighborhood}(
+  x,
+  buffer = 0,
+  legend_title = NULL,
+  palette = "viridis",
+  legend_position = "bottomleft",
+  palette_circle = "YlOrRd",
+  legend_position_circle = "bottomright",
+  legend_title_circle = "Highest concentration",
+  ...
+)
 }
 \arguments{
 \item{x}{object neighborhood object produced by `neighborhood_gh_search()`}
@@ -12,6 +22,16 @@
 \item{buffer}{numeric value, show objects within buffer (in meters) from circle (defaults to 0)}
 
 \item{legend_title}{title of legend}
+
+\item{palette}{palette for points (defaults to "viridis")}
+
+\item{legend_position}{legend position for points legend (defaults to "bottomleft")}
+
+\item{palette_circle}{palette for circles (default to "YlOrRd")}
+
+\item{legend_position_circle}{legend position for circles legend (defaults to "bottomright")}
+
+\item{legend_title_circle}{title of legend for circles}
 
 \item{...}{additional arguments affecting the interactive map produced}
 }

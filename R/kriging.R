@@ -10,9 +10,7 @@
 #' @param lon_targets Column in \code{targets} with longitude (lon is default).
 #' @param lat_targets Column in \code{targets} with latitude (lat is default).
 #'
-#' @importFrom automap autofitVariogram
 #' @importFrom dplyr bind_cols
-#' @importFrom gstat krige
 #' @importFrom methods as
 #' @import sf
 #' @importFrom stats as.formula
@@ -47,10 +45,6 @@ interpolate_krige <- function(observations, targets, value, lon_obs = lon, lat_o
 
   if (!requireNamespace("automap", quietly = TRUE)) {
     stop("automap is needed for this function to work. Install it via install.packages(\"automap\")", call. = FALSE)
-  }
-
-  if (!requireNamespace("sf", quietly = TRUE)) {
-    stop("sf is needed for this function to work. Install it via install.packages(\"sf\")", call. = FALSE)
   }
 
   value <- deparse(substitute(value))

@@ -30,7 +30,6 @@
 #' @importFrom utils txtProgressBar
 #' @importFrom utils data
 #' @importFrom utils download.file
-#' @import vroom
 #'
 #' @author Martin Haringa
 #'
@@ -41,6 +40,10 @@
 #'
 #' @export
 knmi_historic_data <- function(startyear, endyear){
+
+  if (!requireNamespace("vroom", quietly = TRUE)) {
+    stop("vroom is needed for this function to work. Install it via install.packages(\"vroom\")", call. = FALSE)
+  }
 
   # get reference data
   utils::data("knmi_stations", envir = environment())

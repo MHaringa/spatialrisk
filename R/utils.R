@@ -66,15 +66,24 @@ add_gh_nghbrs_sum <- function(df, colname_sum){
   data.table::setnames(gh_nghbrs_dt, old = "self", new = "geohash")
   gh_nghbrs_long <- data.table::melt(gh_nghbrs_dt,
                                      id.vars = c("geohash"),
-                                     measure.vars = c("southwest", "south",
-                                                      "southeast", "west",
-                                                      "east", "northwest",
-                                                      "north", "northeast",
+                                     measure.vars = c("southwest",
+                                                      "south",
+                                                      "southeast",
+                                                      "west",
+                                                      "east",
+                                                      "northwest",
+                                                      "north",
+                                                      "northeast",
                                                       "copy_self"))
-  data.table::setkey(gh_nghbrs_long, "geohash")
+  data.table::setnames(x_dt, old = "geohash", new = "value")
+  data.table::setkey(gh_nghbrs_long, "value")
 
   # Aggregate sum of hash
-  gh_nghbrs_long[x_dt,][,.(gh_nghbrs_sum = sum(geohash_sum)), by = "geohash"][x_dt,][]
+  agg_sum <- gh_nghbrs_long[x_dt,][,.(gh_nghbrs_sum = sum(geohash_sum)), by = "geohash"]
+
+  # Add original sum
+  data.table::setkey(agg_sum, "geohash")
+  agg_sum[x_dt,][]
 }
 
 

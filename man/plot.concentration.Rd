@@ -4,7 +4,14 @@
 \alias{plot.concentration}
 \title{Automatically create a plot for objects obtained from highest_concentration()}
 \usage{
-\method{plot}{concentration}(x, grid_points = TRUE, legend_title = NULL, ...)
+\method{plot}{concentration}(
+  x,
+  grid_points = TRUE,
+  legend_title = NULL,
+  palette = "viridis",
+  legend_position = "bottomleft",
+  ...
+)
 }
 \arguments{
 \item{x}{object of class `concentration` obtained from `highest_concentration()`}
@@ -12,6 +19,10 @@
 \item{grid_points}{show grid points (TRUE), or objects (FALSE)}
 
 \item{legend_title}{title of legend}
+
+\item{palette}{palette for grid points (defaults to "viridis")}
+
+\item{legend_position}{legend position for grid points legend (defaults to "bottomleft")}
 
 \item{...}{additional arguments affecting the interactive map produced}
 }
