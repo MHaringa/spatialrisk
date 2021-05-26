@@ -152,8 +152,8 @@ microbenchmark::microbenchmark(
     ## Unit: milliseconds
     ##                                                                        expr
     ##  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50)
-    ##       min      lq     mean   median      uq      max neval
-    ##  607.2644 610.643 621.2857 614.1885 616.193 696.9701    10
+    ##       min       lq     mean   median       uq      max neval
+    ##  607.0512 609.9632 619.7995 611.0177 614.7176 696.1569    10
 
 The two highest concentrations are found in geohash *u1kwug*:
 
@@ -220,17 +220,44 @@ plot(hconc_nghb)
 
 <br>
 
-Its also possible to show the coordinates with for example the three
-highest concentrations:
+Its also possible to show the coordinates for more than one
+concentration. To show the second and third highest concentration:
 
 ``` r
-neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) %>%
-  plot()
+nb3 <- neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) 
+nb3
+```
+
+Create interactive map:
+
+``` r
+plot(nb3)
 ```
 
 ![](man/figures/n3_groningen.png)
 
 <br>
+
+Show objects in the highest geohash:
+
+``` r
+points_in_circle(Groningen, lon_center = nb3$lon[1], lat_center = nb3$lat[1], radius = 200)
+```
+
+    ## # A tibble: 208 x 10
+    ##    street   number letter suffix postal_code city    lon   lat amount distance_m
+    ##    <chr>     <int> <chr>  <chr>  <chr>       <chr> <dbl> <dbl>  <dbl>      <dbl>
+    ##  1 Elzenla…    135 <NA>   <NA>   9741ND      Gron…  6.55  53.2    135       3.81
+    ##  2 Elzenla…    139 <NA>   <NA>   9741ND      Gron…  6.55  53.2    139       8.13
+    ##  3 Elzenla…     70 <NA>   <NA>   9741NG      Gron…  6.55  53.2     70      30.7 
+    ##  4 Elzenla…     68 <NA>   <NA>   9741NG      Gron…  6.55  53.2     68      34.1 
+    ##  5 Duindoo…      1 <NA>   <NA>   9741NM      Gron…  6.55  53.2     12      35.2 
+    ##  6 Duindoo…     17 <NA>   <NA>   9741NM      Gron…  6.55  53.2     17      44.3 
+    ##  7 Duindoo…     15 <NA>   <NA>   9741NM      Gron…  6.55  53.2     15      48.2 
+    ##  8 Duindoo…     21 <NA>   <NA>   9741NM      Gron…  6.55  53.2     21      48.6 
+    ##  9 Duindoo…     13 <NA>   <NA>   9741NM      Gron…  6.55  53.2     13      52.3 
+    ## 10 Ranonke…     38 <NA>   <NA>   9741LT      Gron…  6.55  53.2     38      59.5 
+    ## # … with 198 more rows
 
 ## Example 4
 
@@ -265,7 +292,9 @@ within classes and maximize the variance between classes.
 choropleth(gemeente_sf, mode = "plot", legend_title = "Sum insured (EUR)", n = 5)
 ```
 
-![](man/figures/example4b-1.png)<!-- -->
+![](man/figures/nl_choro1.png)
+
+<br>
 
 If `mode` is set to `view` an interactive map is created:
 
@@ -273,7 +302,9 @@ If `mode` is set to `view` an interactive map is created:
 choropleth(gemeente_sf, mode = "view", legend_title = "Sum insured (EUR)")
 ```
 
-![](man/figures/example4d-1.png)<!-- -->
+![](man/figures/nl_choro2.png)
+
+<br>
 
 The following simple feature objects are available in `spatialrisk`:
 `nl_provincie`, `nl_corop`, `nl_gemeente`, `nl_postcode1`,

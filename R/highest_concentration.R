@@ -71,8 +71,8 @@
 #'
 #' @examples
 #'  \dontrun{
-#' # Find highest concentration with a precision of a grid of 20 meters
-#' hc1 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 20)
+#' # Find highest concentration with a precision of a grid of 25 meters
+#' hc1 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 25)
 #'
 #' # Look for coordinates with even higher concentrations in the
 #' # neighborhood of the coordinates with the highest concentration
@@ -149,7 +149,9 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
                                   radius = radius)
 
   # Take max of both lowerbounds
-  lowerbound <- max(lowerbound_1, lowerbound_2)
+  if ( is.null(lowerbound) ){
+    lowerbound <- max(lowerbound_1, lowerbound_2)
+  }
 
   # Remove geohashes with a total sum insured lower than the lower bound
   gh_remaining <- gh_sum_nghbrs[gh_nghbrs_sum >= lowerbound]
@@ -238,17 +240,14 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
 #'
 #' @examples
 #' \dontrun{
-#' # Find highest concentration with a precision of a grid of 20 meters
-#' hc1 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 20)
-#'
-#' # Set distance between grid points to 10 meters
-#' hc2 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 10)
+#' # Find highest concentration with a precision of a grid of 25 meters
+#' hc1 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 25)
 #'
 #' # Increase the number of calls to the concentration function for more extensive search
-#' hc1_nghb <- neighborhood_gh_search(hc1, max.call = 7000)
-#' hc2_nghb <- neighborhood_gh_search(hc2, max.call = 7000)
-#' print(hc1_nghb)
+#' hc1_nghb <- neighborhood_gh_search(hc1, max.call = 7000, highest_geohash = 1)
+#' hc2_nghb <- neighborhood_gh_search(hc1, max.call = 7000, highest_geohash = 2)
 #' plot(hc1_nghb)
+#' plot(hc2_nghb)
 #' }
 #'
 #' @export

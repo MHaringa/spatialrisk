@@ -36,17 +36,14 @@ concentrations. This optimization is done by means of Simulated Annealing.
 }
 \examples{
 \dontrun{
-# Find highest concentration with a precision of a grid of 20 meters
-hc1 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 20)
-
-# Set distance between grid points to 10 meters
-hc2 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 10)
+# Find highest concentration with a precision of a grid of 25 meters
+hc1 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 25)
 
 # Increase the number of calls to the concentration function for more extensive search
-hc1_nghb <- neighborhood_gh_search(hc1, max.call = 7000)
-hc2_nghb <- neighborhood_gh_search(hc2, max.call = 7000)
-print(hc1_nghb)
+hc1_nghb <- neighborhood_gh_search(hc1, max.call = 7000, highest_geohash = 1)
+hc2_nghb <- neighborhood_gh_search(hc1, max.call = 7000, highest_geohash = 2)
 plot(hc1_nghb)
+plot(hc2_nghb)
 }
 
 }

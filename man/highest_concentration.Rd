@@ -88,8 +88,8 @@ As a last step for each grid point the concentration is calculated.
 }
 \examples{
  \dontrun{
-# Find highest concentration with a precision of a grid of 20 meters
-hc1 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 20)
+# Find highest concentration with a precision of a grid of 25 meters
+hc1 <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 25)
 
 # Look for coordinates with even higher concentrations in the
 # neighborhood of the coordinates with the highest concentration

@@ -200,18 +200,40 @@ plot(hconc_nghb)
 
 <br>
 
-Its also possible to show the coordinates with for example the three highest concentrations:
+Its also possible to show the coordinates for more than one concentration. To show the second and third highest concentration:
+
+```{r, eval = TRUE, echo = FALSE}
+
+nb3 <- neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3, verbose = FALSE) 
+
+```
 
 ```{r, eval = FALSE, echo = TRUE}
 
-neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) %>%
-  plot()
+nb3 <- neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) 
+nb3
 
+
+```
+
+Create interactive map:
+
+```{r, eval = FALSE, echo = TRUE}
+plot(nb3)
 ```
 
 ![](man/figures/n3_groningen.png)
 
 <br>
+
+Show objects in the highest geohash:
+
+```{r}
+
+points_in_circle(Groningen, lon_center = nb3$lon[1], lat_center = nb3$lat[1], radius = 200)
+
+```
+
 
 
 ## Example 4
@@ -222,7 +244,7 @@ The common approach is to first aggregate the data on the level of the regions i
 
 This example shows how `points_to_polygon()` is used to map the total sum insured on the municipality level in the Netherlands: 
 
-```{r example4, eval = TRUE, message = FALSE, warning = FALSE}
+```{r example4, eval = FALSE, message = FALSE, warning = FALSE}
 
 gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRUE))
 
@@ -230,9 +252,13 @@ gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRU
 
 `choropleth()` creates a map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. When `mode` is set to `plot` a static map is created. The given clustering is according to the Fisher-Jenks algorithm. This commonly used classification method for choropleths seeks to reduce the variance within classes and maximize the variance between classes.
 
-```{r example4b, eval = TRUE, message = FALSE, warning = FALSE}
+```{r example4b, eval = FALSE, message = FALSE, warning = FALSE}
 choropleth(gemeente_sf, mode = "plot", legend_title = "Sum insured (EUR)", n = 5)
 ```
+
+![](man/figures/nl_choro1.png)
+
+<br>
 
 If `mode` is set to `view` an interactive map is created:
 
@@ -240,9 +266,8 @@ If `mode` is set to `view` an interactive map is created:
 choropleth(gemeente_sf, mode = "view", legend_title = "Sum insured (EUR)")
 ```
 
-```{r example4d, eval = TRUE, echo = FALSE}
-gemeente <- choropleth(gemeente_sf, mode = "view")
-tmap::tmap_leaflet(gemeente)
-```
+![](man/figures/nl_choro2.png)
+
+<br>
 
 The following simple feature objects are available in `spatialrisk`: `nl_provincie`, `nl_corop`, `nl_gemeente`, `nl_postcode1`, `nl_postcode2`, `nl_postcode3`, `nl_postcode4`, `world_countries`, and `europe_countries`.

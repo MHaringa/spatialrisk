@@ -83,7 +83,7 @@ concentrations. This optimization is done by means of Simulated Annealing." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.9</span>
       </span>
     </div>
 
@@ -178,17 +178,14 @@ Defaults to 1 (i.e. algorithm is only applied to the geohash with the highest co
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Find highest concentration with a precision of a grid of 20 meters</span>
-<span class='va'>hc1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='highest_concentration.html'>highest_concentration</a></span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span>
-
-<span class='co'># Set distance between grid points to 10 meters</span>
-<span class='va'>hc2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='highest_concentration.html'>highest_concentration</a></span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='co'># Find highest concentration with a precision of a grid of 25 meters</span>
+<span class='va'>hc1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='highest_concentration.html'>highest_concentration</a></span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span>
 
 <span class='co'># Increase the number of calls to the concentration function for more extensive search</span>
-<span class='va'>hc1_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span><span class='op'>)</span>
-<span class='va'>hc2_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc2</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span>
+<span class='va'>hc1_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span>, highest_geohash <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>hc2_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span>, highest_geohash <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc2_nghb</span><span class='op'>)</span>
 <span class='op'>}</span>
 
 </div></pre>

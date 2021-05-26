@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.9</span>
       </span>
     </div>
 
@@ -170,8 +170,8 @@
 <div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Unit: milliseconds</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                                        expr</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50)</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">##       min      lq     mean   median      uq      max neval</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  607.2644 610.643 621.2857 614.1885 616.193 696.9701    10</span></span></code></pre></div>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">##       min       lq     mean   median       uq      max neval</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  607.0512 609.9632 619.7995 611.0177 614.7176 696.1569    10</span></span></code></pre></div>
 <p>The two highest concentrations are found in geohash <em>u1kwug</em>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">hconc</span><span class="op">)</span></code></pre></div>
@@ -203,12 +203,32 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">hconc_nghb</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/n1_groningen.png"></p>
 <p><br></p>
-<p>Its also possible to show the coordinates with for example the three highest concentrations:</p>
+<p>Its also possible to show the coordinates for more than one concentration. To show the second and third highest concentration:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/neighborhood_gh_search.html">neighborhood_gh_search</a></span><span class="op">(</span><span class="va">hconc</span>, max.call <span class="op">=</span> <span class="fl">7000</span>, highest_geohash <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">nb3</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/neighborhood_gh_search.html">neighborhood_gh_search</a></span><span class="op">(</span><span class="va">hconc</span>, max.call <span class="op">=</span> <span class="fl">7000</span>, highest_geohash <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> 
+<span class="va">nb3</span></code></pre></div>
+<p>Create interactive map:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">nb3</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/n3_groningen.png"></p>
 <p><br></p>
+<p>Show objects in the highest geohash:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/points_in_circle.html">points_in_circle</a></span><span class="op">(</span><span class="va">Groningen</span>, lon_center <span class="op">=</span> <span class="va">nb3</span><span class="op">$</span><span class="va">lon</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, lat_center <span class="op">=</span> <span class="va">nb3</span><span class="op">$</span><span class="va">lat</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, radius <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 208 x 10</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="do">##    street   number letter suffix postal_code city    lon   lat amount distance_m</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;     &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Elzenla…    135 &lt;NA&gt;   &lt;NA&gt;   9741ND      Gron…  6.55  53.2    135       3.81</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Elzenla…    139 &lt;NA&gt;   &lt;NA&gt;   9741ND      Gron…  6.55  53.2    139       8.13</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 Elzenla…     70 &lt;NA&gt;   &lt;NA&gt;   9741NG      Gron…  6.55  53.2     70      30.7 </span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 Elzenla…     68 &lt;NA&gt;   &lt;NA&gt;   9741NG      Gron…  6.55  53.2     68      34.1 </span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 Duindoo…      1 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     12      35.2 </span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 Duindoo…     17 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     17      44.3 </span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 Duindoo…     15 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     15      48.2 </span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 Duindoo…     21 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     21      48.6 </span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 Duindoo…     13 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     13      52.3 </span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 Ranonke…     38 &lt;NA&gt;   &lt;NA&gt;   9741LT      Gron…  6.55  53.2     38      59.5 </span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 198 more rows</span></span></code></pre></div>
 </div>
 <div id="example-4" class="section level2">
 <h2 class="hasAnchor">
@@ -216,16 +236,18 @@
 <p><code>spatialrisk</code> also contains functionality to create choropleths. Typically in R it is difficult to create choropleths. <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> attempts to elegantly solve this problem.</p>
 <p>The common approach is to first aggregate the data on the level of the regions in the shapefile, and then merging the aggregated data with the shapefile. Despite it being common, it is problematic in case the names in the data and the names in the shapefile do not match. This is for example the case when there are differences in punctuation marks in the area names. Therefore, <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> uses the longitude and latitude of a point to map this point to a region. This approach makes it easy to create choropleth maps on different region levels.</p>
 <p>This example shows how <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> is used to map the total sum insured on the municipality level in the Netherlands:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gemeente_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/points_to_polygon.html">points_to_polygon</a></span><span class="op">(</span><span class="va">nl_gemeente</span>, <span class="va">insurance</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">amount</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><code><a href="reference/choropleth.html">choropleth()</a></code> creates a map based on the simple feature object obtained in the previous step. There are two options to create a choropleth map. When <code>mode</code> is set to <code>plot</code> a static map is created. The given clustering is according to the Fisher-Jenks algorithm. This commonly used classification method for choropleths seeks to reduce the variance within classes and maximize the variance between classes.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">gemeente_sf</span>, mode <span class="op">=</span> <span class="st">"plot"</span>, legend_title <span class="op">=</span> <span class="st">"Sum insured (EUR)"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/example4b-1.png"><!-- --></p>
+<p><img src="reference/figures/nl_choro1.png"></p>
+<p><br></p>
 <p>If <code>mode</code> is set to <code>view</code> an interactive map is created:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">gemeente_sf</span>, mode <span class="op">=</span> <span class="st">"view"</span>, legend_title <span class="op">=</span> <span class="st">"Sum insured (EUR)"</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/example4d-1.png"><!-- --></p>
+<p><img src="reference/figures/nl_choro2.png"></p>
+<p><br></p>
 <p>The following simple feature objects are available in <code>spatialrisk</code>: <code>nl_provincie</code>, <code>nl_corop</code>, <code>nl_gemeente</code>, <code>nl_postcode1</code>, <code>nl_postcode2</code>, <code>nl_postcode3</code>, <code>nl_postcode4</code>, <code>world_countries</code>, and <code>europe_countries</code>.</p>
 </div>
 </div>
