@@ -1,7 +1,7 @@
 Package: spatialrisk
 Type: Package
 Title: Calculating Spatial Risk
-Version: 0.6.8.9000
+Version: 0.6.9
 Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), email = "mtharinga@gmail.com"))
 Maintainer: Martin Haringa <mtharinga@gmail.com>
 Description: Methods for spatial risk calculations. It offers an efficient approach to determine the sum of all observations within a 
