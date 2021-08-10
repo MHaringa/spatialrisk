@@ -5,7 +5,7 @@
 \title{Determine a lower bound for highest concentration
 Calculate concentration for the coordinates of the highest insured sums}
 \usage{
-lower_bound_fn(df, col, lat_nm, lon_nm, radius = 200, highest = 50)
+lower_bound_fn(df, col, lat_nm, lon_nm, radius, highest = 50)
 }
 \description{
 Determine a lower bound for highest concentration

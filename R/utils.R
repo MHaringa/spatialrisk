@@ -5,7 +5,7 @@
 #' @importFrom utils head
 #'
 #' @keywords internal
-lower_bound_fn <- function(df, col, lat_nm, lon_nm, radius = 200, highest = 50){
+lower_bound_fn <- function(df, col, lat_nm, lon_nm, radius, highest = 50){
 
   df_order <- df[order(-df[[col]]),]
   high_df <- head(df_order, highest)
@@ -27,7 +27,7 @@ lower_bound_fn <- function(df, col, lat_nm, lon_nm, radius = 200, highest = 50){
 #'
 #' @keywords internal
 lower_bound_fn2 <- function(df, full, col, lat_nm, lon_nm,
-                            radius = 200, highest = 100){
+                            radius, highest = 100){
 
   df_order <- data.table::setorder(df, -geohash_sum)
   high_df <- head(df_order, highest)

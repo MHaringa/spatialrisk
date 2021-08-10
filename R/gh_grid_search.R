@@ -93,8 +93,6 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
                                   grid_distance = 25, gh_precision = 6,
                                   display_progress = TRUE){
 
-  df <- as.data.frame(df)
-
   value_nm <- deparse(substitute(value))
   lon_nm <- deparse(substitute(lon))
   lat_nm <- deparse(substitute(lat))
@@ -119,8 +117,7 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
     warning(nrows1 - nrow(df), " NAs detected in ", value_nm, ". Rows with NAs removed.", call. = FALSE)
   }
 
-  # Add geohash (length 5 is 4.89km x 4.89km; length 6 is 1.22 x 0.61km;
-  # length 7 is 153m x 153m; length 8 is 38m x 19m)
+  # Add geohash (length 5 is 4.89km x 4.89km; length 6 is 1.22 x 0.61km; length 7 is 153m x 153m; length 8 is 38m x 19m)
   df[["geohash"]] <- geohashTools::gh_encode(latitude = df[[lat_nm]],
                                              longitude = df[[lon_nm]],
                                              precision = gh_precision)

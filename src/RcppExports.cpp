@@ -5,34 +5,11 @@
 
 using namespace Rcpp;
 
-// cheap_dist_euclidean
-double cheap_dist_euclidean(double lat1, double long1, double lat2, double long2);
-RcppExport SEXP _spatialrisk_cheap_dist_euclidean(SEXP lat1SEXP, SEXP long1SEXP, SEXP lat2SEXP, SEXP long2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type lat1(lat1SEXP);
-    Rcpp::traits::input_parameter< double >::type long1(long1SEXP);
-    Rcpp::traits::input_parameter< double >::type lat2(lat2SEXP);
-    Rcpp::traits::input_parameter< double >::type long2(long2SEXP);
-    rcpp_result_gen = Rcpp::wrap(cheap_dist_euclidean(lat1, long1, lat2, long2));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cheap_dist_euclidean_vec
-Rcpp::NumericVector cheap_dist_euclidean_vec(Rcpp::NumericVector latFrom, Rcpp::NumericVector lonFrom, Rcpp::NumericVector latTo, Rcpp::NumericVector lonTo);
-RcppExport SEXP _spatialrisk_cheap_dist_euclidean_vec(SEXP latFromSEXP, SEXP lonFromSEXP, SEXP latToSEXP, SEXP lonToSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type latFrom(latFromSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lonFrom(lonFromSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type latTo(latToSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lonTo(lonToSEXP);
-    rcpp_result_gen = Rcpp::wrap(cheap_dist_euclidean_vec(latFrom, lonFrom, latTo, lonTo));
-    return rcpp_result_gen;
-END_RCPP
-}
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // haversine_cpp_vec
 Rcpp::NumericVector haversine_cpp_vec(Rcpp::NumericVector latFrom, Rcpp::NumericVector lonFrom, Rcpp::NumericVector latTo, Rcpp::NumericVector lonTo, double earth_radius);
 RcppExport SEXP _spatialrisk_haversine_cpp_vec(SEXP latFromSEXP, SEXP lonFromSEXP, SEXP latToSEXP, SEXP lonToSEXP, SEXP earth_radiusSEXP) {
@@ -92,8 +69,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_spatialrisk_cheap_dist_euclidean", (DL_FUNC) &_spatialrisk_cheap_dist_euclidean, 4},
-    {"_spatialrisk_cheap_dist_euclidean_vec", (DL_FUNC) &_spatialrisk_cheap_dist_euclidean_vec, 4},
     {"_spatialrisk_haversine_cpp_vec", (DL_FUNC) &_spatialrisk_haversine_cpp_vec, 5},
     {"_spatialrisk_haversine_loop_cpp", (DL_FUNC) &_spatialrisk_haversine_loop_cpp, 4},
     {"_spatialrisk_concentration_loop_cpp", (DL_FUNC) &_spatialrisk_concentration_loop_cpp, 4},

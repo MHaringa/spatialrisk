@@ -1,5 +1,6 @@
 # spatialrisk 0.7.0
 
+* `neighborhood_gh_search()` now returns a more precise outcome when the radius of the circle is not equal to 200m
 
 # spatialrisk 0.6.9
 

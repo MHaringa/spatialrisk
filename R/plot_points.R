@@ -14,14 +14,15 @@
 #'
 #' @importFrom sf st_as_sf
 #' @importFrom colourvalues colour_values
+#' @importFrom leafem addMouseCoordinates
+#' @importFrom leafgl addGlPoints
 #' @importFrom leaflet colorNumeric
 #' @importFrom leaflet leaflet
 #' @importFrom leaflet addTiles
 #' @importFrom leaflet addProviderTiles
-#' @importFrom leafgl addGlPoints
 #' @importFrom leaflet addLegend
 #' @importFrom leaflet addLayersControl
-#' @importFrom leafem addMouseCoordinates
+#' @importFrom leaflet layersControlOptions
 #'
 #' @examples \dontrun{
 #' plot_points(Groningen, value = amount)
@@ -37,7 +38,8 @@ plot_points <- function(df, value, lon = lon, lat = lat, palette = "viridis",
   df_nm <- deparse(substitute(df))
 
   if ( value_nm == ""){
-    stop(df_nm, " does not contain column specified in `value`. Specify with argument `value`.",
+    stop(df_nm,
+         " does not contain column specified in `value`. Specify with argument `value`.",
          call. = FALSE)
   }
 
@@ -51,8 +53,10 @@ plot_points <- function(df, value, lon = lon, lat = lat, palette = "viridis",
 
       # Base groups
       leaflet::addTiles(group = "OSM") %>%
-      leaflet::addProviderTiles(providers$CartoDB.Positron, group = "Positron (default)") %>%
-      leaflet::addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+      leaflet::addProviderTiles(provider = leaflet::providers$CartoDB.Positron,
+                                group = "Positron (default)") %>%
+      leaflet::addProviderTiles(provider = leaflet::providers$Stamen.TonerLite,
+                                group = "Toner Lite") %>%
 
       # Overlay groups
       leafgl::addGlPoints(data = obj_sf,
@@ -71,7 +75,7 @@ plot_points <- function(df, value, lon = lon, lat = lat, palette = "viridis",
       leaflet::addLayersControl(
         baseGroups = c("Positron (default)", "OSM", "Toner Lite"),
         overlayGroups = c("Points"),
-        options = layersControlOptions(collapsed = FALSE)
+        options = leaflet::layersControlOptions(collapsed = FALSE)
       )
   })
 
