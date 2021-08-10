@@ -15,7 +15,7 @@
 #' @import RcppProgress
 #'
 #' @examples
-#' points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 50)
+#' points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 60)
 #'
 #' @return data.frame. Column \code{distance_m} gives the distance to the center of the circle (in meters).
 #'
