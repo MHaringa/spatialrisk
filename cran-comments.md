@@ -1,11 +1,11 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* `highest_concentration()` now returns correct highest concentration when the circle of the highest concentration overlaps more than one geohash (bug). 
-* `plot.concentration()` now handles many lon/lat pairs better
+* `neighborhood_gh_search()` now returns a more precise outcome when the radius of the circle is not equal to 200m
+* `sf::st_crs()` is used for `sf` objects to not show the message that old crs is detected anymore
 
 ## Test environments
-* local OS X install, R 4.0.5
+* local OS X install, R 4.1.2
 * win-builder (devel and release)
 
 ## R CMD check results

@@ -1,6 +1,6 @@
 #' Object of class \code{sf} for municipalities in the Netherlands
 #'
-#' @description An object of class \code{sf} (simple feature) for municipalities (Dutch: gemeentes) in the Netherlands in the year 2018.
+#' @description An object of class \code{sf} (simple feature) for municipalities (Dutch: gemeentes) in the Netherlands in the year 2021.
 #'
 #' @author Martin Haringa
 #'
@@ -9,9 +9,9 @@
 #'   \item{id}{id of gemeente}
 #'   \item{code}{code of gemeente}
 #'   \item{areaname}{name of gemeente}
-#'   \item{geometry}{geometry object of gemeente}
 #'   \item{lon}{longitude of the gemeente centroid}
 #'   \item{lat}{latitude of the gemeente centroid}
+#'   \item{geometry}{geometry object of gemeente}
 #' }
 "nl_gemeente"
 
