@@ -49,6 +49,9 @@
 <meta property="og:title" content="Highest concentration risk — highest_concentration" />
 <meta property="og:description" content="Find the centre coordinates of a circle with a fixed radius that maximizes the coverage of total fire risk insured. `highest_concentration()`
 returns the coordinates (lon/lat) and the corresponding concentration. The concentration is defined as the sum of all observations
+within a circle of a certain radius. See concentration for determining concentration for pre-defined coordinates.
+Find the centre coordinates of a circle with a fixed radius that maximizes the coverage of total fire risk insured. `highest_concentration()`
+returns the coordinates (lon/lat) and the corresponding concentration. The concentration is defined as the sum of all observations
 within a circle of a certain radius. See concentration for determining concentration for pre-defined coordinates." />
 <meta property="og:image" content="/logo.png" />
 
@@ -82,7 +85,7 @@ within a circle of a certain radius. See concentration for determining concentra
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -122,7 +125,7 @@ within a circle of a certain radius. See concentration for determining concentra
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Highest concentration risk</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mharinga/spatialrisk/blob/master/R/highest_concentration.R'><code>R/highest_concentration.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mharinga/spatialrisk/blob/master/R/gh_grid_search.R'><code>R/gh_grid_search.R</code></a>, <a href='https://github.com/mharinga/spatialrisk/blob/master/R/highest_concentration.R'><code>R/highest_concentration.R</code></a></small>
     <div class="hidden name"><code>highest_concentration.Rd</code></div>
     </div>
 
@@ -130,9 +133,24 @@ within a circle of a certain radius. See concentration for determining concentra
     <p>Find the centre coordinates of a circle with a fixed radius that maximizes the coverage of total fire risk insured. `highest_concentration()`
 returns the coordinates (lon/lat) and the corresponding concentration. The concentration is defined as the sum of all observations
 within a circle of a certain radius. See <code><a href='concentration.html'>concentration</a></code> for determining concentration for pre-defined coordinates.</p>
+<p>Find the centre coordinates of a circle with a fixed radius that maximizes the coverage of total fire risk insured. `highest_concentration()`
+returns the coordinates (lon/lat) and the corresponding concentration. The concentration is defined as the sum of all observations
+within a circle of a certain radius. See <code><a href='concentration.html'>concentration</a></code> for determining concentration for pre-defined coordinates.</p>
     </div>
 
     <pre class="usage"><span class='fu'>highest_concentration</span><span class='op'>(</span>
+  <span class='va'>df</span>,
+  <span class='va'>value</span>,
+  lon <span class='op'>=</span> <span class='va'>lon</span>,
+  lat <span class='op'>=</span> <span class='va'>lat</span>,
+  lowerbound <span class='op'>=</span> <span class='cn'>NULL</span>,
+  radius <span class='op'>=</span> <span class='fl'>200</span>,
+  grid_distance <span class='op'>=</span> <span class='fl'>25</span>,
+  gh_precision <span class='op'>=</span> <span class='fl'>6</span>,
+  display_progress <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
+
+<span class='fu'>highest_concentration</span><span class='op'>(</span>
   <span class='va'>df</span>,
   <span class='va'>value</span>,
   lon <span class='op'>=</span> <span class='va'>lon</span>,
@@ -190,9 +208,46 @@ in the neighborhood of the highest concentrations.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>data.frame with coordinates (lon/lat) with the highest concentrations</p>
+<p>data.frame with coordinates (lon/lat) with the highest concentrations</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>A recently European Commission regulation requires insurance
+companies to determine the maximum value of insured fire risk policies of
+all buildings that are partly or fully located within circle of a radius of 200m
+(Commission Delegated Regulation (EU), 2015, Article 132). The problem can
+be stated as: "find the centre coordinates of a circle with a fixed radius
+that maximizes the coverage of total fire risk insured". This can be viewed
+as a particular instance of the Maximal Covering Location Problem (MCLP)
+with fixed radius. See Gomes (2018) for a solution to the maximum fire
+risk insured capital problem using a multi-start local search meta-heuristic.
+The computational performance of <code>highest_concentration()</code> is
+investigated to overcome the long times the MCLP algorithm is taking.
+<code>highest_concentration()</code> is written in C++, and for 500,000 buildings
+it needs about 5-10 seconds to determine the maximum value of insured fire risk
+policies that are partly or fully located within circle of a radius of 200m.</p>
+<p>`highest_concentration()` uses Gustavo Niemeyer's wonderful and elegant
+geohash coordinate system. Niemeyer's Geohash method encodes latitude and
+longitude as binary string where each binary value derived from a decision
+as to where the point lies in a bisected region of latitude or longitudinal
+space. The first step is to convert all latitude/longitude coordinates into
+geohash-encoded strings.</p>
+<p>The length of the geohash (`gh_precision`) controls the 'zoom level':</p><ul>
+<li><p>precision 5 is 4.89 x 4.89km;</p></li>
+<li><p>precision 6 is 1.22km x 0.61km;</p></li>
+<li><p>precision 7 is 153m x 153m;</p></li>
+<li><p>precision 8 is 39m x 19m.</p></li>
+</ul>
+
+<p>For a circle with a radius of 200m the precision of the geohash should
+be set equal to 6 (default). Then the `value` column is aggregated (sum)
+per geohash (with a buffer of size `radius` around each geohash,
+since the coordinates of the highest concentration can be near the edge of
+the geohash). The geohashes with a aggregated value below the lowerbound
+are removed, where the lowerbound is equal to the maximum of the
+`value` column. Then a grid is created, with a distance of `grid_distance`
+between the points. See example section for a illustration of the algorithm.
+As a last step for each grid point the concentration is calculated.</p>
+<p>A recently European Commission regulation requires insurance
 companies to determine the maximum value of insured fire risk policies of
 all buildings that are partly or fully located within circle of a radius of 200m
 (Commission Delegated Regulation (EU), 2015, Article 132). The problem can
@@ -232,29 +287,49 @@ As a last step for each grid point the concentration is calculated.</p>
 
     <p>Commission Delegated Regulation (EU) (2015). Solvency II Delegated Act 2015/35. Official Journal of the European Union, 58:124.</p>
 <p>Gomes M.I., Afonso L.B., Chibeles-Martins N., Fradinho J.M. (2018). Multi-start Local Search Procedure for the Maximum Fire Risk Insured Capital Problem. In: Lee J., Rinaldi G., Mahjoub A. (eds) Combinatorial Optimization. ISCO 2018. Lecture Notes in Computer Science, vol 10856. Springer, Cham. &lt;doi:10.1007/978-3-319-96151-4_19&gt;</p>
+<p>Commission Delegated Regulation (EU) (2015). Solvency II Delegated Act 2015/35. Official Journal of the European Union, 58:124.</p>
+<p>Gomes M.I., Afonso L.B., Chibeles-Martins N., Fradinho J.M. (2018). Multi-start Local Search Procedure for the Maximum Fire Risk Insured Capital Problem. In: Lee J., Rinaldi G., Mahjoub A. (eds) Combinatorial Optimization. ISCO 2018. Lecture Notes in Computer Science, vol 10856. Springer, Cham. &lt;doi:10.1007/978-3-319-96151-4_19&gt;</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Martin Haringa</p>
+<p>Martin Haringa</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Find highest concentration with a precision of a grid of 25 meters</span>
-<span class='va'>hc1</span> <span class='op'>&lt;-</span> <span class='fu'>highest_concentration</span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span>
-
-<span class='co'># Look for coordinates with even higher concentrations in the</span>
-<span class='co'># neighborhood of the coordinates with the highest concentration</span>
-<span class='va'>hc1_nghb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='neighborhood_gh_search.html'>neighborhood_gh_search</a></span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span>
-
-<span class='co'># Create map with geohashes above the lowerbound</span>
-<span class='co'># The highest concentration lies in one of the geohashes</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1</span><span class='op'>)</span>
-
-<span class='co'># Create map with highest concentration</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'> <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Find highest concentration with a precision of a grid of 25 meters</span></span>
+<span class='r-in'><span class='va'>hc1</span> <span class='op'>&lt;-</span> <span class='fu'>highest_concentration</span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Look for coordinates with even higher concentrations in the</span></span>
+<span class='r-in'><span class='co'># neighborhood of the coordinates with the highest concentration</span></span>
+<span class='r-in'><span class='va'>hc1_nghb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='neighborhood_gh_search.html'>neighborhood_gh_search</a></span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Create map with geohashes above the lowerbound</span></span>
+<span class='r-in'><span class='co'># The highest concentration lies in one of the geohashes</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Create map with highest concentration</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+<span class='r-in'> <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Find highest concentration with a precision of a grid of 25 meters</span></span>
+<span class='r-in'><span class='va'>hc1</span> <span class='op'>&lt;-</span> <span class='fu'>highest_concentration</span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Look for coordinates with even higher concentrations in the</span></span>
+<span class='r-in'><span class='co'># neighborhood of the coordinates with the highest concentration</span></span>
+<span class='r-in'><span class='va'>hc1_nghb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='neighborhood_gh_search.html'>neighborhood_gh_search</a></span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Create map with geohashes above the lowerbound</span></span>
+<span class='r-in'><span class='co'># The highest concentration lies in one of the geohashes</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Create map with highest concentration</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

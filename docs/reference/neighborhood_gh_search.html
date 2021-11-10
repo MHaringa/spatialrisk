@@ -50,6 +50,10 @@
 <meta property="og:description" content="highest_concentration returns the highest concentration within a portfolio based on grid points.
 However, higher concentrations can be found within two grid points. `neighborhood_gh_search()`
 looks for even higher concentrations in the neighborhood of the grid points with the highest
+concentrations. This optimization is done by means of Simulated Annealing.
+highest_concentration returns the highest concentration within a portfolio based on grid points.
+However, higher concentrations can be found within two grid points. `neighborhood_gh_search()`
+looks for even higher concentrations in the neighborhood of the grid points with the highest
 concentrations. This optimization is done by means of Simulated Annealing." />
 <meta property="og:image" content="/logo.png" />
 
@@ -83,7 +87,7 @@ concentrations. This optimization is done by means of Simulated Annealing." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -123,7 +127,7 @@ concentrations. This optimization is done by means of Simulated Annealing." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Search for coordinates with higher concentrations within geohash</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mharinga/spatialrisk/blob/master/R/highest_concentration.R'><code>R/highest_concentration.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mharinga/spatialrisk/blob/master/R/gh_grid_search.R'><code>R/gh_grid_search.R</code></a>, <a href='https://github.com/mharinga/spatialrisk/blob/master/R/highest_concentration.R'><code>R/highest_concentration.R</code></a></small>
     <div class="hidden name"><code>neighborhood_gh_search.Rd</code></div>
     </div>
 
@@ -132,9 +136,21 @@ concentrations. This optimization is done by means of Simulated Annealing." />
 However, higher concentrations can be found within two grid points. `neighborhood_gh_search()`
 looks for even higher concentrations in the neighborhood of the grid points with the highest
 concentrations. This optimization is done by means of Simulated Annealing.</p>
+<p><code><a href='highest_concentration.html'>highest_concentration</a></code> returns the highest concentration within a portfolio based on grid points.
+However, higher concentrations can be found within two grid points. `neighborhood_gh_search()`
+looks for even higher concentrations in the neighborhood of the grid points with the highest
+concentrations. This optimization is done by means of Simulated Annealing.</p>
     </div>
 
     <pre class="usage"><span class='fu'>neighborhood_gh_search</span><span class='op'>(</span>
+  <span class='va'>hc</span>,
+  highest_geohash <span class='op'>=</span> <span class='fl'>1</span>,
+  max.call <span class='op'>=</span> <span class='fl'>1000</span>,
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  seed <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span>
+
+<span class='fu'>neighborhood_gh_search</span><span class='op'>(</span>
   <span class='va'>hc</span>,
   highest_geohash <span class='op'>=</span> <span class='fl'>1</span>,
   max.call <span class='op'>=</span> <span class='fl'>1000</span>,
@@ -172,23 +188,36 @@ Defaults to 1 (i.e. algorithm is only applied to the geohash with the highest co
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>data.frame</p>
+<p>data.frame</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Martin Haringa</p>
+<p>Martin Haringa</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Find highest concentration with a precision of a grid of 25 meters</span>
-<span class='va'>hc1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='highest_concentration.html'>highest_concentration</a></span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span>
-
-<span class='co'># Increase the number of calls to the concentration function for more extensive search</span>
-<span class='va'>hc1_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span>, highest_geohash <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>hc2_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span>, highest_geohash <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc2_nghb</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Find highest concentration with a precision of a grid of 25 meters</span></span>
+<span class='r-in'><span class='va'>hc1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='highest_concentration.html'>highest_concentration</a></span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Increase the number of calls to the concentration function for more extensive search</span></span>
+<span class='r-in'><span class='va'>hc1_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span>, highest_geohash <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>hc2_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span>, highest_geohash <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc2_nghb</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Find highest concentration with a precision of a grid of 25 meters</span></span>
+<span class='r-in'><span class='va'>hc1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='highest_concentration.html'>highest_concentration</a></span><span class='op'>(</span><span class='va'>Groningen</span>, <span class='va'>amount</span>, radius <span class='op'>=</span> <span class='fl'>200</span>, grid_distance <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Increase the number of calls to the concentration function for more extensive search</span></span>
+<span class='r-in'><span class='va'>hc1_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span>, highest_geohash <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>hc2_nghb</span> <span class='op'>&lt;-</span> <span class='fu'>neighborhood_gh_search</span><span class='op'>(</span><span class='va'>hc1</span>, max.call <span class='op'>=</span> <span class='fl'>7000</span>, highest_geohash <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc1_nghb</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hc2_nghb</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

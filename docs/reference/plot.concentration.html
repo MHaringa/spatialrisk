@@ -47,7 +47,8 @@
 
 
 <meta property="og:title" content="Automatically create a plot for objects obtained from highest_concentration() — plot.concentration" />
-<meta property="og:description" content="Takes an object produced by `highest_concentration()`, and creates an interactive map." />
+<meta property="og:description" content="Takes an object produced by `highest_concentration()`, and creates an interactive map.
+Takes an object produced by `highest_concentration()`, and creates an interactive map." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -80,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -120,15 +121,26 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Automatically create a plot for objects obtained from highest_concentration()</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mharinga/spatialrisk/blob/master/R/highest_concentration.R'><code>R/highest_concentration.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mharinga/spatialrisk/blob/master/R/gh_grid_search.R'><code>R/gh_grid_search.R</code></a>, <a href='https://github.com/mharinga/spatialrisk/blob/master/R/highest_concentration.R'><code>R/highest_concentration.R</code></a></small>
     <div class="hidden name"><code>plot.concentration.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Takes an object produced by `highest_concentration()`, and creates an interactive map.</p>
+<p>Takes an object produced by `highest_concentration()`, and creates an interactive map.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for concentration</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  grid_points <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  legend_title <span class='op'>=</span> <span class='cn'>NULL</span>,
+  palette <span class='op'>=</span> <span class='st'>"viridis"</span>,
+  legend_position <span class='op'>=</span> <span class='st'>"bottomleft"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for concentration</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
   <span class='va'>x</span>,
   grid_points <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -170,9 +182,11 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Interactive view of geohashes with highest concentrations</p>
+<p>Interactive view of geohashes with highest concentrations</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Martin Haringa</p>
+<p>Martin Haringa</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

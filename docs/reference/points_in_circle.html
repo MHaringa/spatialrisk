@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spatialrisk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -174,13 +174,15 @@
     <p>Martin Haringa</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>points_in_circle</span><span class='op'>(</span><span class='va'>Groningen</span>, lon_center <span class='op'>=</span> <span class='fl'>6.571561</span>, lat_center <span class='op'>=</span> <span class='fl'>53.21326</span>, radius <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 2 x 10</span><span>
-#&gt;   street   number letter suffix postal_code city     lon   lat amount distance_m
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> Heresin…      5 </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     9711EP      Groni…  6.57  53.2      5       31.4
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> Heresin…     11 </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     9711ER      Groni…  6.57  53.2     11       47.8</div><div class='input'>
-</div></span></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>points_in_circle</span><span class='op'>(</span><span class='va'>Groningen</span>, lon_center <span class='op'>=</span> <span class='fl'>6.571561</span>, lat_center <span class='op'>=</span> <span class='fl'>53.21326</span>, radius <span class='op'>=</span> <span class='fl'>60</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 3 × 10</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   street   number letter suffix postal_code city     lon   lat amount distance_m</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span> Heresin…      5 <span style='color: #BB0000;'>NA</span>     <span style='color: #BB0000;'>NA</span>     9711EP      Groni…  6.57  53.2      5       31.4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>2</span> Heresin…     11 <span style='color: #BB0000;'>NA</span>     <span style='color: #BB0000;'>NA</span>     9711ER      Groni…  6.57  53.2     11       47.8</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>3</span> Zuiderp…   <span style='text-decoration: underline;'>1</span>003 <span style='color: #BB0000;'>NA</span>     <span style='color: #BB0000;'>NA</span>     9724AK      Groni…  6.57  53.2   <span style='text-decoration: underline;'>1</span>003       57.6</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
