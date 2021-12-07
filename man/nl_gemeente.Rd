@@ -10,16 +10,16 @@ A simple feature object with 380 rows and 6 variables:
   \item{id}{id of gemeente}
   \item{code}{code of gemeente}
   \item{areaname}{name of gemeente}
-  \item{geometry}{geometry object of gemeente}
   \item{lon}{longitude of the gemeente centroid}
   \item{lat}{latitude of the gemeente centroid}
+  \item{geometry}{geometry object of gemeente}
 }
 }
 \usage{
 nl_gemeente
 }
 \description{
-An object of class \code{sf} (simple feature) for municipalities (Dutch: gemeentes) in the Netherlands in the year 2018.
+An object of class \code{sf} (simple feature) for municipalities (Dutch: gemeentes) in the Netherlands in the year 2021.
 }
 \author{
 Martin Haringa

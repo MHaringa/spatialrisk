@@ -347,6 +347,7 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000, ver
 #' @importFrom leaflet addLayersControl
 #' @importFrom leaflet hideGroup
 #' @importFrom leaflet layersControlOptions
+#' @importFrom leaflet providers
 #' @importFrom leafgl addGlPoints
 #' @importFrom leafem addMouseCoordinates
 #'
@@ -400,8 +401,8 @@ plot.concentration <- function(x,
 
     # Base groups
     leaflet::addTiles(group = "OSM") %>%
-    leaflet::addProviderTiles(providers$CartoDB.Positron, group = "Positron (default)") %>%
-    leaflet::addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+    leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron, group = "Positron (default)") %>%
+    leaflet::addProviderTiles(leaflet::providers$Stamen.TonerLite, group = "Toner Lite") %>%
 
     # Overlay groups
     leaflet::addRectangles(lng1 = geohashes$west,
@@ -466,6 +467,7 @@ plot.concentration <- function(x,
 #' @importFrom leaflet addLegend
 #' @importFrom leaflet addLayersControl
 #' @importFrom leaflet layersControlOptions
+#' @importFrom leaflet providers
 #' @importFrom leafem addMouseCoordinates
 #' @importFrom leaflet hideGroup
 #' @importFrom leaflet labelOptions
@@ -539,8 +541,8 @@ plot.neighborhood <- function(x,
 
     # Base groups
     leaflet::addTiles(group = "OSM") %>%
-    leaflet::addProviderTiles(providers$CartoDB.Positron, group = "Positron (default)") %>%
-    leaflet::addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+    leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron, group = "Positron (default)") %>%
+    leaflet::addProviderTiles(leaflet::providers$Stamen.TonerLite, group = "Toner Lite") %>%
 
     # Overlay groups with 200m circles
     leaflet::addPolygons(data = circle_sf,

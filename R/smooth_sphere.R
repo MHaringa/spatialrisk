@@ -63,6 +63,6 @@ interpolate_spline <- function(observations, targets, value, lon_obs = lon, lat_
     })
 
   response <- as.numeric(mgcv::predict.gam(pred_gam, targets, type = "response"))
-  targets[,paste0(value, "_pred")] <- response
+  targets[, paste0(value, "_pred")] <- response
   return(targets)
 }

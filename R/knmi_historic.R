@@ -21,8 +21,14 @@
 #'   \item lat = Latitude of station (crs = 4326).
 #' }
 #'
-#' @import dplyr
-#' @import fs
+#' @importFrom dplyr left_join
+#' @importFrom fs dir_create
+#' @importFrom fs file_temp
+#' @importFrom fs file_create
+#' @importFrom fs path
+#' @importFrom fs dir_ls
+#' @importFrom fs file_size
+#' @importFrom fs dir_delete
 #' @importFrom lubridate year
 #' @importFrom lubridate today
 #' @importFrom lubridate ymd

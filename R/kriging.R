@@ -12,7 +12,8 @@
 #'
 #' @importFrom dplyr bind_cols
 #' @importFrom methods as
-#' @import sf
+#' @importFrom sf st_as_sf
+#' @importFrom sf st_drop_geometry
 #' @importFrom stats as.formula
 #'
 #' @references \code{\link[gstat:krige]{gstat::krige}}

@@ -13,9 +13,6 @@
 #' @return tmap
 #' @export choropleth_tmap
 #'
-#' @import sf
-#' @import tmap
-#' @import viridis
 #'
 #' @author Martin Haringa
 choropleth_tmap <- function(sf_object, value = "output", id_name = "areaname",

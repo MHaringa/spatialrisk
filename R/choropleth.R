@@ -15,8 +15,13 @@
 #' @return tmap
 #' @export choropleth
 #'
-#' @import sf
-#' @import tmap
+#' @importFrom tmap tmap_mode
+#' @importFrom tmap tm_shape
+#' @importFrom tmap tm_polygons
+#' @importFrom tmap tm_basemap
+#' @importFrom tmap tm_compass
+#' @importFrom tmap tm_scale_bar
+#' @importFrom tmap tm_layout
 #' @import viridis
 #'
 #' @author Martin Haringa

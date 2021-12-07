@@ -13,10 +13,15 @@
 #' @return ggplot map
 #' @export choropleth_ggplot2
 #'
-#' @import sf
-#' @import ggplot2
-#' @import viridis
-#' @import classInt
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 geom_sf
+#' @importFrom ggplot2 coord_sf
+#' @importFrom ggplot2 scale_fill_viridis_d
+#' @importFrom ggplot2 theme_void
+#' @importFrom ggplot2 labs
+#' @importFrom ggplot2 scale_fill_viridis_c
+#' @importFrom ggplot2 aes
+#' @importFrom classInt classIntervals
 #'
 #' @author Martin Haringa
 #'
@@ -40,7 +45,7 @@ choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2, le
       })
 
       ggplot2::ggplot(sf_object) +
-        ggplot2::geom_sf(aes(fill = clustering), size = .1, color = "grey85")  +
+        ggplot2::geom_sf(ggplot2::aes(fill = clustering), size = .1, color = "grey85")  +
         ggplot2::coord_sf(datum = NA) +
         ggplot2::scale_fill_viridis_d(direction = direction, option = option) +
         ggplot2::theme_void() +
@@ -49,7 +54,7 @@ choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2, le
     error = function(e) {
 
       ggplot2::ggplot(sf_object) +
-        ggplot2::geom_sf(aes(fill = vector_value), size = .1, color = "grey85")  +
+        ggplot2::geom_sf(ggplot2::aes(fill = vector_value), size = .1, color = "grey85")  +
         ggplot2::coord_sf(datum = NA) +
         ggplot2::scale_fill_viridis_c(direction = direction, option = option) +
         ggplot2::theme_void() +
