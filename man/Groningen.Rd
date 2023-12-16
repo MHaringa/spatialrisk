@@ -19,12 +19,14 @@ A data frame with 25000 rows and 8 variables:
 }
 }
 \source{
-The BAG is the Dutch registry for Buildings and adresses (Basisregistratie adressen en gebouwen).
+The BAG is the Dutch registry for Buildings and adresses
+(Basisregistratie adressen en gebouwen).
 }
 \usage{
 Groningen
 }
 \description{
-A dataset of postal codes and the corresponding spatial locations in terms of a latitude and a longitude.
+A dataset of postal codes and the corresponding spatial locations in terms of
+a latitude and a longitude.
 }
 \keyword{datasets}

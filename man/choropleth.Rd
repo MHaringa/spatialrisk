@@ -21,21 +21,26 @@ choropleth(
 
 \item{id_name}{column name of ids to plot}
 
-\item{mode}{choose between static ('plot' is default) and interactive map ('view')}
+\item{mode}{choose between static ('plot' is default) and interactive
+map ('view')}
 
 \item{n}{number of clusters (default is 7)}
 
 \item{legend_title}{title of legend}
 
-\item{palette}{palette name or a vector of colors. See tmaptools::palette_explorer() for the named palettes. Use a "-" as prefix to reverse the palette. The default palette is "viridis".}
+\item{palette}{palette name or a vector of colors. See
+tmaptools::palette_explorer() for the named palettes.
+Use a "-" as prefix to reverse the palette. The default palette is "viridis".}
 }
 \value{
 tmap
 }
 \description{
-Takes an object produced by \code{points_to_polygon()}, and creates the corresponding choropleth map.
-The given clustering is according to the Fisher-Jenks algorithm. This commonly used method for choropleths seeks to reduce
-the variance within classes and maximize the variance between classes.
+Takes an object produced by \code{points_to_polygon()}, and
+creates the corresponding choropleth map. The given clustering is according
+to the Fisher-Jenks algorithm. This commonly used method for choropleths
+seeks to reduce the variance within classes and maximize the variance
+between classes.
 }
 \examples{
 test <- points_to_polygon(nl_provincie, insurance, sum(amount, na.rm = TRUE))

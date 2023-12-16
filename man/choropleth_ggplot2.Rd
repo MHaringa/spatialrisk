@@ -25,15 +25,20 @@ choropleth_ggplot2(
 
 \item{legend_title}{title of legend}
 
-\item{option}{a character string indicating the colormap option to use. Four options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
+\item{option}{a character string indicating the colormap option to use. Four
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
+(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
 
-\item{direction}{Sets the order of colors in the scale. If 1, the default, colors are ordered from darkest to lightest. If -1, the order of colors is reversed.}
+\item{direction}{Sets the order of colors in the scale. If 1, the default,
+colors are ordered from darkest to lightest. If -1, the order of colors is
+reversed.}
 }
 \value{
 ggplot map
 }
 \description{
-Takes an object produced by \code{choropleth_sf()}, and creates the correspoding choropleth map.
+Takes an object produced by \code{choropleth_sf()}, and creates
+the correspoding choropleth map.
 }
 \examples{
 test <- points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))

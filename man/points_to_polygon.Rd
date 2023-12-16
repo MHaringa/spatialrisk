@@ -9,20 +9,25 @@ points_to_polygon(sf_map, df, oper, crs = 4326, outside_print = FALSE)
 \arguments{
 \item{sf_map}{object of class sf}
 
-\item{df}{data.frame containing coordinates (column names should be 'lon' and 'lat')}
+\item{df}{data.frame containing coordinates (column names should be 'lon'
+and 'lat')}
 
 \item{oper}{an arithmetic operation on the polygon level}
 
-\item{crs}{coordinate reference system: integer with the EPSG code, or character with proj4string}
+\item{crs}{coordinate reference system: integer with the EPSG code, or
+character with proj4string}
 
-\item{outside_print}{print points that are not within a polygon (default is FALSE).}
+\item{outside_print}{print points that are not within a polygon (default is
+FALSE).}
 }
 \value{
 an object of class \code{sf}
 }
 \description{
-A data.frame containing coordinates (in terms of longitude and latitude) is joined to the polygon level.
-   Then arithmetic operations on the attributes of the coordinates are applied to obtain aggregated values for each polygon.
+A data.frame containing coordinates (in terms of longitude and
+latitude) is joined to the polygon level. Then arithmetic operations on the
+attributes of the coordinates are applied to obtain aggregated values for
+each polygon.
 }
 \examples{
 points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))

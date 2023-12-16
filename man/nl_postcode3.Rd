@@ -17,10 +17,15 @@ A simple feature object with 799 rows and 3 variables:
 nl_postcode3
 }
 \description{
-An object of class \code{sf} (simple feature) for 3-digit postal codes (Dutch: postcode) regions in the Netherlands.
+An object of class \code{sf} (simple feature) for 3-digit postal
+codes (Dutch: postcode) regions in the Netherlands.
 }
 \details{
-Postal codes in the Netherlands, known as postcodes, are alphanumeric, consisting of four digits followed by two uppercase letters. The first two digits indicate a city and a region, the second two digits and the two letters indicate a range of house numbers, usually on the same street.
+Postal codes in the Netherlands, known as postcodes, are
+alphanumeric, consisting of four digits followed by two uppercase letters.
+The first two digits indicate a city and a region, the second two digits and
+the two letters indicate a range of house numbers, usually on the same
+street.
 }
 \author{
 Martin Haringa

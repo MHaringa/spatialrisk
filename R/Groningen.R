@@ -1,6 +1,7 @@
 #' Coordinates of houses in Groningen
 #'
-#' A dataset of postal codes and the corresponding spatial locations in terms of a latitude and a longitude.
+#' A dataset of postal codes and the corresponding spatial locations in terms of
+#' a latitude and a longitude.
 #'
 #' @format A data frame with 25000 rows and 8 variables:
 #' \describe{
@@ -14,5 +15,6 @@
 #'   \item{lat}{Latitude (in degrees)}
 #'   \item{amount}{Random value}
 #' }
-#' @source The BAG is the Dutch registry for Buildings and adresses (Basisregistratie adressen en gebouwen).
+#' @source The BAG is the Dutch registry for Buildings and adresses
+#' (Basisregistratie adressen en gebouwen).
 "Groningen"

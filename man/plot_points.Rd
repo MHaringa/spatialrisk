@@ -11,7 +11,8 @@ plot_points(
   lat = lat,
   palette = "viridis",
   legend_position = "bottomleft",
-  crs = 4326
+  crs = 4326,
+  providers = c("CartoDB.Positron", "nlmaps.luchtfoto")
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ plot_points(
 \item{legend_position}{position for legend (default is "bottomleft")}
 
 \item{crs}{crs (default is 4326)}
+
+\item{providers}{providers to show. See `leaflet::providers` for a list.}
 }
 \value{
 leaflet map

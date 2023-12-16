@@ -8,9 +8,8 @@ The returned data frame contains the following columns:
 \itemize{
   \item station = ID of measurement station;
   \item date = Date;
-  \item FH	= Hourly mean wind speed (in 0.1 m/s)
+  \item FH	= Hourly mean wind speed (in 0.1 m/s);
   \item FX	= Maximum wind gust (in 0.1 m/s) during the hourly division;
-  \item T = Temperature (in 0.1 degrees Celsius) at 1.50 m at the time of observation;
   \item DR	= Precipitation duration (in 0.1 hour) during the hourly division;
   \item RH	= Hourly precipitation amount (in 0.1 mm) (-1 for <0.05 mm);
   \item city = City where the measurement station is located;
@@ -27,10 +26,13 @@ knmi_historic_data(startyear, endyear)
 \item{endyear}{end year for historic weather data.}
 }
 \value{
-Data frame containing weather data and meta data for weather station locations.
+Data frame containing weather data and meta data for weather station
+locations.
 }
 \description{
-This function retrieves historic weather data collected by the official KNMI weather stations. See spatialrisk::knmi_stations for a list of the official KNMI weather stations.
+This function retrieves historic weather data collected by the official KNMI
+weather stations. See spatialrisk::knmi_stations for a list of the official
+KNMI weather stations.
 }
 \examples{
 \dontrun{

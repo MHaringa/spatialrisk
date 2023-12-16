@@ -10,8 +10,11 @@ A simple feature object with 4053 rows and 7 variables:
   \item{pc4}{4-digit postal code}
   \item{areaname}{name of corresponding 4-digit postal code}
   \item{city}{name of city}
-  \item{biggest_20cities}{pc4 is in one of the following twenty (biggest) cities in the Netherlands: Amsterdam, Rotterdam, 's-Gravenhage, Utrecht, Eindhoven,
-  Tilburg, Groningen, Almere, Breda, Nijmegen, Enschede, Apeldoorn, Haarlem, Amersfoort, Arnhem, 's-Hertogenbosch, Zoetermeer, Zwolle, Maastricht, Leiden.}
+  \item{biggest_20cities}{pc4 is in one of the following twenty (biggest)
+  cities in the Netherlands: Amsterdam, Rotterdam, 's-Gravenhage, Utrecht,
+  Eindhoven, Tilburg, Groningen, Almere, Breda, Nijmegen, Enschede,
+  Apeldoorn, Haarlem, Amersfoort, Arnhem, 's-Hertogenbosch, Zoetermeer,
+  Zwolle, Maastricht, Leiden.}
   \item{geometry}{geometry object of postal code}
   \item{lon}{longitude of the 4-digit postal code centroid}
   \item{lat}{latitude of the 4-digit postal code centroid}
@@ -21,10 +24,15 @@ A simple feature object with 4053 rows and 7 variables:
 nl_postcode4
 }
 \description{
-An object of class \code{sf} (simple feature) for 4-digit postal codes (Dutch: postcode) regions in the Netherlands.
+An object of class \code{sf} (simple feature) for 4-digit postal
+codes (Dutch: postcode) regions in the Netherlands.
 }
 \details{
-Postal codes in the Netherlands, known as postcodes, are alphanumeric, consisting of four digits followed by two uppercase letters. The first two digits indicate a city and a region, the second two digits and the two letters indicate a range of house numbers, usually on the same street.
+Postal codes in the Netherlands, known as postcodes, are
+alphanumeric, consisting of four digits followed by two uppercase letters.
+The first two digits indicate a city and a region, the second two digits and
+ the two letters indicate a range of house numbers, usually on the same
+ street.
 }
 \author{
 Martin Haringa

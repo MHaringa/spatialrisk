@@ -18,7 +18,8 @@ interpolate_spline(
 \arguments{
 \item{observations}{data.frame of observations.}
 
-\item{targets}{data.frame of locations to calculate the interpolated and smoothed values for (target points).}
+\item{targets}{data.frame of locations to calculate the interpolated and
+smoothed values for (target points).}
 
 \item{value}{Column with values in \code{observations}.}
 
@@ -30,22 +31,31 @@ interpolate_spline(
 
 \item{lat_targets}{Column in \code{targets} with latitude (lat is default).}
 
-\item{k}{(default 50) is the basis dimension. For small data sets reduce \code{k} manually rather than using default.}
+\item{k}{(default 50) is the basis dimension. For small data sets reduce
+\code{k} manually rather than using default.}
 }
 \value{
-Object equal to object \code{targets} including an extra column with predicted values.
+Object equal to object \code{targets} including an extra column
+ with predicted values.
 }
 \description{
 Spline interpolation and smoothing on the sphere.
 }
 \details{
-\code{observations} should include at least columns for longitude and latitude.
+\code{observations} should include at least columns for longitude
+and latitude.
 
-\code{targets} should include at least columns for longitude, latitude and value of interest to interpolate and smooth.
+\code{targets} should include at least columns for longitude,
+latitude and value of interest to interpolate and smooth.
 
-A smooth of the general type discussed in Duchon (1977) is used: the sphere is embedded in a 3D Euclidean space, but smoothing employs a penalty based on second derivatives (so that locally as the smoothing parameter tends to zero we recover a "normal" thin plate spline on the tangent space). This is an unpublished suggestion of Jean Duchon.
+A smooth of the general type discussed in Duchon (1977) is used:
+the sphere is embedded in a 3D Euclidean space, but smoothing employs a
+penalty based on second derivatives (so that locally as the smoothing
+parameter tends to zero we recover a "normal" thin plate spline on the
+tangent space). This is an unpublished suggestion of Jean Duchon.
 
-See \code{\link[spatialrisk:interpolate_krige]{ordinary kriging}} for interpolation and smoothing on the sphere by means of kriging.
+See \code{\link[spatialrisk:interpolate_krige]{ordinary kriging}}
+for interpolation and smoothing on the sphere by means of kriging.
 }
 \examples{
 \dontrun{
@@ -58,7 +68,8 @@ choropleth(pop_sf, value = "population_pc4_pred", n = 13)
 
 }
 \references{
-\code{\link[mgcv:smooth.construct.sos.smooth.spec]{Splines on the sphere}}
+\code{\link[mgcv:smooth.construct.sos.smooth.spec]{Splines on
+the sphere}}
 }
 \author{
 Martin Haringa

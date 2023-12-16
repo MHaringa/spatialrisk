@@ -19,7 +19,8 @@ A simple feature object with 380 rows and 6 variables:
 nl_gemeente
 }
 \description{
-An object of class \code{sf} (simple feature) for municipalities (Dutch: gemeentes) in the Netherlands in the year 2021.
+An object of class \code{sf} (simple feature) for municipalities
+(Dutch: gemeentes) in the Netherlands in the year 2021.
 }
 \author{
 Martin Haringa

@@ -18,6 +18,11 @@ A data frame with 29,990 rows and 5 variables:
 insurance
 }
 \description{
-A dataset of postal codes with their sum insured, population and the corresponding spatial locations in terms of a latitude and a longitude.
+A dataset of postal codes with their sum insured, population
+and the corresponding spatial locations in terms of a latitude and a
+longitude.
+}
+\author{
+Martin Haringa
 }
 \keyword{datasets}

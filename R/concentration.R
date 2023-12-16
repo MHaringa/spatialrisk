@@ -2,20 +2,24 @@
 #'
 #' @description The sum of all observations within a circle of a certain radius.
 #'
-#' @param sub data.frame of locations to calculate concentration risk for (target points). \code{sub} should include at least
-#' columns for longitude and latitude.
+#' @param sub data.frame of locations to calculate concentration risk for
+#' (target points). \code{sub} should include at least columns for longitude
+#' and latitude.
 #' @param full data.frame to find the locations within radius \code{r} from
-#' locations in \code{sub} (reference locations). \code{full}
-#' should include at least columns for longitude, latitude and value of interest to summarize.
+#' locations in \code{sub} (reference locations). \code{full} should include at
+#' least columns for longitude, latitude and value of interest to summarize.
 #' @param value column name with value of interest to summarize in \code{full}.
 #' @param lon_sub column name in \code{sub} with longitude (lon is default).
 #' @param lat_sub column name in \code{sub} with latitude (lat is default).
-#' @param lon_full column name in \code{full} with longitude in \code{full} (lon is default).
-#' @param lat_full column name in \code{full} with latitude in \code{full} (lat is default).
+#' @param lon_full column name in \code{full} with longitude in \code{full}
+#' (lon is default).
+#' @param lat_full column name in \code{full} with latitude in \code{full}
+#' (lat is default).
 #' @param radius radius (in meters) (default is 200m).
 #' @param display_progress show progress bar (TRUE/FALSE). Defaults to TRUE.
 #'
-#' @return A data.frame equal to data.frame \code{sub} including an extra column \code{concentration}.
+#' @return A data.frame equal to data.frame \code{sub} including an extra column
+#' \code{concentration}.
 #'
 #' @useDynLib spatialrisk
 #' @importFrom Rcpp sourceCpp
@@ -25,7 +29,8 @@
 #' @author Martin Haringa
 #'
 #' @examples
-#' df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
+#' df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398),
+#'  lat = c(53.21369, 53.21326))
 #' concentration(df, Groningen, value = amount, radius = 100)
 #'
 #' @export
@@ -46,21 +51,28 @@ concentration <- function(sub, full, value,
   value <- deparse(substitute(value))
 
   if ( !all(c(lon_sub, lat_sub) %in% names(sub))) {
-    stop(paste0(sub_name, " does not contain columns ", lon_sub, " and ", lat_sub), call. = FALSE)
+    stop(paste0(sub_name, " does not contain columns ", lon_sub, " and ",
+                lat_sub), call. = FALSE)
   }
 
   if ( !all(c(lon_full, lat_full) %in% names(full))) {
-    stop(paste0(full_name, " does not contain columns ", lon_full, " and ", lat_full), call. = FALSE)
+    stop(paste0(full_name, " does not contain columns ", lon_full, " and ",
+                lat_full), call. = FALSE)
   }
 
-  if ( !all(is.numeric(c(sub[[lon_sub]], sub[[lat_sub]], full[[lon_full]], full[[lat_full]], full[[value]]))) ){
-    stop(paste0("the following variables should be numeric: ", lon_sub, ", ", lat_sub, ", ", lon_full, ", ", lat_full, ", ", value), call. = FALSE)
+  if ( !all(is.numeric(c(sub[[lon_sub]], sub[[lat_sub]], full[[lon_full]],
+                         full[[lat_full]], full[[value]]))) ){
+    stop(paste0("the following variables should be numeric: ", lon_sub, ", ",
+                lat_sub, ", ", lon_full, ", ", lat_full, ", ", value),
+         call. = FALSE)
   }
 
   sub_df <- data.frame("lon" = sub[[lon_sub]], "lat" = sub[[lat_sub]])
-  full_df <- data.frame("lon" = full[[lon_full]], "lat" = full[[lat_full]], "value" = full[[value]])
+  full_df <- data.frame("lon" = full[[lon_full]], "lat" = full[[lat_full]],
+                        "value" = full[[value]])
 
-  concentration_df <- concentration_loop_cpp(sub_df, full_df, radius, display_progress)
+  concentration_df <- concentration_loop_cpp(sub_df, full_df, radius,
+                                             display_progress)
 
   sub$concentration <- concentration_df$cumulation
 

@@ -17,8 +17,6 @@ reference:
       - points_to_polygon
       - choropleth
       - choropleth_ggplot2
-      - choropleth_tmap
-      - choropleth_sf
       - plot_points
   - title: "Spatial interpolation"
     contents:

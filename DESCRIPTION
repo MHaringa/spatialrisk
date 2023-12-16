@@ -4,6 +4,7 @@ Title: Calculating Spatial Risk
 Version: 0.7.0.9000
 Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), email = "mtharinga@gmail.com"))
 Maintainer: Martin Haringa <mtharinga@gmail.com>
+BugReports: https://github.com/mharinga/spatialrisk/issues
 Description: Methods for spatial risk calculations. It offers an efficient approach to determine the sum of all observations within a 
      circle of a certain radius. This might be beneficial for insurers who are required (by a recent European Commission regulation) to determine 
      the maximum value of insured fire risk policies of all buildings that are partly or fully located within a circle of a radius of 200m. See 
@@ -24,7 +25,6 @@ Imports:
     leafem,
     leafgl,
     leaflet,
-    lubridate,
     methods,
     Rcpp,
     RcppProgress, 
@@ -34,7 +34,7 @@ Imports:
     viridis
 Depends: R (>= 3.3)
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Suggests: 
     automap, 
     gstat, 

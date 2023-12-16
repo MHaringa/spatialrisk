@@ -17,12 +17,13 @@ concentration(
 )
 }
 \arguments{
-\item{sub}{data.frame of locations to calculate concentration risk for (target points). \code{sub} should include at least
-columns for longitude and latitude.}
+\item{sub}{data.frame of locations to calculate concentration risk for
+(target points). \code{sub} should include at least columns for longitude
+and latitude.}
 
 \item{full}{data.frame to find the locations within radius \code{r} from
-locations in \code{sub} (reference locations). \code{full}
-should include at least columns for longitude, latitude and value of interest to summarize.}
+locations in \code{sub} (reference locations). \code{full} should include at
+least columns for longitude, latitude and value of interest to summarize.}
 
 \item{value}{column name with value of interest to summarize in \code{full}.}
 
@@ -30,22 +31,26 @@ should include at least columns for longitude, latitude and value of interest to
 
 \item{lat_sub}{column name in \code{sub} with latitude (lat is default).}
 
-\item{lon_full}{column name in \code{full} with longitude in \code{full} (lon is default).}
+\item{lon_full}{column name in \code{full} with longitude in \code{full}
+(lon is default).}
 
-\item{lat_full}{column name in \code{full} with latitude in \code{full} (lat is default).}
+\item{lat_full}{column name in \code{full} with latitude in \code{full}
+(lat is default).}
 
 \item{radius}{radius (in meters) (default is 200m).}
 
 \item{display_progress}{show progress bar (TRUE/FALSE). Defaults to TRUE.}
 }
 \value{
-A data.frame equal to data.frame \code{sub} including an extra column \code{concentration}.
+A data.frame equal to data.frame \code{sub} including an extra column
+\code{concentration}.
 }
 \description{
 The sum of all observations within a circle of a certain radius.
 }
 \examples{
-df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398), lat = c(53.21369, 53.21326))
+df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398),
+ lat = c(53.21369, 53.21326))
 concentration(df, Groningen, value = amount, radius = 100)
 
 }

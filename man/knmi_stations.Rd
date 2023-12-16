@@ -20,7 +20,8 @@ A data frame with 50 rows and 7 variables:
 knmi_stations
 }
 \description{
-A data frame containing the IDs and meta-data on the official KNMI weather stations.
+A data frame containing the IDs and meta-data on the official
+KNMI weather stations.
 }
 \author{
 Martin Haringa

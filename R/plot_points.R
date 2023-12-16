@@ -9,6 +9,7 @@
 #' @param palette color palette
 #' @param legend_position position for legend (default is "bottomleft")
 #' @param crs crs (default is 4326)
+#' @param providers providers to show. See `leaflet::providers` for a list.
 #'
 #' @return leaflet map
 #'
@@ -23,6 +24,7 @@
 #' @importFrom leaflet addLegend
 #' @importFrom leaflet addLayersControl
 #' @importFrom leaflet layersControlOptions
+#' @importFrom leaflet providers
 #'
 #' @examples \dontrun{
 #' plot_points(Groningen, value = amount)
@@ -30,7 +32,8 @@
 #'
 #' @export
 plot_points <- function(df, value, lon = lon, lat = lat, palette = "viridis",
-                        legend_position = "bottomleft", crs = 4326){
+                         legend_position = "bottomleft", crs = 4326,
+                         providers = c("CartoDB.Positron", "nlmaps.luchtfoto")){
 
   value_nm <- deparse(substitute(value))
   lon_nm <- deparse(substitute(lon))
@@ -49,36 +52,34 @@ plot_points <- function(df, value, lon = lon, lat = lat, palette = "viridis",
   qpal <- leaflet::colorNumeric(palette, obj_sf[[value_nm]])
 
   suppressMessages({
-    leaflet::leaflet() %>%
+    x <- leaflet::leaflet() |>
 
       # Base groups
-      leaflet::addTiles(group = "OSM") %>%
-      leaflet::addProviderTiles(provider = leaflet::providers$CartoDB.Positron,
-                                group = "Positron (default)") %>%
-      leaflet::addProviderTiles(provider = leaflet::providers$Stamen.TonerLite,
-                                group = "Toner Lite") %>%
+      leaflet::addTiles(group = "OSM")
 
-      # Overlay groups
+    x <- addProvidersToMap(x, providers)
+
+    # Overlay groups
+    x[["map"]] |>
       leafgl::addGlPoints(data = obj_sf,
                           fillColor = cols,
                           popup = TRUE,
-                          group = "Points") %>%
+                          group = "Points") |>
       leaflet::addLegend(data = obj_sf,
                          pal = qpal,
                          title = value_nm,
                          values = obj_sf[[value_nm]],
                          position = legend_position,
-                         group = "Points") %>%
-      leafem::addMouseCoordinates() %>%
+                         group = "Points") |>
+      leafem::addMouseCoordinates() |>
 
       # Layers control
       leaflet::addLayersControl(
-        baseGroups = c("Positron (default)", "OSM", "Toner Lite"),
+        baseGroups = c("OSM", x[["used_providers"]]),
         overlayGroups = c("Points"),
         options = leaflet::layersControlOptions(collapsed = FALSE)
       )
   })
-
 }
 
 

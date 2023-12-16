@@ -17,7 +17,8 @@ interpolate_krige(
 \arguments{
 \item{observations}{data.frame of observations.}
 
-\item{targets}{data.frame of locations to calculate the interpolated and smoothed values for (target points).}
+\item{targets}{data.frame of locations to calculate the interpolated and
+smoothed values for (target points).}
 
 \item{value}{Column with values in \code{observations}.}
 
@@ -30,19 +31,27 @@ interpolate_krige(
 \item{lat_targets}{Column in \code{targets} with latitude (lat is default).}
 }
 \value{
-Object equal to object \code{targets} including extra columns for the predicted value and the variance.
+Object equal to object \code{targets} including extra columns for
+the predicted value and the variance.
 }
 \description{
-Interpolation and smoothing on the sphere by means of ordinary kriging.
+Interpolation and smoothing on the sphere by means of ordinary
+kriging.
 }
 \details{
-\code{observations} should include at least columns for longitude and latitude.
+\code{observations} should include at least columns for longitude
+and latitude.
 
-\code{targets} should include at least columns for longitude, latitude and value of interest to interpolate and smooth.
+\code{targets} should include at least columns for longitude,
+latitude and value of interest to interpolate and smooth.
 
-Kriging can be considered as linear regression with spatially correlated residuals. Kriging is most appropriate when it is known there is a spatially correlated distance or directional bias in the data. It is often used in soil science and geology.
+Kriging can be considered as linear regression with spatially
+correlated residuals. Kriging is most appropriate when it is known there is
+a spatially correlated distance or directional bias in the data. It is often
+used in soil science and geology.
 
-See \code{\link[spatialrisk:interpolate_spline]{splines on the sphere}} for interpolation and smoothing on the sphere by means of splines.
+See \code{\link[spatialrisk:interpolate_spline]{splines on the
+sphere}} for interpolation and smoothing on the sphere by means of splines.
 }
 \examples{
 \dontrun{

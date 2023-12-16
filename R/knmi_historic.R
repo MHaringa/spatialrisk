@@ -1,19 +1,21 @@
 #' Retrieve historic weather data for the Netherlands
 #'
-#' This function retrieves historic weather data collected by the official KNMI weather stations. See spatialrisk::knmi_stations for a list of the official KNMI weather stations.
+#' This function retrieves historic weather data collected by the official KNMI
+#' weather stations. See spatialrisk::knmi_stations for a list of the official
+#' KNMI weather stations.
 #'
 #' @param startyear start year for historic weather data.
 #' @param endyear end year for historic weather data.
 #'
-#' @return Data frame containing weather data and meta data for weather station locations.
+#' @return Data frame containing weather data and meta data for weather station
+#' locations.
 #'
 #' @format The returned data frame contains the following columns:
 #' \itemize{
 #'   \item station = ID of measurement station;
 #'   \item date = Date;
-#'   \item FH	= Hourly mean wind speed (in 0.1 m/s)
+#'   \item FH	= Hourly mean wind speed (in 0.1 m/s);
 #'   \item FX	= Maximum wind gust (in 0.1 m/s) during the hourly division;
-#'   \item T = Temperature (in 0.1 degrees Celsius) at 1.50 m at the time of observation;
 #'   \item DR	= Precipitation duration (in 0.1 hour) during the hourly division;
 #'   \item RH	= Hourly precipitation amount (in 0.1 mm) (-1 for <0.05 mm);
 #'   \item city = City where the measurement station is located;
@@ -29,9 +31,6 @@
 #' @importFrom fs dir_ls
 #' @importFrom fs file_size
 #' @importFrom fs dir_delete
-#' @importFrom lubridate year
-#' @importFrom lubridate today
-#' @importFrom lubridate ymd
 #' @importFrom utils setTxtProgressBar
 #' @importFrom utils txtProgressBar
 #' @importFrom utils data
@@ -48,7 +47,8 @@
 knmi_historic_data <- function(startyear, endyear){
 
   if (!requireNamespace("vroom", quietly = TRUE)) {
-    stop("vroom is needed for this function to work. Install it via install.packages(\"vroom\")", call. = FALSE)
+    stop("vroom is needed for this function to work. Install it via
+         install.packages(\"vroom\")", call. = FALSE)
   }
 
   # get reference data
@@ -56,12 +56,18 @@ knmi_historic_data <- function(startyear, endyear){
 
   id_stations <- knmi_stations$station
 
-  if ( startyear < 1951 ) { stop("Historic weather data before the year 1951 is not available.") }
-  if( endyear > lubridate::year(lubridate::today()) ) { stop("Year end should not be greater than the current year.") }
+  if ( startyear < 1951 ) {
+    stop("Historic weather data before the year 1951 is not available.",
+         call. = FALSE) }
+
+  if( endyear > as.POSIXlt(Sys.Date())$year + 1900 ) {
+    stop("Year end should not be greater than the current year.",
+         call. = FALSE) }
 
   historic_levels <- cut(startyear:endyear,
                          breaks = c(1951, seq(1960, 2200, by = 10)),
-                         labels = paste0(seq(1951, 2191, by = 10), "-", seq(1960, 2200, by = 10)),
+                         labels = paste0(seq(1951, 2191, by = 10), "-",
+                                         seq(1960, 2200, by = 10)),
                          include.lowest = TRUE, dig.lab = 5)
 
   periods <- unique(as.character(historic_levels))
@@ -73,13 +79,17 @@ knmi_historic_data <- function(startyear, endyear){
   pb <- utils::txtProgressBar(max = length(id_stations), style = 3)
 
   # create new files in the new directory
-  for (i in 1:length(id_stations)){
+  for (i in seq_len(length(id_stations))){
 
     utils::setTxtProgressBar(pb, i)
 
-    for (j in 1:length(periods)){
-      new_file <- fs::file_create(fs::path(tmp, paste0("knmi_", id_stations[i], "_", periods[j], ".zip")))
-      knmi_url <- paste0("https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/uurgegevens/uurgeg_", id_stations[i], "_", periods[j], ".zip")
+    for (j in seq_len(length(periods))){
+      new_file <- fs::file_create(
+        fs::path(tmp, paste0("knmi_", id_stations[i], "_", periods[j], ".zip"))
+        )
+      knmi_url <- paste0(
+  "https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/uurgegevens/uurgeg_",
+  id_stations[i], "_", periods[j], ".zip")
       tryCatch(utils::download.file(knmi_url, new_file, quiet = TRUE),
                error = function(e) print(paste(knmi_url, 'is not found')))
     }
@@ -93,7 +103,8 @@ knmi_historic_data <- function(startyear, endyear){
   # Read files into R
   suppressMessages(
     df <- vroom::vroom(files_exist, skip = 31, delim = ",",
-                       col_select = list(station = 1, date = YYYYMMDD, HH, DD, FH, FF, FX, T, DR, RH, Y))[-1,]
+                       col_select = list(station = 1, date = YYYYMMDD, HH,
+                                         DD, FH, FF, FX, DR, RH, Y))[-1,]
   )
 
   # Delete directory
@@ -104,9 +115,13 @@ knmi_historic_data <- function(startyear, endyear){
   df_selection <- subset(df, year >= startyear & year <= endyear)
 
   # Add metadata
-  df_meta <- dplyr::left_join(df_selection, knmi_stations[, c("station", "city", "lon", "lat")], by = "station")
+  df_meta <- dplyr::left_join(
+    df_selection, knmi_stations[, c("station", "city", "lon", "lat")],
+    by = "station"
+    )
 
   return(df_meta)
 }
+
 
 

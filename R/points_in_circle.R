@@ -1,11 +1,15 @@
 #' Points in circle
 #'
-#' @description Find all observations in a data.frame within a circle of a certain radius.
+#' @description Find all observations in a data.frame within a circle of a
+#' certain radius.
 #'
 #' @param data data.frame with at least columns for longitude and latitude.
-#' @param lon_center numeric value referencing to the longitude of the center of the circle
-#' @param lat_center numeric value referencing to the latitude of the center of the circle
-#' @param lon column name in \code{data} with longitudes (\code{lon} is default).
+#' @param lon_center numeric value referencing to the longitude of the center
+#' of the circle
+#' @param lat_center numeric value referencing to the latitude of the center of
+#' the circle
+#' @param lon column name in \code{data} with longitudes (\code{lon} is
+#' default).
 #' @param lat column name in \code{data} with latitudes (\code{lat} is default).
 #' @param radius radius (in meters) (defaults to 200m).
 #'
@@ -15,12 +19,15 @@
 #' @import RcppProgress
 #'
 #' @examples
-#' points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326, radius = 60)
+#' points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326,
+#' radius = 60)
 #'
-#' @return data.frame. Column \code{distance_m} gives the distance to the center of the circle (in meters).
+#' @return data.frame. Column \code{distance_m} gives the distance to the center
+#' of the circle (in meters).
 #'
 #' @export
-points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat, radius = 200){
+points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat,
+                             radius = 200){
 
   # Turn into character vector
   lon <- deparse(substitute(lon))
@@ -28,7 +35,8 @@ points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat,
   data_name <- deparse(substitute(data))
 
   if ( !all(c(lon, lat) %in% names(data))) {
-    stop(paste0(data_name, " does not contain columns ", lon, " and ", lat), call. = FALSE)
+    stop(paste0(data_name, " does not contain columns ", lon, " and ", lat),
+         call. = FALSE)
   }
 
   if ( !all(is.numeric(c(data[[lon]], data[[lat]]))) ){

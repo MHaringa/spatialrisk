@@ -1,6 +1,7 @@
 #' Object of class \code{sf} for municipalities in the Netherlands
 #'
-#' @description An object of class \code{sf} (simple feature) for municipalities (Dutch: gemeentes) in the Netherlands in the year 2021.
+#' @description An object of class \code{sf} (simple feature) for municipalities
+#' (Dutch: gemeentes) in the Netherlands in the year 2021.
 #'
 #' @author Martin Haringa
 #'
@@ -17,7 +18,8 @@
 
 #' Object of class \code{sf} for provinces in the Netherlands
 #'
-#' @description An object of class \code{sf} (simple feature) for provinces (Dutch: provincies) in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for provinces
+#' (Dutch: provincies) in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
@@ -32,11 +34,16 @@
 
 #' Object of class \code{sf} for COROP regions in the Netherlands
 #'
-#' @description An object of class \code{sf} (simple feature) for COROP regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for COROP regions
+#' in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
-#' @details A COROP region is a regional area within the Netherlands. These regions are used for analytical purposes by, among others, Statistics Netherlands. The Dutch abbreviation stands for Coordinatiecommissie Regionaal Onderzoeksprogramma, literally the Coordination Commission Regional Research Programme.
+#' @details A COROP region is a regional area within the Netherlands. These
+#' regions are used for analytical purposes by, among others, Statistics
+#' Netherlands. The Dutch abbreviation stands for Coordinatiecommissie Regionaal
+#' Onderzoeksprogramma, literally the Coordination Commission Regional Research
+#' Programme.
 #'
 #' @format A simple feature object with 40 rows and 5 variables:
 #' \describe{
@@ -51,11 +58,16 @@
 
 #' Object of class \code{sf} for 2-digit postcode regions in the Netherlands
 #'
-#' @description An object of class \code{sf} (simple feature) for 2-digit postal codes (Dutch: postcode) regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for 2-digit postal
+#' codes (Dutch: postcode) regions in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
-#' @details Postal codes in the Netherlands, known as postcodes, are alphanumeric, consisting of four digits followed by two uppercase letters. The first two digits indicate a city and a region, the second two digits and the two letters indicate a range of house numbers, usually on the same street.
+#' @details Postal codes in the Netherlands, known as postcodes, are
+#' alphanumeric, consisting of four digits followed by two uppercase letters.
+#' The first two digits indicate a city and a region, the second two digits and
+#'  the two letters indicate a range of house numbers, usually on the same
+#'  street.
 #'
 #' @format A simple feature object with 90 rows and 4 variables:
 #' \describe{
@@ -68,11 +80,16 @@
 
 #' Object of class \code{sf} for 3-digit postcode regions in the Netherlands
 #'
-#' @description An object of class \code{sf} (simple feature) for 3-digit postal codes (Dutch: postcode) regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for 3-digit postal
+#' codes (Dutch: postcode) regions in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
-#' @details Postal codes in the Netherlands, known as postcodes, are alphanumeric, consisting of four digits followed by two uppercase letters. The first two digits indicate a city and a region, the second two digits and the two letters indicate a range of house numbers, usually on the same street.
+#' @details Postal codes in the Netherlands, known as postcodes, are
+#' alphanumeric, consisting of four digits followed by two uppercase letters.
+#' The first two digits indicate a city and a region, the second two digits and
+#' the two letters indicate a range of house numbers, usually on the same
+#' street.
 #'
 #' @format A simple feature object with 799 rows and 3 variables:
 #' \describe{
@@ -85,19 +102,27 @@
 
 #' Object of class \code{sf} for 4-digit postcode regions in the Netherlands
 #'
-#' @description An object of class \code{sf} (simple feature) for 4-digit postal codes (Dutch: postcode) regions in the Netherlands.
+#' @description An object of class \code{sf} (simple feature) for 4-digit postal
+#' codes (Dutch: postcode) regions in the Netherlands.
 #'
 #' @author Martin Haringa
 #'
-#' @details Postal codes in the Netherlands, known as postcodes, are alphanumeric, consisting of four digits followed by two uppercase letters. The first two digits indicate a city and a region, the second two digits and the two letters indicate a range of house numbers, usually on the same street.
+#' @details Postal codes in the Netherlands, known as postcodes, are
+#' alphanumeric, consisting of four digits followed by two uppercase letters.
+#' The first two digits indicate a city and a region, the second two digits and
+#'  the two letters indicate a range of house numbers, usually on the same
+#'  street.
 #'
 #' @format A simple feature object with 4053 rows and 7 variables:
 #' \describe{
 #'   \item{pc4}{4-digit postal code}
 #'   \item{areaname}{name of corresponding 4-digit postal code}
 #'   \item{city}{name of city}
-#'   \item{biggest_20cities}{pc4 is in one of the following twenty (biggest) cities in the Netherlands: Amsterdam, Rotterdam, 's-Gravenhage, Utrecht, Eindhoven,
-#'   Tilburg, Groningen, Almere, Breda, Nijmegen, Enschede, Apeldoorn, Haarlem, Amersfoort, Arnhem, 's-Hertogenbosch, Zoetermeer, Zwolle, Maastricht, Leiden.}
+#'   \item{biggest_20cities}{pc4 is in one of the following twenty (biggest)
+#'   cities in the Netherlands: Amsterdam, Rotterdam, 's-Gravenhage, Utrecht,
+#'   Eindhoven, Tilburg, Groningen, Almere, Breda, Nijmegen, Enschede,
+#'   Apeldoorn, Haarlem, Amersfoort, Arnhem, 's-Hertogenbosch, Zoetermeer,
+#'   Zwolle, Maastricht, Leiden.}
 #'   \item{geometry}{geometry object of postal code}
 #'   \item{lon}{longitude of the 4-digit postal code centroid}
 #'   \item{lat}{latitude of the 4-digit postal code centroid}
@@ -108,7 +133,8 @@
 
 #' KNMI stations
 #'
-#' @description A data frame containing the IDs and meta-data on the official KNMI weather stations.
+#' @description A data frame containing the IDs and meta-data on the official
+#' KNMI weather stations.
 #'
 #' @author Martin Haringa
 #'

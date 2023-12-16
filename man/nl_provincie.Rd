@@ -17,7 +17,8 @@ A simple feature object with 12 rows and 4 variables:
 nl_provincie
 }
 \description{
-An object of class \code{sf} (simple feature) for provinces (Dutch: provincies) in the Netherlands.
+An object of class \code{sf} (simple feature) for provinces
+(Dutch: provincies) in the Netherlands.
 }
 \author{
 Martin Haringa

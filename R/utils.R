@@ -79,7 +79,8 @@ add_gh_nghbrs_sum <- function(df, colname_sum){
   data.table::setkey(gh_nghbrs_long, "value")
 
   # Aggregate sum of hash
-  agg_sum <- gh_nghbrs_long[x_dt,][,.(gh_nghbrs_sum = sum(geohash_sum)), by = "geohash"]
+  agg_sum <- gh_nghbrs_long[x_dt,][,.(gh_nghbrs_sum = sum(geohash_sum)),
+                                   by = "geohash"]
 
   # Add original sum
   data.table::setkey(agg_sum, "geohash")
@@ -126,11 +127,12 @@ create_grid_points <- function(df, meters){
   one_lat_in_meters <- circumference_earth_in_meters * 0.002777778
 
   uit <- vector("list", nrow(df))
-  for (i in 1:nrow(df)){
+  for (i in seq_len(nrow(df))){
     lat_step <- seq(df[["latitude"]][i] - df[["delta_latitude"]][i],
                     df[["latitude"]][i] + df[["delta_latitude"]][i],
                     by = meters / one_lat_in_meters)
-    one_lon_in_meters <- circumference_earth_in_meters * cos(df[["latitude"]][i] * 0.01745329) * 0.002777778
+    one_lon_in_meters <- circumference_earth_in_meters *
+      cos(df[["latitude"]][i] * 0.01745329) * 0.002777778
     lon_step <- seq(df[["longitude"]][i] - df[["delta_longitude"]][i],
                     df[["longitude"]][i] + df[["delta_longitude"]][i],
                     by = meters / one_lon_in_meters)
@@ -145,3 +147,30 @@ create_grid_points <- function(df, meters){
 #' @importFrom dplyr %>%
 #' @export
 dplyr::`%>%`
+
+
+
+#'
+#' @importFrom leaflet addProviderTiles
+#' @importFrom leaflet providers
+#'
+#' @keywords internal
+addProvidersToMap <- function(x, providers) {
+  prov <- NULL
+  if ( !is.null(providers) ){
+    for (i in seq_along(providers)) {
+      if (providers[i] %in% names(leaflet::providers)) {
+        x <- leaflet::addProviderTiles(
+          x,
+          provider = leaflet::providers[[providers[i]]],
+          group = providers[i]
+        )
+        prov <- append(prov, providers[i])
+      } else {
+        warning(paste("Provider ", providers[i], " is not available\n", sep = ""),
+                call. = FALSE)
+      }
+    }
+  }
+  return(list(map = x, used_providers = prov))
+}
