@@ -1,5 +1,6 @@
 # spatialrisk 0.7.1
 
+* `plot_points()` now returns a warning when a specific provider tile is not available
 
 # spatialrisk 0.7.0
 
