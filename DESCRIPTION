@@ -1,7 +1,7 @@
 Package: spatialrisk
 Type: Package
 Title: Calculating Spatial Risk
-Version: 0.7.1
+Version: 0.7.1.9000
 Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), email = "mtharinga@gmail.com"))
 Maintainer: Martin Haringa <mtharinga@gmail.com>
 BugReports: https://github.com/mharinga/spatialrisk/issues
