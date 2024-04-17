@@ -2,7 +2,7 @@
 % Please edit documentation in R/points_in_circle.R
 \name{points_in_circle}
 \alias{points_in_circle}
-\title{Points in circle}
+\title{Filter observations within circle}
 \usage{
 points_in_circle(
   data,
@@ -16,26 +16,26 @@ points_in_circle(
 \arguments{
 \item{data}{data.frame with at least columns for longitude and latitude.}
 
-\item{lon_center}{numeric value referencing to the longitude of the center
-of the circle}
+\item{lon_center}{numeric. Representing the longitude of the circle's center.}
 
-\item{lat_center}{numeric value referencing to the latitude of the center of
-the circle}
+\item{lat_center}{numeric. Representing the latitude of the circle's center.}
 
-\item{lon}{column name in \code{data} with longitudes (\code{lon} is
-default).}
+\item{lon}{column name in \code{data} containing longitudes
+(default is \code{lon}).}
 
-\item{lat}{column name in \code{data} with latitudes (\code{lat} is default).}
+\item{lat}{column name in \code{data} containing latitudes
+(default is \code{lat}).}
 
-\item{radius}{radius (in meters) (defaults to 200m).}
+\item{radius}{radius of the circle in meters (default is 200m).}
 }
 \value{
-data.frame. Column \code{distance_m} gives the distance to the center
-of the circle (in meters).
+A subset of the input data.frame containing only the observations
+that fall within the specified circle.
 }
 \description{
-Find all observations in a data.frame within a circle of a
-certain radius.
+Filter all observations in a data.frame that fall within a
+circle of a specified radius drawn around a given latitude and longitude
+point.
 }
 \examples{
 points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326,

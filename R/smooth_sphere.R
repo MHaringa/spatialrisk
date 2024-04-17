@@ -22,8 +22,6 @@
 #' penalty based on second derivatives (so that locally as the smoothing
 #' parameter tends to zero we recover a "normal" thin plate spline on the
 #' tangent space). This is an unpublished suggestion of Jean Duchon.
-#' @details See \code{\link[spatialrisk:interpolate_krige]{ordinary kriging}}
-#' for interpolation and smoothing on the sphere by means of kriging.
 #'
 #' @return Object equal to object \code{targets} including an extra column
 #'  with predicted values.
@@ -40,7 +38,7 @@
 #' target <- sf::st_drop_geometry(nl_postcode3)
 #' obs <- dplyr::sample_n(insurance, 1000)
 #' pop_df <- interpolate_spline(obs, target, population_pc4, k = 20)
-#' pop_sf <- left_join(nl_postcode3, pop_df)
+#' pop_sf <- dplyr::left_join(nl_postcode3, pop_df)
 #' choropleth(pop_sf, value = "population_pc4_pred", n = 13)
 #' }
 #'
@@ -70,16 +68,15 @@ interpolate_spline <- function(observations, targets, value, lon_obs = lon,
   f <- as.formula(paste0(value, "~ s(lat, lon,", "bs = ", sos,
                          ", m = -1, k = ", k, ")"))
   pred_gam <- tryCatch(
-    {
-      mgcv::gam(f, data = observations)
-    },
+    { mgcv::gam(f, data = observations) },
     error = function(e) {
       stop("Error: dimension k is chosen too large (default k = 50). Reduce
            dimension k manually as argument in function call.", call. = FALSE)
-    })
+    }
+  )
 
   response <- as.numeric(mgcv::predict.gam(pred_gam, targets,
                                            type = "response"))
   targets[, paste0(value, "_pred")] <- response
-  return(targets)
+  targets
 }

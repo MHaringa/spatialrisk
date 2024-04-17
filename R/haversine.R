@@ -1,17 +1,14 @@
 #' Haversine great circle distance
 #'
-#' @description The shortest distance between two points (i.e., the
-#' 'great-circle-distance' or 'as the crow flies'), according to the 'haversine
-#' method'. This method assumes a spherical earth, ignoring ellipsoidal effects.
-#' Note that this version is implemented in C++. A quick benchmark to the
-#' version of geosphere showed it to be a non-insignificant speed enhancement.
-#' The algorithm converges in one-twentieth of the original time.
+#' @description Calculates the shortest distance between two points on the
+#' Earth's surface using the Haversine formula, also known as the great-circle
+#' distance or "as the crow flies".
 #'
-#' @param lat_from Latitude of point.
-#' @param lon_from Longitude of point.
-#' @param lat_to Latitude of point.
-#' @param lon_to Longitude of point.
-#' @param r Radius of the earth; default = 6378137m
+#' @param lat_from Latitude of the starting point.
+#' @param lon_from Longitude of the starting point.
+#' @param lat_to Latitude of the destination point.
+#' @param lon_to Longitude of the destination point.
+#' @param r Radius of the Earth in meters (default = 6378137).
 #'
 #' @references Sinnott, R.W, 1984. Virtues of the Haversine. Sky and Telescope
 #' 68(2): 159.
@@ -27,7 +24,7 @@
 #' haversine(53.24007, 6.520386, 53.24054, 6.520386)
 #'
 #' @export
-haversine <- function(lat_from, lon_from, lat_to, lon_to, r = 6378137){
+haversine <- function(lat_from, lon_from, lat_to, lon_to, r = 6378137) {
 
   if (!all(unlist(lapply(list(lat_from, lon_from, lat_to, lon_to),
                          is.numeric)))) {
@@ -38,12 +35,10 @@ haversine <- function(lat_from, lon_from, lat_to, lon_to, r = 6378137){
 
   na_output <- sum(is.na(dist))
 
-  if ( na_output > 0 ){
+  if (na_output > 0) {
     message("Ignoring missing coordinates: ", sum(is.na(dist)),
             " NA's returned")
   }
 
-  return(dist)
+  dist
 }
-
-

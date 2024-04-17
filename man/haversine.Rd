@@ -7,26 +7,23 @@
 haversine(lat_from, lon_from, lat_to, lon_to, r = 6378137)
 }
 \arguments{
-\item{lat_from}{Latitude of point.}
+\item{lat_from}{Latitude of the starting point.}
 
-\item{lon_from}{Longitude of point.}
+\item{lon_from}{Longitude of the starting point.}
 
-\item{lat_to}{Latitude of point.}
+\item{lat_to}{Latitude of the destination point.}
 
-\item{lon_to}{Longitude of point.}
+\item{lon_to}{Longitude of the destination point.}
 
-\item{r}{Radius of the earth; default = 6378137m}
+\item{r}{Radius of the Earth in meters (default = 6378137).}
 }
 \value{
 Vector of distances in the same unit as \code{r} (default in meters).
 }
 \description{
-The shortest distance between two points (i.e., the
-'great-circle-distance' or 'as the crow flies'), according to the 'haversine
-method'. This method assumes a spherical earth, ignoring ellipsoidal effects.
-Note that this version is implemented in C++. A quick benchmark to the
-version of geosphere showed it to be a non-insignificant speed enhancement.
-The algorithm converges in one-twentieth of the original time.
+Calculates the shortest distance between two points on the
+Earth's surface using the Haversine formula, also known as the great-circle
+distance or "as the crow flies".
 }
 \details{
 The Haversine ('half-versed-sine') formula was published by R.W.

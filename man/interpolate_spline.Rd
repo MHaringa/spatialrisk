@@ -53,16 +53,13 @@ the sphere is embedded in a 3D Euclidean space, but smoothing employs a
 penalty based on second derivatives (so that locally as the smoothing
 parameter tends to zero we recover a "normal" thin plate spline on the
 tangent space). This is an unpublished suggestion of Jean Duchon.
-
-See \code{\link[spatialrisk:interpolate_krige]{ordinary kriging}}
-for interpolation and smoothing on the sphere by means of kriging.
 }
 \examples{
 \dontrun{
 target <- sf::st_drop_geometry(nl_postcode3)
 obs <- dplyr::sample_n(insurance, 1000)
 pop_df <- interpolate_spline(obs, target, population_pc4, k = 20)
-pop_sf <- left_join(nl_postcode3, pop_df)
+pop_sf <- dplyr::left_join(nl_postcode3, pop_df)
 choropleth(pop_sf, value = "population_pc4_pred", n = 13)
 }
 

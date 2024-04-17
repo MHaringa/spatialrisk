@@ -29,9 +29,9 @@ choropleth_ggplot2(
 options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
 
-\item{direction}{Sets the order of colors in the scale. If 1, the default,
-colors are ordered from darkest to lightest. If -1, the order of colors is
-reversed.}
+\item{direction}{Sets the order of colors in the scale. If \code{1},
+the default, colors are ordered from darkest to lightest. If \code{-1},
+the order of colors is reversed.}
 }
 \value{
 ggplot map
@@ -43,6 +43,7 @@ the correspoding choropleth map.
 \examples{
 test <- points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
 choropleth_ggplot2(test)
+
 }
 \author{
 Martin Haringa

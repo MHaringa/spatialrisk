@@ -17,3 +17,35 @@ block_loop_cpp <- function(sub, ref, radius = 200, display_progress = TRUE) {
     .Call('_spatialrisk_block_loop_cpp', PACKAGE = 'spatialrisk', sub, ref, radius, display_progress)
 }
 
+concentration_loop_cpp2 <- function(sub, ref, radius = 200) {
+    .Call('_spatialrisk_concentration_loop_cpp2', PACKAGE = 'spatialrisk', sub, ref, radius)
+}
+
+one_lon_in_meters <- function(lat0) {
+    .Call('_spatialrisk_one_lon_in_meters', PACKAGE = 'spatialrisk', lat0)
+}
+
+add_cell_bounds_cpp <- function(df, size = 50, radius = 200) {
+    .Call('_spatialrisk_add_cell_bounds_cpp', PACKAGE = 'spatialrisk', df, size, radius)
+}
+
+seq_cpp <- function(from, to, length_out) {
+    .Call('_spatialrisk_seq_cpp', PACKAGE = 'spatialrisk', from, to, length_out)
+}
+
+expand_grid_cpp <- function(seq1, seq2) {
+    .Call('_spatialrisk_expand_grid_cpp', PACKAGE = 'spatialrisk', seq1, seq2)
+}
+
+filter_full_cpp <- function(dffull, subb, i) {
+    .Call('_spatialrisk_filter_full_cpp', PACKAGE = 'spatialrisk', dffull, subb, i)
+}
+
+highest_indices_cpp <- function(x, n) {
+    .Call('_spatialrisk_highest_indices_cpp', PACKAGE = 'spatialrisk', x, n)
+}
+
+max_conc_per_cell_cpp <- function(dfsub, dffull, points = 50L, size = 50L, radius = 200) {
+    .Call('_spatialrisk_max_conc_per_cell_cpp', PACKAGE = 'spatialrisk', dfsub, dffull, points, size, radius)
+}
+

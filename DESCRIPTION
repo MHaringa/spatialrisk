@@ -2,33 +2,34 @@ Package: spatialrisk
 Type: Package
 Title: Calculating Spatial Risk
 Version: 0.7.1.9000
-Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), email = "mtharinga@gmail.com"))
+Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), 
+    email = "mtharinga@gmail.com"))
 Maintainer: Martin Haringa <mtharinga@gmail.com>
 BugReports: https://github.com/mharinga/spatialrisk/issues
-Description: Methods for spatial risk calculations. It offers an efficient approach to determine the sum of all observations within a 
-     circle of a certain radius. This might be beneficial for insurers who are required (by a recent European Commission regulation) to determine 
-     the maximum value of insured fire risk policies of all buildings that are partly or fully located within a circle of a radius of 200m. See 
-     Church (1974) <doi:10.1007/BF01942293> for a description of the problem.
+Description: Methods for spatial risk calculations. It offers an efficient 
+    approach to determine the sum of all observations within a circle of a 
+    certain radius. This might be beneficial for insurers who are required (by 
+    a recent European Commission regulation) to determine the maximum value of 
+    insured fire risk policies of all buildings that are partly or fully located 
+    within a circle of a radius of 200m. See  Church (1974) 
+    <doi:10.1007/BF01942293> for a description of the problem.
 License: GPL (>= 2)
 URL: https://github.com/mharinga/spatialrisk, https://mharinga.github.io/spatialrisk/
 LazyData: true
 LinkingTo: Rcpp, RcppProgress
 Imports: 
     classInt,
-    colourvalues,
     data.table, 
     dplyr,
     fs,
-    GenSA,
-    geohashTools,
     ggplot2,
-    leafem,
-    leafgl,
-    leaflet,
-    methods,
+    lifecycle,
+    mapview, 
     Rcpp,
     RcppProgress, 
+    rlang,
     sf,
+    terra,
     tmap,
     units,
     viridis
@@ -36,9 +37,13 @@ Depends: R (>= 3.3)
 Encoding: UTF-8
 RoxygenNote: 7.3.1
 Suggests: 
-    automap, 
-    gstat, 
+    colourvalues,
+    GenSA,
+    geohashTools,
     knitr,
+    leafem,
+    leafgl,
+    leaflet,
     mgcv,
     rmarkdown, 
     testthat, 

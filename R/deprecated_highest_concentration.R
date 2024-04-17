@@ -8,20 +8,19 @@
 #' for pre-defined coordinates.
 #'
 #' @param df data.frame of locations, should at least include column for
-#' longitude, latitude and sum insured
+#' longitude, latitude and sum insured.
 #' @param value column name with value of interest to summarize (e.g. sum
-#' insured)
-#' @param lon column name with longitude (defaults to `lon`)
-#' @param lat column name with latitude (defaults to `lat`)
-#' @param lowerbound set lower bound for outcome (defaults to NULL)
-#' @param radius radius (in meters) (default is 200m)
+#' insured).
+#' @param lon column name with longitude (defaults to `lon`).
+#' @param lat column name with latitude (defaults to `lat`).
+#' @param radius radius (in meters) (default is 200m).
 #' @param grid_distance distance (in meters) for precision of concentration risk
 #' (default is 25m). `neighborhood_search()` can be used to search for
 #' coordinates with even higher concentrations in the neighborhood of the
 #' highest concentrations.
-#' @param gh_precision positive integer to define geohash precision. See
-#' details.
 #' @param display_progress show progress bar (TRUE/FALSE). Defaults to TRUE.
+#' @param lowerbound set lowerbound.
+#' @param gh_precision set precision for geohash.
 #'
 #' @details A recently European Commission regulation requires insurance
 #' companies to determine the maximum value of insured fire risk policies of
@@ -39,34 +38,8 @@
 #' risk policies that are partly or fully located within circle of a radius of
 #' 200m.
 #'
-#' `highest_concentration()` uses Gustavo Niemeyer's wonderful and elegant
-#' geohash coordinate system. Niemeyer's Geohash method encodes latitude and
-#' longitude as binary string where each binary value derived from a decision
-#' as to where the point lies in a bisected region of latitude or longitudinal
-#' space. The first step is to convert all latitude/longitude coordinates into
-#' geohash-encoded strings.
-#'
-#' The length of the geohash (`gh_precision`) controls the 'zoom level':
-#' \itemize{
-#' \item precision 5 is 4.89 x 4.89km;
-#' \item precision 6 is 1.22km x 0.61km;
-#' \item precision 7 is 153m x 153m;
-#' \item precision 8 is 39m x 19m.
-#' }
-#'
-#' For a circle with a radius of 200m the precision of the geohash should
-#' be set equal to 6 (default). Then the `value` column is aggregated (sum)
-#' per geohash (with a buffer of size `radius` around each geohash,
-#' since the coordinates of the highest concentration can be near the edge of
-#' the geohash). The geohashes with a aggregated value below the lowerbound
-#' are removed, where the lowerbound is equal to the maximum of the
-#' `value` column. Then a grid is created, with a distance of `grid_distance`
-#' between the points. See example section for a illustration of the algorithm.
-#' As a last step for each grid point the concentration is calculated.
-#'
 #' @import data.table
-#' @importFrom geohashTools gh_encode
-#' @importFrom geohashTools gh_decode
+#' @importFrom lifecycle deprecate_warn
 #'
 #' @author Martin Haringa
 #'
@@ -103,7 +76,18 @@
 highest_concentration <- function(df, value, lon = lon, lat = lat,
                                   lowerbound = NULL, radius = 200,
                                   grid_distance = 25, gh_precision = 6,
-                                  display_progress = TRUE){
+                                  display_progress = TRUE) {
+
+  lifecycle::deprecate_warn(
+    when = "0.7.2",
+    what = "highest_concentration()",
+    details = "Please use `find_highest_concentration()` instead."
+  )
+
+  if (!requireNamespace("geohashTools", quietly = TRUE)) {
+    stop("geohashTools is needed for this function to work. Install it via
+         install.packages(\"geohashTools\")", call. = FALSE)
+  }
 
   df <- as.data.frame(df)
 
@@ -112,12 +96,12 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
   lat_nm <- deparse(substitute(lat))
   df_nm <- deparse(substitute(df))
 
-  if ( !all(c(value_nm) %in% names(df))) {
+  if (!all(c(value_nm) %in% names(df))) {
     stop(df_nm, " does not contain column specified in `value`.
          Specify with argument `value`.", call. = FALSE)
   }
 
-  if ( !all(c(lon_nm, lat_nm) %in% names(df))) {
+  if (!all(c(lon_nm, lat_nm) %in% names(df))) {
     stop(df_nm, " does not contain columns ", lon_nm, " and ", lat_nm,
          ". Specify with arguments `lon` and `lat`.", call. = FALSE)
   }
@@ -127,7 +111,7 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
   # Remove rows with NA values
   df <- df[!is.na(df[[value_nm]]), ]
 
-  if ( nrows1 !=  nrow(df) ){
+  if (nrows1 !=  nrow(df)) {
     warning(nrows1 - nrow(df), " NAs detected in ", value_nm, ".
             Rows with NAs removed.", call. = FALSE)
   }
@@ -141,7 +125,7 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
   # Determine lower bound for concentration
   # (based on circles around 1000 highest sums insured)
   # This only works with some relatively high sums insured
-  if ( is.null(lowerbound) ){
+  if (is.null(lowerbound)) {
     lowerbound_1 <- lower_bound_fn(df, value_nm,
                                    lat_nm = lat_nm,
                                    lon_nm = lon_nm,
@@ -167,7 +151,7 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
                                   radius = radius)
 
   # Take max of both lowerbounds
-  if ( is.null(lowerbound) ){
+  if (is.null(lowerbound)) {
     lowerbound <- max(lowerbound_1, lowerbound_2)
   }
 
@@ -233,7 +217,7 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
   attr(gh_grid_conc_sort, "gh_remaining") <- gh_remaining_bbox
   attr(gh_grid_conc_sort, "radius") <- radius
 
-  class(gh_grid_conc_sort) <- append("concentration", class(gh_grid_conc_sort))
+  class(gh_grid_conc_sort) <- append("conc", class(gh_grid_conc_sort))
   return(gh_grid_conc_sort)
 }
 
@@ -258,12 +242,13 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
 #' FALSE.
 #' @param seed set seed
 #'
-#' @importFrom GenSA GenSA
-#' @importFrom geohashTools gh_decode
+#' @importFrom lifecycle deprecate_warn
 #'
 #' @author Martin Haringa
 #'
 #' @return data.frame
+#'
+#' @export neighborhood_gh_search
 #'
 #' @examples
 #' \dontrun{
@@ -277,17 +262,31 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
 #' plot(hc1_nghb)
 #' plot(hc2_nghb)
 #' }
-#'
-#' @export
 neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
-                                   verbose = TRUE, seed = 1){
+                                   verbose = TRUE, seed = 1) {
 
-  if( !inherits(hc, c("concentration")) ) {
-    stop("Input must be of class concentration.
+  lifecycle::deprecate_warn(
+    when = "0.7.2",
+    what = "neighborhood_gh_search()",
+    details = "Please use `find_highest_concentration()` instead."
+  )
+
+  if (!requireNamespace("geohashTools", quietly = TRUE)) {
+    stop("geohashTools is needed for this function to work. Install it via
+         install.packages(\"geohashTools\")", call. = FALSE)
+  }
+
+  if (!requireNamespace("GenSA", quietly = TRUE)) {
+    stop("GenSA is needed for this function to work. Install it via
+         install.packages(\"GenSA\")", call. = FALSE)
+  }
+
+  if (!inherits(hc, c("conc"))) {
+    stop("Input must be of class conc
          Use highest_concentration() first.", call. = FALSE)
   }
 
-  if ( length(unique(hc$geohash)) < highest_geohash ){
+  if (length(unique(hc$geohash)) < highest_geohash) {
     highest_geohash <- length(unique(hc$geohash))
     warning("highest_geohash must be equal or lower than the length of unique
             input geohashes. highest_geohash is set to ",
@@ -303,7 +302,7 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
   geohash <- unique(hc$geohash)[seq_len(highest_geohash)]
 
   # Function to minimize
-  csa <- function(x){
+  csa <- function(x) {
     df <- data.frame(lon = x[1], lat = x[2])
     -concentration(df, pts_remaining, valueconc, radius = radius,
                    display_progress = FALSE)$concentration[1]
@@ -346,7 +345,7 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
   attr(dc, "value_nm") <- value_nm
 
   class(dc) <- append("neighborhood", class(dc))
-  return(dc)
+  dc
 }
 
 
@@ -355,7 +354,7 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
 #' @description Takes an object produced by `highest_concentration()`,
 #' and creates an interactive map.
 #'
-#' @param x object of class `concentration` obtained from
+#' @param x object of class `conc` obtained from
 #' `highest_concentration()`
 #' @param grid_points show grid points (TRUE), or objects (FALSE)
 #' @param legend_title title of legend
@@ -370,33 +369,39 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
 #' @author Martin Haringa
 #'
 #' @importFrom sf st_as_sf
-#' @importFrom colourvalues colour_values
-#' @importFrom leaflet colorNumeric
-#' @importFrom leaflet leaflet
-#' @importFrom leaflet addTiles
-#' @importFrom leaflet addProviderTiles
-#' @importFrom leaflet addRectangles
-#' @importFrom leaflet addLegend
-#' @importFrom leaflet addLayersControl
-#' @importFrom leaflet hideGroup
-#' @importFrom leaflet layersControlOptions
-#' @importFrom leaflet providers
-#' @importFrom leafgl addGlPoints
-#' @importFrom leafem addMouseCoordinates
-#'
 #'
 #' @export
-plot.concentration <- function(x,
-                               grid_points = TRUE,
-                               legend_title = NULL,
-                               palette = "viridis",
-                               legend_position = "bottomleft",
-                               providers = c("CartoDB.Positron", "nlmaps.luchtfoto"),
-                               ...){
+plot.conc <- function(x,
+                      grid_points = TRUE,
+                      legend_title = NULL,
+                      palette = "viridis",
+                      legend_position = "bottomleft",
+                      providers = c("CartoDB.Positron", "nlmaps.luchtfoto"),
+                      ...) {
 
-  if (!inherits(x, "concentration")) {
-    stop("plot.concentration requires an object of class concentration",
+  if (!inherits(x, "conc")) {
+    stop("plot.conc requires an object of class conc",
          call. = FALSE)
+  }
+
+  if (!requireNamespace("leaflet", quietly = TRUE)) {
+    stop("leaflet is needed for this function to work. Install it via
+         install.packages(\"leaflet\")", call. = FALSE)
+  }
+
+  if (!requireNamespace("leafem", quietly = TRUE)) {
+    stop("leafem is needed for this function to work. Install it via
+         install.packages(\"leafem\")", call. = FALSE)
+  }
+
+  if (!requireNamespace("leafgl", quietly = TRUE)) {
+    stop("leafgl is needed for this function to work. Install it via
+         install.packages(\"leafgl\")", call. = FALSE)
+  }
+
+  if (!requireNamespace("colourvalues", quietly = TRUE)) {
+    stop("colourvalues is needed for this function to work. Install it via
+         install.packages(\"colourvalues\")", call. = FALSE)
   }
 
   pts <- attr(x, "pts_remaining")
@@ -405,17 +410,17 @@ plot.concentration <- function(x,
   legend_nm <- value_nm
   x_nm <- deparse(substitute(x))
 
-  if ( !is.null(legend_title) ){
+  if (!is.null(legend_title)) {
     legend_nm <- legend_title
   }
 
-  if ( !isTRUE(grid_points) ){
+  if (!isTRUE(grid_points)) {
     pts_sf <- sf::st_as_sf(pts, coords = c("lon", "lat"), crs = 4326)
   }
 
-  if ( isTRUE(grid_points) ){
+  if (isTRUE(grid_points)) {
 
-    if ( !all(c("lon", "lat", "concentration") %in% names(x))) {
+    if (!all(c("lon", "lat", "concentration") %in% names(x))) {
       stop(x_nm, " must contain columns `concentration`, `lon` and `lat`",
            call. = FALSE)
     }
@@ -426,10 +431,14 @@ plot.concentration <- function(x,
   }
 
   geohashes <- geohashes0[
-    , north := latitude + delta_latitude][
-      , south := latitude - delta_latitude][
-        , east := longitude + delta_longitude][
-          , west := longitude - delta_longitude]
+    , north := latitude + delta_latitude
+  ][
+    , south := latitude - delta_latitude
+  ][
+    , east := longitude + delta_longitude
+  ][
+    , west := longitude - delta_longitude
+  ]
 
   cols <- colourvalues::colour_values(pts_sf[[value_nm]], palette = palette)
   qpal <- leaflet::colorNumeric(palette, pts_sf[[value_nm]])
@@ -439,7 +448,7 @@ plot.concentration <- function(x,
     # Base groups
     leaflet::addTiles(group = "OSM")
 
-  ml <- addProvidersToMap(ml, providers)
+  ml <- add_providers_to_map(ml, providers)
 
   ml[["map"]] |>
 
@@ -504,18 +513,6 @@ plot.concentration <- function(x,
 #' @importFrom sf st_transform
 #' @importFrom sf st_buffer
 #' @importFrom sf st_geometry
-#' @importFrom leaflet colorNumeric
-#' @importFrom leaflet leaflet
-#' @importFrom leaflet addTiles
-#' @importFrom leaflet addProviderTiles
-#' @importFrom leaflet addCircleMarkers
-#' @importFrom leaflet addLegend
-#' @importFrom leaflet addLayersControl
-#' @importFrom leaflet layersControlOptions
-#' @importFrom leaflet providers
-#' @importFrom leafem addMouseCoordinates
-#' @importFrom leaflet hideGroup
-#' @importFrom leaflet labelOptions
 #'
 #' @rdname plot
 #'
@@ -528,8 +525,19 @@ plot.neighborhood <- function(x,
                               palette_circle = "YlOrRd",
                               legend_position_circle = "bottomright",
                               legend_title_circle = "Highest concentration",
-                              providers = c("CartoDB.Positron", "nlmaps.luchtfoto"),
-                              ...){
+                              providers = c("CartoDB.Positron",
+                                            "nlmaps.luchtfoto"),
+                              ...) {
+
+  if (!requireNamespace("leaflet", quietly = TRUE)) {
+    stop("leaflet is needed for this function to work. Install it via
+         install.packages(\"leaflet\")", call. = FALSE)
+  }
+
+  if (!requireNamespace("leafem", quietly = TRUE)) {
+    stop("leafem is needed for this function to work. Install it via
+         install.packages(\"leafem\")", call. = FALSE)
+  }
 
   if (!inherits(x, "neighborhood")) {
     stop("plot.neighborhood requires an object of class neighborhood",
@@ -541,7 +549,7 @@ plot.neighborhood <- function(x,
   value_nm <- attr(x, "value_nm")
   legend_nm <- value_nm
 
-  if ( !is.null(legend_title) ){
+  if (!is.null(legend_title)) {
     legend_nm <- legend_title
   }
 
@@ -551,13 +559,17 @@ plot.neighborhood <- function(x,
   gh_center0$geohash <- xgh
 
   gh_center <- gh_center0[
-    , north := latitude + delta_latitude][
-      , south := latitude - delta_latitude][
-        , east := longitude + delta_longitude][
-          , west := longitude - delta_longitude]
+    , north := latitude + delta_latitude
+  ][
+    , south := latitude - delta_latitude
+  ][
+    , east := longitude + delta_longitude
+  ][
+    , west := longitude - delta_longitude
+  ]
 
   pts_lst <- vector("list", nrow(x))
-  for ( i in seq_len(nrow(x)) ){
+  for (i in seq_len(nrow(x))) {
     pts_lst[[i]] <- points_in_circle(pts0,
                                      lon_center = x$lon[i],
                                      lat_center = x$lat[i],
@@ -580,7 +592,7 @@ plot.neighborhood <- function(x,
                                        circle_sf[["highest_concentration"]])
 
   popuptxt <- NULL
-  for ( i in seq_len(nrow(pts)) ){
+  for (i in seq_len(nrow(pts))) {
     x <- paste0("<b>", names(pts)[i], ": ", "</b>",
                 pts[[names(pts)[i]]], "<br>")
     popuptxt <- paste(popuptxt, x)
@@ -591,20 +603,24 @@ plot.neighborhood <- function(x,
     # Base groups
     leaflet::addTiles(group = "OSM")
 
-  ml <- addProvidersToMap(m, providers)
+  ml <- add_providers_to_map(m, providers)
 
   # Overlay groups with 200m circles
   m <- ml[["map"]] |>
     leaflet::addPolygons(data = circle_sf,
                          color = "red",
-                         label = paste0(format(
-                           circle_sf[["highest_concentration"]],
-                           decimal.mark=".", big.mark=" "),
-                           " (", circle_sf[["idrow"]], ")"),
+                         label = paste0(
+                           format(circle_sf[["highest_concentration"]],
+                                  decimal.mark = ".", big.mark = " "),
+                           " (", circle_sf[["idrow"]], ")"
+                         ),
                          fillColor = pal_circles(
-                           circle_sf[["highest_concentration"]]),
+                           circle_sf[["highest_concentration"]]
+                         ),
                          labelOptions = leaflet::labelOptions(
-                           noHide = TRUE, textsize = "15px"),
+                           noHide = TRUE,
+                           textsize = "15px"
+                         ),
                          stroke = TRUE,
                          weight = 1,
                          group = "Circle") |>
@@ -642,7 +658,7 @@ plot.neighborhood <- function(x,
     ) |>
     leaflet::hideGroup("Geohash")
 
-  if ( nrow(circle_sf) > 1 ){
+  if (nrow(circle_sf) > 1) {
 
     m <- m |>
       leaflet::addLegend(data = circle_sf,
@@ -655,6 +671,3 @@ plot.neighborhood <- function(x,
 
   m
 }
-
-
-

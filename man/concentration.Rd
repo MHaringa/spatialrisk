@@ -2,7 +2,7 @@
 % Please edit documentation in R/concentration.R
 \name{concentration}
 \alias{concentration}
-\title{Concentration risk}
+\title{Concentration calculation}
 \usage{
 concentration(
   sub,
@@ -17,36 +17,39 @@ concentration(
 )
 }
 \arguments{
-\item{sub}{data.frame of locations to calculate concentration risk for
-(target points). \code{sub} should include at least columns for longitude
-and latitude.}
+\item{sub}{data.frame of target points to calculate concentration risk for,
+including at least columns for longitude and latitude.}
 
-\item{full}{data.frame to find the locations within radius \code{r} from
-locations in \code{sub} (reference locations). \code{full} should include at
-least columns for longitude, latitude and value of interest to summarize.}
+\item{full}{data.frame containing reference points, where the function finds
+locations within a radius from the target points. Should include at least
+columns for longitude, latitude, and the value of interest to summarize.}
 
 \item{value}{column name with value of interest to summarize in \code{full}.}
 
-\item{lon_sub}{column name in \code{sub} with longitude (lon is default).}
+\item{lon_sub}{column name in \code{sub} for longitude
+(default is \code{lon}).}
 
-\item{lat_sub}{column name in \code{sub} with latitude (lat is default).}
+\item{lat_sub}{column name in \code{sub} for latitude
+(default is \code{lat}).}
 
-\item{lon_full}{column name in \code{full} with longitude in \code{full}
-(lon is default).}
+\item{lon_full}{column name in \code{full} for longitude in \code{full}
+(default is \code{lon}).}
 
-\item{lat_full}{column name in \code{full} with latitude in \code{full}
-(lat is default).}
+\item{lat_full}{column name in \code{full} for latitude in \code{full}
+(default is \code{lat}).}
 
-\item{radius}{radius (in meters) (default is 200m).}
+\item{radius}{numeric. Radius of the circle in meters (default is 200).}
 
-\item{display_progress}{show progress bar (TRUE/FALSE). Defaults to TRUE.}
+\item{display_progress}{boolean indicating whether to show progress bar
+(TRUE/FALSE). Defaults to TRUE.}
 }
 \value{
-A data.frame equal to data.frame \code{sub} including an extra column
-\code{concentration}.
+A data.frame equal to \code{sub} including an additional
+column \code{concentration}.
 }
 \description{
-The sum of all observations within a circle of a certain radius.
+Calculates the concentration, which is the sum of all
+observations within a circle of a certain radius.
 }
 \examples{
 df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398),

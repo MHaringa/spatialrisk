@@ -55,7 +55,6 @@
 #' }
 "nl_corop"
 
-
 #' Object of class \code{sf} for 2-digit postcode regions in the Netherlands
 #'
 #' @description An object of class \code{sf} (simple feature) for 2-digit postal
@@ -129,8 +128,6 @@
 #' }
 "nl_postcode4"
 
-
-
 #' KNMI stations
 #'
 #' @description A data frame containing the IDs and meta-data on the official
@@ -149,4 +146,3 @@
 #'   \item{Y}{Y coordinate of the station (crs = 32631)}
 #' }
 "knmi_stations"
-

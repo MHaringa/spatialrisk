@@ -11,12 +11,11 @@
 #' @param option a character string indicating the colormap option to use. Four
 #' options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 #' (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
-#' @param direction Sets the order of colors in the scale. If 1, the default,
-#' colors are ordered from darkest to lightest. If -1, the order of colors is
-#' reversed.
+#' @param direction Sets the order of colors in the scale. If \code{1},
+#' the default, colors are ordered from darkest to lightest. If \code{-1},
+#' the order of colors is reversed.
 #'
 #' @return ggplot map
-#' @export choropleth_ggplot2
 #'
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 geom_sf
@@ -33,22 +32,26 @@
 #' @examples
 #' test <- points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
 #' choropleth_ggplot2(test)
+#'
+#' @export
 choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2,
                                legend_title = "Class", option = "D",
-                               direction = 1){
+                               direction = 1) {
 
   value <- deparse(substitute(value))
   vector_value <- sf_object[[value]]
 
   result <- tryCatch(
     {
-      suppressWarnings({
-        cluster <- classInt::classIntervals(vector_value, n = n,
-                                            style = 'fisher',
-                                            intervalClosure = 'right')[[2]]
-        sf_object$clustering <- cut(vector_value, breaks = cluster,
-                                    include.lowest = TRUE, dig.lab = dig.lab)
-      })
+      suppressWarnings(
+        {
+          cluster <- classInt::classIntervals(vector_value, n = n,
+                                              style = "fisher",
+                                              intervalClosure = "right")[[2]]
+          sf_object$clustering <- cut(vector_value, breaks = cluster,
+                                      include.lowest = TRUE, dig.lab = dig.lab)
+        }
+      )
 
       ggplot2::ggplot(sf_object) +
         ggplot2::geom_sf(ggplot2::aes(fill = clustering), size = .1,
@@ -59,7 +62,6 @@ choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2,
         ggplot2::labs(fill = legend_title)
     },
     error = function(e) {
-
       ggplot2::ggplot(sf_object) +
         ggplot2::geom_sf(ggplot2::aes(fill = vector_value), size = .1,
                          color = "grey85")  +
@@ -67,8 +69,8 @@ choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2,
         ggplot2::scale_fill_viridis_c(direction = direction, option = option) +
         ggplot2::theme_void() +
         ggplot2::labs(fill = legend_title)
-    })
+    }
+  )
 
-  return(result)
+  result
 }
-

@@ -1,5 +1,10 @@
 # spatialrisk (development version)
 
+# spatialrisk 0.7.2
+
+* `highest_concentration()` now uses focal calculations instead of geohashes to calculate the sum per cell
+* `plot_points()` now uses `mapview::mapview()` to plot the map 
+
 # spatialrisk 0.7.1
 
 * `plot_points()` now returns a warning when a specific provider tile is not available

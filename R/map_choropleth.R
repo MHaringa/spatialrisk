@@ -14,11 +14,11 @@
 #' @param n number of clusters (default is 7)
 #' @param legend_title title of legend
 #' @param palette palette name or a vector of colors. See
-#' tmaptools::palette_explorer() for the named palettes.
-#' Use a "-" as prefix to reverse the palette. The default palette is "viridis".
+#' \code{tmaptools::palette_explorer()} for the named palettes.
+#' Use a \code{-} as prefix to reverse the palette. The default palette is
+#' "viridis".
 #'
 #' @return tmap
-#' @export choropleth
 #'
 #' @importFrom tmap tmap_mode
 #' @importFrom tmap tm_shape
@@ -35,11 +35,13 @@
 #' test <- points_to_polygon(nl_provincie, insurance, sum(amount, na.rm = TRUE))
 #' choropleth(test)
 #' choropleth(test, id_name = "areaname", mode = "view")
+#'
+#' @export
 choropleth <- function(sf_object, value = "output", id_name = "areaname",
-                            mode = "plot", n = 7, legend_title = "Clustering",
-                            palette = "viridis"){
+                       mode = "plot", n = 7, legend_title = "Clustering",
+                       palette = "viridis") {
 
-  if (mode == "view"){
+  if (mode == "view") {
     suppressMessages({
       tmap::tmap_mode("view")
     })
@@ -54,9 +56,7 @@ choropleth <- function(sf_object, value = "output", id_name = "areaname",
                         alpha = .5) +
       tmap::tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas",
                          "Esri.WorldTopoMap"))
-  }
-
-  else{
+  } else {
     suppressMessages({
       tmap::tmap_mode("plot")
     })
@@ -73,5 +73,5 @@ choropleth <- function(sf_object, value = "output", id_name = "areaname",
       tmap::tm_layout(frame = FALSE)
   }
 
-  return(output)
+  output
 }

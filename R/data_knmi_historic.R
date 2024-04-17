@@ -44,7 +44,7 @@
 #' }
 #'
 #' @export
-knmi_historic_data <- function(startyear, endyear){
+knmi_historic_data <- function(startyear, endyear) {
 
   if (!requireNamespace("vroom", quietly = TRUE)) {
     stop("vroom is needed for this function to work. Install it via
@@ -56,13 +56,16 @@ knmi_historic_data <- function(startyear, endyear){
 
   id_stations <- knmi_stations$station
 
-  if ( startyear < 1951 ) {
+  if (startyear < 1951) {
     stop("Historic weather data before the year 1951 is not available.",
-         call. = FALSE) }
+         call. = FALSE)
+  }
 
-  if( endyear > as.POSIXlt(Sys.Date())$year + 1900 ) {
+
+  if (endyear > as.POSIXlt(Sys.Date())$year + 1900) {
     stop("Year end should not be greater than the current year.",
-         call. = FALSE) }
+         call. = FALSE)
+  }
 
   historic_levels <- cut(startyear:endyear,
                          breaks = c(1951, seq(1960, 2200, by = 10)),
@@ -83,15 +86,15 @@ knmi_historic_data <- function(startyear, endyear){
 
     utils::setTxtProgressBar(pb, i)
 
-    for (j in seq_len(length(periods))){
+    for (j in seq_len(length(periods))) {
       new_file <- fs::file_create(
         fs::path(tmp, paste0("knmi_", id_stations[i], "_", periods[j], ".zip"))
-        )
-      knmi_url <- paste0(
-  "https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/uurgegevens/uurgeg_",
-  id_stations[i], "_", periods[j], ".zip")
+      )
+      knmi_url <- paste0("https://cdn.knmi.nl/knmi/map/page/",
+                         "klimatologie/gegevens/uurgegevens/uurgeg_",
+                         id_stations[i], "_", periods[j], ".zip")
       tryCatch(utils::download.file(knmi_url, new_file, quiet = TRUE),
-               error = function(e) print(paste(knmi_url, 'is not found')))
+               error = function(e) print(paste(knmi_url, "is not found")))
     }
   }
 
@@ -104,7 +107,7 @@ knmi_historic_data <- function(startyear, endyear){
   suppressMessages(
     df <- vroom::vroom(files_exist, skip = 31, delim = ",",
                        col_select = list(station = 1, date = YYYYMMDD, HH,
-                                         DD, FH, FF, FX, DR, RH, Y))[-1,]
+                                         DD, FH, FF, FX, DR, RH, Y))[-1, ]
   )
 
   # Delete directory
@@ -115,13 +118,7 @@ knmi_historic_data <- function(startyear, endyear){
   df_selection <- subset(df, year >= startyear & year <= endyear)
 
   # Add metadata
-  df_meta <- dplyr::left_join(
-    df_selection, knmi_stations[, c("station", "city", "lon", "lat")],
-    by = "station"
-    )
-
-  return(df_meta)
+  dplyr::left_join(df_selection,
+                   knmi_stations[, c("station", "city", "lon", "lat")],
+                   by = "station")
 }
-
-
-
