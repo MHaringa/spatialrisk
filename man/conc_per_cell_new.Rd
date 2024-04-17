@@ -5,7 +5,19 @@
 \title{Determine the concentrations within the highest focal cells for the current
 iteration}
 \usage{
-conc_per_cell_new(high_foc, dff, value, size, points, db, radius)
+conc_per_cell_new(
+  high_foc,
+  dff,
+  value,
+  size,
+  points,
+  db,
+  radius,
+  crs_from,
+  crs_to,
+  lon,
+  lat
+)
 }
 \arguments{
 \item{high_foc}{data.frame containing cell ids with the top n focal values
@@ -22,6 +34,10 @@ from the current iteration.}
 \item{db}{data.frame containing previously saved highest concentrations.}
 
 \item{radius}{radius of circle in meters.}
+
+\item{crs_from}{crs from}
+
+\item{crs_to}{crs to}
 }
 \description{
 Determine the concentrations within the highest focal cells for

@@ -51,3 +51,29 @@ points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat,
   incircle_df$distance_m <- incircle$distance_m
   incircle_df[order(incircle_df$distance_m), ]
 }
+
+
+#' @keywords internal
+points_in_circle_ <- function(data, lon_center, lat_center, lon = lon, lat = lat,
+                             radius = 200) {
+
+  # Turn into character vector
+  data_name <- deparse(substitute(data))
+
+  if (!all(c(lon, lat) %in% names(data))) {
+    stop(paste0(data_name, " does not contain columns ", lon, " and ", lat),
+         call. = FALSE)
+  }
+
+  if (!all(is.numeric(c(data[[lon]], data[[lat]])))) {
+    stop(paste0(lon, ", ", lat, " should be numeric"), call. = FALSE)
+  }
+
+  df <- data.frame("lon" = data[[lon]], "lat" = data[[lat]])
+
+  incircle <- haversine_loop_cpp(df, lat_center, lon_center, radius)
+
+  incircle_df <- data[incircle$id, ]
+  incircle_df$distance_m <- incircle$distance_m
+  incircle_df[order(incircle_df$distance_m), ]
+}

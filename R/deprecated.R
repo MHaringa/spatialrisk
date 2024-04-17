@@ -135,10 +135,6 @@ create_grid_points <- function(df, meters) {
 }
 
 
-
-#' @importFrom leaflet addProviderTiles
-#' @importFrom leaflet providers
-#'
 #' @keywords internal
 add_providers_to_map <- function(x, providers) {
   prov <- NULL

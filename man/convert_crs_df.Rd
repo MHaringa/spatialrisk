@@ -41,4 +41,3 @@ from one CRS to another.
 \author{
 Martin Haringa
 }
-\keyword{internal}

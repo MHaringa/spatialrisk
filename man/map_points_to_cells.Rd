@@ -4,12 +4,20 @@
 \alias{map_points_to_cells}
 \title{Map point coordinates to cell indices}
 \usage{
-map_points_to_cells(pts, focal, r = NULL)
+map_points_to_cells(pts, focal, lon, lat, crs_from, crs_to, r = NULL)
 }
 \arguments{
 \item{pts}{data.frame with \code{lon} and \code{lat} columns in CRS 4326.}
 
 \item{focal}{focal (SpatRaster).}
+
+\item{lon}{character.}
+
+\item{lat}{character.}
+
+\item{crs_from}{crs from}
+
+\item{crs_to}{crs to}
 
 \item{r}{buffer around extent (in units of the crs).}
 }

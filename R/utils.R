@@ -46,7 +46,7 @@ convert_df_to_sf <- function(df, lon = "lon", lat = "lat",
 #'
 #' @author Martin Haringa
 #'
-#' @keywords internal
+#' @export
 convert_crs_df <- function(df, crs_from = 3035, crs_to = 4326,
                            lon_from = "x", lat_from = "y",
                            lon_to = "lon", lat_to = "lat") {
@@ -151,6 +151,10 @@ cells_above_threshold <- function(focal, threshold) {
 #'
 #' @param pts data.frame with \code{lon} and \code{lat} columns in CRS 4326.
 #' @param focal focal (SpatRaster).
+#' @param lon character.
+#' @param lat character.
+#' @param crs_from crs from
+#' @param crs_to crs to
 #' @param r buffer around extent (in units of the crs).
 #'
 #' @importFrom sf st_coordinates
@@ -161,8 +165,9 @@ cells_above_threshold <- function(focal, threshold) {
 #' @author Martin Haringa
 #'
 #' @keywords internal
-map_points_to_cells <- function(pts, focal, r = NULL) {
-  pts_sf <- convert_df_to_sf(pts, "lon", "lat", 4326, 3035)
+map_points_to_cells <- function(pts, focal, lon, lat, crs_from, crs_to,
+                                r = NULL) {
+  pts_sf <- convert_df_to_sf(pts, lon, lat, crs_from, crs_to)
   xy <- sf::st_coordinates(pts_sf)
   gcp <- terra::cellFromXY(focal, xy)
   if (!is.null(r)) {
@@ -272,17 +277,25 @@ update_focal <- function(old_focal, new_rasterized, extent, mw){
 #' @param points number of points per `size`.
 #' @param db data.frame containing previously saved highest concentrations.
 #' @param radius radius of circle in meters.
+#' @param crs_from crs from
+#' @param crs_to crs to
 #'
 #' @author Martin Haringa
 #'
 #' @keywords internal
-conc_per_cell_new <- function(high_foc, dff, value, size, points, db, radius) {
+conc_per_cell_new <- function(high_foc, dff, value, size, points, db, radius,
+                              crs_from, crs_to, lon, lat) {
   ix_new <- setdiff(high_foc$cell, db$cell)
   hf_new <- high_foc[high_foc$cell %in% ix_new, ]
-  hf_new <- convert_crs_df(hf_new, 3035, 4326)
+  hf_new <- convert_crs_df(hf_new, crs_from, crs_to)
   colnames(dff)[colnames(dff) == value] <- "value"
+  colnames(dff)[colnames(dff) == lon] <- "lon"
+  colnames(dff)[colnames(dff) == lat] <- "lat"
   if (!is.null(hf_new)) {
-    max_conc_per_cell_cpp(hf_new, dff, points, size, radius)
+    mc <- max_conc_per_cell_cpp(hf_new, dff, points, size, radius)
+    colnames(mc)[colnames(mc) == "lon"] <- lon
+    colnames(mc)[colnames(mc) == "lat"] <- lat
+    mc
   } else {
     NULL
   }

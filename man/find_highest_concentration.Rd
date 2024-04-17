@@ -10,7 +10,10 @@ find_highest_concentration(
   top_n = 1,
   radius = 200,
   cell_size = 100,
-  grid_precision = 1
+  grid_precision = 1,
+  lon = "lon",
+  lat = "lat",
+  crs_metric = 3035
 )
 }
 \arguments{
@@ -26,9 +29,26 @@ latitude, and the value of interest to summarize.}
 \item{cell_size}{numeric. Size of cell in meters (default is 100).}
 
 \item{grid_precision}{numeric. Precision of grid in meters (default is 1).}
+
+\item{lon}{column name in \code{df} with longitude (default is "lon").}
+
+\item{lat}{column name in \code{df} with latitude (default is "lat").}
+
+\item{crs_metric}{numeric. The metric Coordinate Reference System (CRS) is
+used solely in the background calculations. For European coordinates,
+\href{https://epsg.io/3035}{EPSG:3035} (default) is recommended. For the
+United States, \href{https://epsg.io/6317}{EPSG:6317} can be utilized. For
+Asia and the Pacific regions, \href{https://epsg.io/8859}{EPSG:8859} is
+recommended.}
 }
 \value{
-list
+A list with two elements:
+\enumerate{
+\item A data.frame containing the \code{top_n} concentrations as specified
+by \code{top_n}.
+\item A data.frame containing the rows from \code{df} that correspond to the
+\code{top_n} concentrations.
+}
 }
 \description{
 Determines the central coordinates of a circle with a constant
@@ -54,6 +74,10 @@ least one facility.
 x <- find_highest_concentration(Groningen, "amount")
 plot(x)
 
+y <- find_highest_concentration(
+    Groningen, "amount", top_n = 2, cell_size = 50
+)
+plot(y)
 
 }
 \author{

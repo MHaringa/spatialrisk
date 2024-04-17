@@ -1,19 +1,3 @@
-
-# r2 <- project(raster1, "EPSG:3035")
-# crs(r2, describe = TRUE)
-# area 1 Europe - European Union (EU) countries and candidates. Europe - onshore
-# and offshore: Albania; Andorra; Austria; Belgium; Bosnia and Herzegovina;
-# Bulgaria; Croatia; Cyprus; Czechia; Denmark; Estonia; Faroe Islands; Finland;
-# France; Germany; Gibraltar; Greece; Hungary; Iceland; Ireland; Italy; Kosovo;
-# Latvia; Liechtenstein; Lithuania; Luxembourg; Malta; Monaco; Montenegro;
-# Netherlands; North Macedonia; Norway including Svalbard and Jan Mayen; Poland;
-# Portugal including Madeira and Azores; Romania; San Marino; Serbia; Slovakia;
-# Slovenia; Spain including Canary Islands; Sweden; Switzerland; Turkey; United
-# Kingdom (UK) including Channel Islands and Isle of Man; Vatican City State
-
-
-
-
 #' Find highest concentration
 #'
 #' @description Determines the central coordinates of a circle with a constant
@@ -32,6 +16,14 @@
 #' @param radius numeric. Radius of the circle in meters (default is 200).
 #' @param cell_size numeric. Size of cell in meters (default is 100).
 #' @param grid_precision numeric. Precision of grid in meters (default is 1).
+#' @param lon column name in \code{df} with longitude (default is "lon").
+#' @param lat column name in \code{df} with latitude (default is "lat").
+#' @param crs_metric numeric. The metric Coordinate Reference System (CRS) is
+#' used solely in the background calculations. For European coordinates,
+#' \href{https://epsg.io/3035}{EPSG:3035} (default) is recommended. For the
+#' United States, \href{https://epsg.io/6317}{EPSG:6317} can be utilized. For
+#' Asia and the Pacific regions, \href{https://epsg.io/8859}{EPSG:8859} is
+#' recommended.
 #'
 #' @importFrom terra ext
 #' @importFrom terra focal
@@ -50,16 +42,28 @@
 #' that each demand point falls within the designated distance (radius) of at
 #' least one facility.
 #'
-#' @return list
+#' @return A list with two elements:
+#' \enumerate{
+#' \item A data.frame containing the \code{top_n} concentrations as specified
+#' by \code{top_n}.
+#' \item A data.frame containing the rows from \code{df} that correspond to the
+#' \code{top_n} concentrations.
+#' }
 #'
 #' @examples
 #' x <- find_highest_concentration(Groningen, "amount")
 #' plot(x)
 #'
+#' y <- find_highest_concentration(
+#'     Groningen, "amount", top_n = 2, cell_size = 50
+#' )
+#' plot(y)
 #'
 #' @export
 find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
-                                       cell_size = 100, grid_precision = 1) {
+                                       cell_size = 100, grid_precision = 1,
+                                       lon = "lon", lat = "lat",
+                                       crs_metric = 3035) {
 
   check_input(df, value, top_n, radius, cell_size, grid_precision)
 
@@ -73,8 +77,9 @@ find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
                                         cell = vector("integer"))
 
   df$ix <- seq.int(nrow(df))
-  metric_sf <- convert_crs_df(df, 4326, 3035, "lon", "lat", "x", "y")
-  spatvctr <- terra::vect(metric_sf, geom = c("x", "y"), crs = "EPSG:3035")
+  metric_sf <- convert_crs_df(df, 4326, crs_metric, lon, lat, "x", "y")
+  terra_crs <- paste0("EPSG:", crs_metric)
+  spatvctr <- terra::vect(metric_sf, geom = c("x", "y"), crs = terra_crs)
   raster <- terra::rast(spatvctr, res = cell_size)
   rasterized <- terra::rasterize(spatvctr, raster, field = value, fun = sum)
   mw <- mw_create(raster, radius)
@@ -84,19 +89,21 @@ find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
 
     top_focals <- top_n_focals(foc, n = 5)
     cpc <- conc_per_cell_new(top_focals, df, value, cell_size, 10,
-                             threshold_db, radius)
+                             threshold_db, radius, crs_metric, 4326, lon, lat)
     hc_lb <- highest_conc(cpc, top_focals, threshold_db)
     threshold <- hc_lb$concentration[1]
     foc_lb <- cells_above_threshold(foc, threshold)
     points <- cell_size / grid_precision
     cpc2 <- conc_per_cell_new(foc_lb, df, value, cell_size, points,
-                              conc_db, radius)
+                              conc_db, radius, crs_metric, 4326, lon, lat)
     hc <- highest_conc(cpc2, foc_lb, conc_db)
     hc$id <- i
-    pic <- points_in_circle(df,
-                            lon_center = hc$lon[1],
-                            lat_center = hc$lat[1],
-                            radius = radius)
+    pic <- points_in_circle_(df,
+                             lon_center = hc$lon[1],
+                             lat_center = hc$lat[1],
+                             lon = lon,
+                             lat = lat,
+                             radius = radius)
     pic$id <- i
     pic$conc <- hc$concentration[1]
 
@@ -111,11 +118,13 @@ find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
         rlang::abort("Need more rows", call = NULL)
       }
       spatvctr <- spatvctr[!spatvctr$ix %in% pic$ix, ]
-      cell_ids <- map_points_to_cells(pic, foc, radius)
+      cell_ids <- map_points_to_cells(pic, foc, lon, lat, 4326, crs_metric,
+                                      r = radius)
+
       threshold_db <- update_db(cpc, threshold_db, cell_ids)
       conc_db <- update_db(cpc2, conc_db, cell_ids)
 
-      cells <- map_points_to_cells(pic, foc)
+      cells <- map_points_to_cells(pic, foc, lon, lat, 4326, crs_metric)
       extent <- terra::ext(raster, cells)
       rasterized <- update_rasterize(rasterized, extent, spatvctr, value)
       foc <- update_focal(foc, rasterized, extent, mw)
@@ -134,6 +143,9 @@ find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
   attr(lst, "focal") <- foc
   attr(lst, "threshold") <- threshold
   attr(lst, "value") <- value
+  attr(lst, "lon") <- lon
+  attr(lst, "lat") <- lat
+  attr(lst, "crs_metric") <- crs_metric
   class(lst) <- append("concentration", class(lst))
   lst
 }
@@ -187,10 +199,13 @@ plot.concentration <- function(x, type = c("concentration", "focal",
   threshold <- attr(x, "threshold")
   radius <- attr(x, "radius")
   value <- attr(x, "value")
+  lon <- attr(x, "lon")
+  lat <- attr(x, "lat")
+  crs_metric <- attr(x, "crs_metric")
 
   if (type == "concentration") {
-    cw <- convert_df_to_sf(x[[1]])
-    mpv <- convert_df_to_sf(x[[2]])
+    cw <- convert_df_to_sf(x[[1]], lon, lat, 4326, crs_metric)
+    mpv <- convert_df_to_sf(x[[2]], lon, lat, 4326, crs_metric)
     mpv$logvalue <- log(mpv[[value]])
 
     cw_buffer <- sf::st_buffer(cw, dist = radius, nQuadSegs = 50)
@@ -246,5 +261,8 @@ print.concentration <- function(x, ...) {
   attr(x, "focal") <- NULL
   attr(x, "threshold") <- NULL
   attr(x, "value") <- NULL
+  attr(x, "lon") <- NULL
+  attr(x, "lat") <- NULL
+  attr(x, "crs_metric") <- NULL
   print.default(x, ...)
 }

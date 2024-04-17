@@ -85,3 +85,47 @@ concentration <- function(sub, full, value,
   sub$concentration <- concentration_df$cumulation
   sub
 }
+
+#' @keywords internal
+concentration_ <- function(sub, full, value,
+                          lon_sub = lon, lat_sub = lat,
+                          lon_full = lon, lat_full = lat,
+                          radius = 200, display_progress = TRUE) {
+
+  if (!is.numeric(radius) || radius <= 0) {
+    msg <- paste0("Can't find concentrations with `radius = ", radius, "`.")
+    error_msg <- paste0("`radius` is not a positive number.")
+    rlang::abort(c(msg, "x" = error_msg), call = NULL)
+  }
+
+  # Turn into character vector
+  sub_name <- deparse(substitute(sub))
+  full_name <- deparse(substitute(full))
+
+  if (!all(c(lon_sub, lat_sub) %in% names(sub))) {
+    stop(paste0(sub_name, " does not contain columns ", lon_sub, " and ",
+                lat_sub), call. = FALSE)
+  }
+
+  if (!all(c(lon_full, lat_full) %in% names(full))) {
+    stop(paste0(full_name, " does not contain columns ", lon_full, " and ",
+                lat_full), call. = FALSE)
+  }
+
+  if (!all(is.numeric(c(sub[[lon_sub]], sub[[lat_sub]], full[[lon_full]],
+                        full[[lat_full]], full[[value]])))) {
+    stop(paste0("the following variables should be numeric: ", lon_sub, ", ",
+                lat_sub, ", ", lon_full, ", ", lat_full, ", ", value),
+         call. = FALSE)
+  }
+
+  sub_df <- data.frame("lon" = sub[[lon_sub]], "lat" = sub[[lat_sub]])
+  full_df <- data.frame("lon" = full[[lon_full]], "lat" = full[[lat_full]],
+                        "value" = full[[value]])
+
+  concentration_df <- concentration_loop_cpp(sub_df, full_df, radius,
+                                             display_progress)
+
+  sub$concentration <- concentration_df$cumulation
+  sub
+}
