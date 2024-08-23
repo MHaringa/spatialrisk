@@ -13,7 +13,8 @@ find_highest_concentration(
   grid_precision = 1,
   lon = "lon",
   lat = "lat",
-  crs_metric = 3035
+  crs_metric = 3035,
+  print_progress = TRUE
 )
 }
 \arguments{
@@ -30,9 +31,11 @@ latitude, and the value of interest to summarize.}
 
 \item{grid_precision}{numeric. Precision of grid in meters (default is 1).}
 
-\item{lon}{column name in \code{df} with longitude (default is "lon").}
+\item{lon}{column name in \code{df} with longitude (default is "lon").
+Should be in   EPSG:4326.}
 
-\item{lat}{column name in \code{df} with latitude (default is "lat").}
+\item{lat}{column name in \code{df} with latitude (default is "lat").
+Should be in EPSG:4326.}
 
 \item{crs_metric}{numeric. The metric Coordinate Reference System (CRS) is
 used solely in the background calculations. For European coordinates,
@@ -40,6 +43,8 @@ used solely in the background calculations. For European coordinates,
 United States, \href{https://epsg.io/6317}{EPSG:6317} can be utilized. For
 Asia and the Pacific regions, \href{https://epsg.io/8859}{EPSG:8859} is
 recommended.}
+
+\item{print_progress}{print progress iteration steps.}
 }
 \value{
 A list with two elements:
@@ -52,15 +57,19 @@ by \code{top_n}.
 }
 \description{
 Determines the central coordinates of a circle with a constant
-radius that maximizes the coverage of insured fire risk, where the fire risk
-is defined as assuming 100 percent damage on the total sum of the capital
-insured for each building located partly or fully within this radius.
-
-A recent regulation by the European Commission mandates insurance companies
-to report the maximum value of insured fire risk policies for all buildings
-partially or fully situated within a circle with a radius of 200 meters.
+radius that maximizes the coverage of demand points.
 }
 \details{
+A recent regulation by the European Commission mandates insurance
+companies to report the maximum value of insured fire risk policies for all
+buildings partially or fully situated within a circle with a radius of 200
+meters  (see Article 132 - fire risk sub-module - of the Delegated
+Regulation). This article captures the risk of catastrophic fire or
+explosion, including as a result of terrorist attacks. The sub-module is
+based on the scenario that the insurance or reinsurance undertaking incurs a
+loss equal to the capital insured for each building located partly or fully
+within a radius of 200 meters.
+
 This problem resembles a Maximal Covering Location Problem (MCLP)
 with a fixed radius, belonging to the category of facility location problems.
 The main aim is to select the best locations for a predetermined number of
@@ -79,6 +88,10 @@ y <- find_highest_concentration(
 )
 plot(y)
 
+}
+\references{
+Commission Delegated Regulation (EU) (2015). Solvency II
+Delegated Act 2015/35. Official Journal of the European Union, 58:124.
 }
 \author{
 Martin Haringa

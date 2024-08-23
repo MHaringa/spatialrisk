@@ -36,9 +36,8 @@ remotes::install_github("MHaringa/spatialrisk")
 
 ## Example 1
 
-Find all observations in data.frame `Groningen` that are located within
-circle of a radius of 100m from the point
-`(lon,lat) = (6.561561,53.21326)`:
+Filter all observations in `Groningen` that fall within a circle of a
+radius of 100m drawn around the point `(lon,lat) = (6.561561,53.21326)`:
 
 ``` r
 library(spatialrisk)
@@ -46,26 +45,25 @@ circle <- points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.213
 circle
 ```
 
-    ## # A tibble: 14 x 10
-    ##    street  number letter suffix postal_code city     lon   lat amount distance_m
-    ##    <chr>    <int> <chr>  <chr>  <chr>       <chr>  <dbl> <dbl>  <dbl>      <dbl>
-    ##  1 Heresi…      5 <NA>   <NA>   9711EP      Groni…  6.57  53.2      5       31.4
-    ##  2 Heresi…     11 <NA>   <NA>   9711ER      Groni…  6.57  53.2     11       47.8
-    ##  3 Zuider…   1003 <NA>   <NA>   9724AK      Groni…  6.57  53.2   1003       57.6
-    ##  4 Heresi…     13 <NA>   <NA>   9711ER      Groni…  6.57  53.2     13       68.1
-    ##  5 Herepl…     10 <NA>   <NA>   9711GA      Groni…  6.57  53.2     10       74.6
-    ##  6 Heresi…     16 <NA>   <NA>   9711ES      Groni…  6.57  53.2     16       84.1
-    ##  7 Heresi…      6 <NA>   <NA>   9711ES      Groni…  6.57  53.2      6       86.2
-    ##  8 Heresi…      6 a      <NA>   9711ES      Groni…  6.57  53.2      6       87.8
-    ##  9 Heresi…      6 b      <NA>   9711ES      Groni…  6.57  53.2      6       90.9
-    ## 10 Heresi…     20 <NA>   <NA>   9711ET      Groni…  6.57  53.2     20       91.5
-    ## 11 Heresi…     20 a      <NA>   9711ET      Groni…  6.57  53.2     20       93.0
-    ## 12 Heresi…     15 a      <NA>   9711ER      Groni…  6.57  53.2     15       95.1
-    ## 13 Zuider…   1007 <NA>   <NA>   9724AK      Groni…  6.57  53.2   1007       97.2
-    ## 14 Zuider…     25 a      <NA>   9724AJ      Groni…  6.57  53.2     25       97.8
+    ## # A tibble: 14 × 10
+    ##    street   number letter suffix postal_code city    lon   lat amount distance_m
+    ##    <chr>     <int> <chr>  <chr>  <chr>       <chr> <dbl> <dbl>  <dbl>      <dbl>
+    ##  1 Heresin…      5 <NA>   <NA>   9711EP      Gron…  6.57  53.2      5       31.4
+    ##  2 Heresin…     11 <NA>   <NA>   9711ER      Gron…  6.57  53.2     11       47.8
+    ##  3 Zuiderp…   1003 <NA>   <NA>   9724AK      Gron…  6.57  53.2   1003       57.6
+    ##  4 Heresin…     13 <NA>   <NA>   9711ER      Gron…  6.57  53.2     13       68.1
+    ##  5 Hereple…     10 <NA>   <NA>   9711GA      Gron…  6.57  53.2     10       74.6
+    ##  6 Heresin…     16 <NA>   <NA>   9711ES      Gron…  6.57  53.2     16       84.1
+    ##  7 Heresin…      6 <NA>   <NA>   9711ES      Gron…  6.57  53.2      6       86.2
+    ##  8 Heresin…      6 a      <NA>   9711ES      Gron…  6.57  53.2      6       87.8
+    ##  9 Heresin…      6 b      <NA>   9711ES      Gron…  6.57  53.2      6       90.9
+    ## 10 Heresin…     20 <NA>   <NA>   9711ET      Gron…  6.57  53.2     20       91.5
+    ## 11 Heresin…     20 a      <NA>   9711ET      Gron…  6.57  53.2     20       93.0
+    ## 12 Heresin…     15 a      <NA>   9711ER      Gron…  6.57  53.2     15       95.1
+    ## 13 Zuiderp…   1007 <NA>   <NA>   9724AK      Gron…  6.57  53.2   1007       97.2
+    ## 14 Zuiderp…     25 a      <NA>   9724AJ      Gron…  6.57  53.2     25       97.8
 
-The sum of all observations within a circle of a radius of 100m is equal
-to:
+The sum of all observations within this circle is equal to:
 
 ``` r
 sum(circle$amount)
@@ -108,156 +106,107 @@ isTRUE(sum(circle$amount) == conc$concentration[3])
 ## Example 3
 
 Example 2 shows how to determine the sum of all observations within a
-circle of certain radius for multiple points. `highest_concentration()`
-can be used to find the coordinates of the center of a circle for which
-the sum of the observations within the circle is the highest. This
-example gives an application to data set `Groningen`.
-`highest_concentration()` uses Gustavo Niemeyer’s wonderful and elegant
-geohash coordinate system. Niemeyer’s Geohash method encodes latitude
-and longitude as binary string where each binary value derived from a
-decision as to where the point lies in a bisected region of latitude or
-longitudinal space.
-
-Note that all functions are written in C++, and are therefore very fast.
-It takes about 5-10 seconds to find the highest concentration for a
-portfolio with 500,000 objects.
+circle of certain radius for multiple points.
+`find_highest_concentration()` can be used to determine the central
+coordinates of a circle with a constant radius that maximizes the
+coverage of demand points. As an example this is applied to data set
+`Groningen`.
 
 Show all points in data set `Groningen`:
 
 ``` r
-plot_points(Groningen, value = amount)
+plot_points(Groningen, value = "amount")
 ```
 
-![](man/figures/pts_groningen.png)
+![](man/figures/example3a-1.png)
 
 <br>
 
 ------------------------------------------------------------------------
 
-Find the highest concentration:
+Find the central coordinates of a circle with the highest concentration:
 
 ``` r
-hconc <- highest_concentration(Groningen, amount, radius = 200, grid_distance = 50)
+hconc <- find_highest_concentration(Groningen, 
+                                    value = "amount", 
+                                    radius = 200)
 ```
 
-For a portfolio of about 25,000 it takes about 0.5 second to find the
-highest concentration.
+    ## Time difference of 0.4750721 secs
+
+Note that all functions are written in C++, and are therefore very fast.
+
+Output highest concentration:
 
 ``` r
-microbenchmark::microbenchmark(
-  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50), 
-  times = 10)
+hc[[1]]
 ```
 
-    ## Unit: milliseconds
-    ##                                                                        expr
-    ##  highest_concentration(Groningen, amount, radius = 200, grid_distance = 50)
-    ##       min       lq     mean   median       uq      max neval
-    ##  607.0512 609.9632 619.7995 611.0177 614.7176 696.1569    10
+    ##        lon      lat concentration cell id
+    ## 1 6.547326 53.23658         64438 3642  1
 
-The two highest concentrations are found in geohash *u1kwug*:
-
-``` r
-head(hconc)
-```
-
-    ##    concentration      lon      lat geohash
-    ## 1:         63485 6.547372 53.23650  u1kwug
-    ## 2:         61075 6.547372 53.23695  u1kwug
-    ## 3:         57121 6.523147 53.23101  u1kwu6
-    ## 4:         57009 6.589809 53.20534  u1kwtv
-    ## 5:         56336 6.589809 53.20579  u1kwtv
-    ## 6:         55631 6.523897 53.23145  u1kwu6
-
-The following gives an illustration of this. The yellow parts show the
-areas with the highest concentrations.
-
-``` r
-plot(hconc) 
-```
-
-![](man/figures/gh_groningen.png)
-
-<br>
-
-------------------------------------------------------------------------
-
-`highest_concentration()` returns the highest concentration within a
-portfolio based on a grid. However, higher concentrations can be found
-within two grid points. `neighborhood_gh_search()` looks for even higher
-concentrations in the neighborhood of the grid points with the highest
-concentrations. This optimization is done by means of Simulated
-Annealing.
-
-Look for higher concentrations in the geohash with the highest
-concentration found by `highest_concentration()`:
-
-``` r
-hconc_nghb <- neighborhood_gh_search(hconc, max.call = 7000)
-```
-
-The highest concentration is found in:
-
-``` r
-hconc_nghb
-```
-
-    ##   highest_concentration      lon      lat geohash
-    ## 1                 64438 6.547329 53.23658  u1kwug
-
-The concentration 64,438 is higher than the highest concentration of
-63,485 on the grid points. This concentration is the highest in data set
-Groningen.
+Plot the points in the highest concentration highest concentration. The
+sum of all values is equal to the concentration. This concentration is
+the highest in data set Groningen.
 
 Show the highest concentration on a map (the highest concentration
 includes two apartment buildings with many objects):
 
 ``` r
-plot(hconc_nghb)
+plot(hc)
 ```
 
-![](man/figures/n1_groningen.png)
+![](man/figures/unnamed-chunk-9-1.png)
 
 <br>
+
+------------------------------------------------------------------------
 
 Its also possible to show the coordinates for more than one
 concentration. To show the second and third highest concentration:
 
 ``` r
-nb3 <- neighborhood_gh_search(hconc, max.call = 7000, highest_geohash = 3) 
-nb3
+hconc <- find_highest_concentration(Groningen, 
+                                    value = "amount", 
+                                    radius = 200, 
+                                    top_n = 3)
 ```
+
+    ## Finished 1 of 3Finished 2 of 3Finished 3 of 3
 
 Create interactive map:
 
 ``` r
-plot(nb3)
+plot(hconc)
 ```
 
-![](man/figures/n3_groningen.png)
+![](man/figures/unnamed-chunk-11-1.png)
 
 <br>
 
-Show objects in the highest geohash:
+------------------------------------------------------------------------
+
+Show objects in the highest circle:
 
 ``` r
-points_in_circle(Groningen, lon_center = nb3$lon[1], lat_center = nb3$lat[1], radius = 200)
+hc[[2]]
 ```
 
-    ## # A tibble: 208 x 10
-    ##    street   number letter suffix postal_code city    lon   lat amount distance_m
-    ##    <chr>     <int> <chr>  <chr>  <chr>       <chr> <dbl> <dbl>  <dbl>      <dbl>
-    ##  1 Elzenla…    135 <NA>   <NA>   9741ND      Gron…  6.55  53.2    135       3.81
-    ##  2 Elzenla…    139 <NA>   <NA>   9741ND      Gron…  6.55  53.2    139       8.13
-    ##  3 Elzenla…     70 <NA>   <NA>   9741NG      Gron…  6.55  53.2     70      30.7 
-    ##  4 Elzenla…     68 <NA>   <NA>   9741NG      Gron…  6.55  53.2     68      34.1 
-    ##  5 Duindoo…      1 <NA>   <NA>   9741NM      Gron…  6.55  53.2     12      35.2 
-    ##  6 Duindoo…     17 <NA>   <NA>   9741NM      Gron…  6.55  53.2     17      44.3 
-    ##  7 Duindoo…     15 <NA>   <NA>   9741NM      Gron…  6.55  53.2     15      48.2 
-    ##  8 Duindoo…     21 <NA>   <NA>   9741NM      Gron…  6.55  53.2     21      48.6 
-    ##  9 Duindoo…     13 <NA>   <NA>   9741NM      Gron…  6.55  53.2     13      52.3 
-    ## 10 Ranonke…     38 <NA>   <NA>   9741LT      Gron…  6.55  53.2     38      59.5 
-    ## # … with 198 more rows
+    ## # A tibble: 208 × 13
+    ##    street        number letter suffix postal_code city    lon   lat amount    ix
+    ##    <chr>          <int> <chr>  <chr>  <chr>       <chr> <dbl> <dbl>  <dbl> <int>
+    ##  1 Elzenlaan        135 <NA>   <NA>   9741ND      Gron…  6.55  53.2    135 20449
+    ##  2 Elzenlaan        139 <NA>   <NA>   9741ND      Gron…  6.55  53.2    139 23229
+    ##  3 Elzenlaan         70 <NA>   <NA>   9741NG      Gron…  6.55  53.2     70   585
+    ##  4 Elzenlaan         68 <NA>   <NA>   9741NG      Gron…  6.55  53.2     68 14677
+    ##  5 Duindoornstr…      1 <NA>   <NA>   9741NM      Gron…  6.55  53.2     12 16828
+    ##  6 Duindoornstr…     17 <NA>   <NA>   9741NM      Gron…  6.55  53.2     17 12829
+    ##  7 Duindoornstr…     15 <NA>   <NA>   9741NM      Gron…  6.55  53.2     15 16004
+    ##  8 Duindoornstr…     21 <NA>   <NA>   9741NM      Gron…  6.55  53.2     21 11748
+    ##  9 Duindoornstr…     13 <NA>   <NA>   9741NM      Gron…  6.55  53.2     13  2006
+    ## 10 Ranonkelstra…     38 <NA>   <NA>   9741LT      Gron…  6.55  53.2     38 19696
+    ## # ℹ 198 more rows
+    ## # ℹ 3 more variables: distance_m <dbl>, id <int>, conc <dbl>
 
 ## Example 4
 

@@ -88,9 +88,9 @@ concentration <- function(sub, full, value,
 
 #' @keywords internal
 concentration_ <- function(sub, full, value,
-                          lon_sub = lon, lat_sub = lat,
-                          lon_full = lon, lat_full = lat,
-                          radius = 200, display_progress = TRUE) {
+                           lon_sub = lon, lat_sub = lat,
+                           lon_full = lon, lat_full = lat,
+                           radius = 200, display_progress = TRUE) {
 
   if (!is.numeric(radius) || radius <= 0) {
     msg <- paste0("Can't find concentrations with `radius = ", radius, "`.")

@@ -53,7 +53,8 @@ Rcpp::NumericVector haversine_cpp_vec(Rcpp::NumericVector latFrom, Rcpp::Numeric
 
 
 // [[Rcpp::export]]
-DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, double radius = 200) {
+DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center,
+                             double radius = 200) {
 
   // extracting each column into a vector
   IntegerVector id = seq(1, x.nrows());
@@ -62,8 +63,10 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 
   // create block around center point
   int circumference_earth_in_meters = 40075000;
-  double one_lat_in_meters = circumference_earth_in_meters * 0.002777778;  // 0.002777778 is used instead of 1/360;
-  double one_lon_in_meters = circumference_earth_in_meters * cos(lat_center * 0.01745329) * 0.002777778;
+  // 0.002777778 is used instead of 1/360;
+  double one_lat_in_meters = circumference_earth_in_meters * 0.002777778;
+  double one_lon_in_meters = circumference_earth_in_meters *
+    cos(lat_center * 0.01745329) * 0.002777778;
   double south_lat = lat_center - radius / one_lat_in_meters;
   double north_lat = lat_center + radius / one_lat_in_meters;
   double west_lon = lon_center - radius / one_lon_in_meters;
@@ -74,7 +77,8 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
   LogicalVector ind_block(n);
 
   for ( int i = 0; i < n; i++ ){
-    ind_block[i] = !((lon[i] > east_lon) || (lon[i] < west_lon) || (lat[i] < south_lat) || (lat[i] > north_lat));
+    ind_block[i] = !((lon[i] > east_lon) || (lon[i] < west_lon) ||
+      (lat[i] < south_lat) || (lat[i] > north_lat));
   }
 
   // create new data.frame based on "pre-subsetting"
@@ -108,7 +112,8 @@ DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, 
 #include <progress.hpp>
 #include <progress_bar.hpp>
 // [[Rcpp::export]]
-DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool display_progress = true) {
+DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius =
+  200, bool display_progress = true) {
 
   // extracting each column into a vector
   IntegerVector id_sub = seq(1, sub.nrows());
@@ -152,7 +157,8 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
       }
 
       // apply haversine for coordinates outside diamond and inside square
-      else if ((haversine_cpp(lat_sub[j], lon_sub[j], lat_ref[i], lon_ref[i]) < radius)){
+      else if ((haversine_cpp(lat_sub[j], lon_sub[j], lat_ref[i],
+                              lon_ref[i]) < radius)){
         ind_ref[i] = true;
       }
 
@@ -172,7 +178,8 @@ DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius = 2
 
 
 // [[Rcpp::export]]
-DataFrame block_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool display_progress = true) {
+DataFrame block_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200,
+                         bool display_progress = true) {
 
   // extracting each column into a vector
   IntegerVector id_sub = seq(1, sub.nrows());
@@ -206,7 +213,8 @@ DataFrame block_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool
     // apply "pre-subsetting" before using haversine method
     for ( int i = 0; i < n_ref; i++ ){
 
-      if ( !((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) || (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat)) ){
+      if ( !((lon_ref[i] > east_lon) || (lon_ref[i] < west_lon) ||
+           (lat_ref[i] < south_lat) || (lat_ref[i] > north_lat)) ){
         ind_ref[i] = true;
       }
 
@@ -227,7 +235,8 @@ DataFrame block_loop_cpp(DataFrame sub, DataFrame ref, double radius = 200, bool
 
 
 // [[Rcpp::export]]
-DataFrame concentration_loop_cpp2(DataFrame sub, DataFrame ref, double radius = 200) {
+DataFrame concentration_loop_cpp2(DataFrame sub, DataFrame ref,
+                                  double radius = 200) {
 
   // extracting each column into a vector
   IntegerVector id_sub = seq(1, sub.nrows());
@@ -294,7 +303,8 @@ double one_lon_in_meters(double lat0) {
 }
 
 // [[Rcpp::export]]
-DataFrame add_cell_bounds_cpp(DataFrame df, double size = 50, double radius = 200) {
+DataFrame add_cell_bounds_cpp(DataFrame df, double size = 50,
+                              double radius = 200) {
   double circumference_earth_in_meters = 40075000;
   double one_lat_in_meters = circumference_earth_in_meters * 0.002777778;
   double dsize = size * .5;
@@ -479,6 +489,82 @@ DataFrame max_conc_per_cell_cpp(DataFrame dfsub,
                                     Named("concentration") = res_conc,
                                     Named("cell") = cell);
   return(NDF);
+}
+
+
+// [[Rcpp::export]]
+DataFrame haversine_loop_cpp0(DataFrame x, NumericVector lat_centers,
+                              NumericVector lon_centers, double radius = 200) {
+
+  // extracting each column into a vector
+  IntegerVector id = seq(1, x.nrows());
+  NumericVector lon = x["lon"];
+  NumericVector lat = x["lat"];
+
+  // prepare result storage
+  IntegerVector result_id;
+  NumericVector result_distance_m;
+  IntegerVector result_center_index;
+
+  // iterate over each center
+  for (int j = 0; j < lat_centers.size(); ++j) {
+    double lat_center = lat_centers[j];
+    double lon_center = lon_centers[j];
+
+    // create block around center point
+    int circumference_earth_in_meters = 40075000;
+    // 0.002777778 is used instead of 1/360;
+    double one_lat_in_meters = circumference_earth_in_meters * 0.002777778;
+    double one_lon_in_meters = circumference_earth_in_meters *
+      cos(lat_center * 0.01745329) * 0.002777778;
+    double south_lat = lat_center - radius / one_lat_in_meters;
+    double north_lat = lat_center + radius / one_lat_in_meters;
+    double west_lon = lon_center - radius / one_lon_in_meters;
+    double east_lon = lon_center + radius / one_lon_in_meters;
+
+    // apply "pre-subsetting" before using haversine method
+    int n = x.nrows();
+    LogicalVector ind_block(n);
+
+    for ( int i = 0; i < n; i++ ){
+      ind_block[i] = !((lon[i] > east_lon) || (lon[i] < west_lon) ||
+        (lat[i] < south_lat) || (lat[i] > north_lat));
+    }
+
+    // create new data.frame based on "pre-subsetting"
+    IntegerVector id_sub = id[ind_block];
+    NumericVector lat_sub = lat[ind_block];
+    NumericVector lon_sub = lon[ind_block];
+
+    int n1 = id_sub.size();
+
+    // apply haversine method to find points within radius from center
+    NumericVector result(n1);
+    for ( int i = 0; i < n1; ++i ) {
+      result[i] = haversine_cpp(lat_center, lon_center, lat_sub[i], lon_sub[i]);
+    }
+
+    // create indicator whether coordinates are within radius
+    LogicalVector ind_radius(n1);
+    for (int i = 0; i < n1; i++){
+      ind_radius[i] = (result[i] < radius);
+    }
+
+    // append to result storage
+    for (int i = 0; i < n1; ++i) {
+      if (ind_radius[i]) {
+        result_id.push_back(id_sub[i]);
+        result_distance_m.push_back(result[i]);
+        result_center_index.push_back(j + 1); // indexing from 1 for R
+      }
+    }
+  }
+
+  // create a new data frame
+  DataFrame NDF = DataFrame::create(Named("id") = result_id,
+                                    Named("distance_m") = result_distance_m,
+                                    Named("center_index") = result_center_index);
+  return NDF;
 }
 
 

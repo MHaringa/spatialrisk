@@ -72,7 +72,7 @@
 #' plot(hc1_nghb)
 #' }
 #'
-#' @export
+#' @noRd
 highest_concentration <- function(df, value, lon = lon, lat = lat,
                                   lowerbound = NULL, radius = 200,
                                   grid_distance = 25, gh_precision = 6,
@@ -248,8 +248,6 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
 #'
 #' @return data.frame
 #'
-#' @export neighborhood_gh_search
-#'
 #' @examples
 #' \dontrun{
 #' # Find highest concentration with a precision of a grid of 25 meters
@@ -262,6 +260,7 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
 #' plot(hc1_nghb)
 #' plot(hc2_nghb)
 #' }
+#' @noRd
 neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
                                    verbose = TRUE, seed = 1) {
 
@@ -370,7 +369,7 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
 #'
 #' @importFrom sf st_as_sf
 #'
-#' @export
+#' @noRd
 plot.conc <- function(x,
                       grid_points = TRUE,
                       legend_title = NULL,
@@ -516,7 +515,7 @@ plot.conc <- function(x,
 #'
 #' @rdname plot
 #'
-#' @export
+#' @noRd
 plot.neighborhood <- function(x,
                               buffer = 0,
                               legend_title = NULL,

@@ -1,13 +1,7 @@
 #' Find highest concentration
 #'
 #' @description Determines the central coordinates of a circle with a constant
-#' radius that maximizes the coverage of insured fire risk, where the fire risk
-#' is defined as assuming 100 percent damage on the total sum of the capital
-#' insured for each building located partly or fully within this radius.
-#'
-#' A recent regulation by the European Commission mandates insurance companies
-#' to report the maximum value of insured fire risk policies for all buildings
-#' partially or fully situated within a circle with a radius of 200 meters.
+#' radius that maximizes the coverage of demand points.
 #'
 #' @param df data.frame. Should include at least columns for longitude,
 #'     latitude, and the value of interest to summarize.
@@ -17,13 +11,16 @@
 #' @param cell_size numeric. Size of cell in meters (default is 100).
 #' @param grid_precision numeric. Precision of grid in meters (default is 1).
 #' @param lon column name in \code{df} with longitude (default is "lon").
+#' Should be in   EPSG:4326.
 #' @param lat column name in \code{df} with latitude (default is "lat").
+#' Should be in EPSG:4326.
 #' @param crs_metric numeric. The metric Coordinate Reference System (CRS) is
 #' used solely in the background calculations. For European coordinates,
 #' \href{https://epsg.io/3035}{EPSG:3035} (default) is recommended. For the
 #' United States, \href{https://epsg.io/6317}{EPSG:6317} can be utilized. For
 #' Asia and the Pacific regions, \href{https://epsg.io/8859}{EPSG:8859} is
 #' recommended.
+#' @param print_progress print progress iteration steps.
 #'
 #' @importFrom terra ext
 #' @importFrom terra focal
@@ -33,7 +30,17 @@
 #'
 #' @author Martin Haringa
 #'
-#' @details This problem resembles a Maximal Covering Location Problem (MCLP)
+#' @details A recent regulation by the European Commission mandates insurance
+#' companies to report the maximum value of insured fire risk policies for all
+#' buildings partially or fully situated within a circle with a radius of 200
+#' meters  (see Article 132 - fire risk sub-module - of the Delegated
+#' Regulation). This article captures the risk of catastrophic fire or
+#' explosion, including as a result of terrorist attacks. The sub-module is
+#' based on the scenario that the insurance or reinsurance undertaking incurs a
+#' loss equal to the capital insured for each building located partly or fully
+#' within a radius of 200 meters.
+#'
+#' This problem resembles a Maximal Covering Location Problem (MCLP)
 #' with a fixed radius, belonging to the category of facility location problems.
 #' The main aim is to select the best locations for a predetermined number of
 #' facilities to achieve maximum coverage of demand points within a specified
@@ -41,6 +48,9 @@
 #' facility locations to cover as many demand points as feasible, while ensuring
 #' that each demand point falls within the designated distance (radius) of at
 #' least one facility.
+#'
+#' @references Commission Delegated Regulation (EU) (2015). Solvency II
+#' Delegated Act 2015/35. Official Journal of the European Union, 58:124.
 #'
 #' @return A list with two elements:
 #' \enumerate{
@@ -63,7 +73,8 @@
 find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
                                        cell_size = 100, grid_precision = 1,
                                        lon = "lon", lat = "lat",
-                                       crs_metric = 3035) {
+                                       crs_metric = 3035,
+                                       print_progress = TRUE) {
 
   check_input(df, value, top_n, radius, cell_size, grid_precision)
 
@@ -99,24 +110,26 @@ find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
     hc <- highest_conc(cpc2, foc_lb, conc_db)
     hc$id <- i
     pic <- points_in_circle_(df,
-                             lon_center = hc$lon[1],
-                             lat_center = hc$lat[1],
+                             lon_center = hc[[lon]][1],
+                             lat_center = hc[[lat]][1],
                              lon = lon,
                              lat = lat,
                              radius = radius)
     pic$id <- i
     pic$conc <- hc$concentration[1]
 
-    if (top_n > 1) {
+    if (top_n > 1 && print_progress) {
       cat("\rFinished", i, "of", top_n)
     }
 
     if (top_n > 1 && i < top_n) {
-      # update inputs for next iteration
+
       df <- df[!df$ix %in% pic$ix, ]
+
       if (nrow(df) == 0) {
         rlang::abort("Need more rows", call = NULL)
       }
+
       spatvctr <- spatvctr[!spatvctr$ix %in% pic$ix, ]
       cell_ids <- map_points_to_cells(pic, foc, lon, lat, 4326, crs_metric,
                                       r = radius)
@@ -248,11 +261,6 @@ plot.concentration <- function(x, type = c("concentration", "focal",
 }
 
 
-#' Print output
-#'
-#' @param x input from function
-#' @param ... additional arguments
-#'
 #' @export
 print.concentration <- function(x, ...) {
   attr(x, "class") <- NULL
@@ -266,3 +274,5 @@ print.concentration <- function(x, ...) {
   attr(x, "crs_metric") <- NULL
   print.default(x, ...)
 }
+
+

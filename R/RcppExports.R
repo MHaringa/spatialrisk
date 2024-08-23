@@ -49,3 +49,7 @@ max_conc_per_cell_cpp <- function(dfsub, dffull, points = 50L, size = 50L, radiu
     .Call('_spatialrisk_max_conc_per_cell_cpp', PACKAGE = 'spatialrisk', dfsub, dffull, points, size, radius)
 }
 
+haversine_loop_cpp0 <- function(x, lat_centers, lon_centers, radius = 200) {
+    .Call('_spatialrisk_haversine_loop_cpp0', PACKAGE = 'spatialrisk', x, lat_centers, lon_centers, radius)
+}
+

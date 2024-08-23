@@ -1,4 +1,3 @@
-# spatialrisk (development version)
 
 # spatialrisk 0.7.2
 

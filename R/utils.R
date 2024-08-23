@@ -250,7 +250,7 @@ update_rasterize <- function(old_rasterized, extent, new_spatvector, col) {
 #' @author Martin Haringa
 #'
 #' @keywords internal
-update_focal <- function(old_focal, new_rasterized, extent, mw){
+update_focal <- function(old_focal, new_rasterized, extent, mw) {
   cell_size <- terra::xres(new_rasterized)
   mw_cells <- (nrow(mw) - 1) / 2
   mw_dist <- mw_cells * cell_size
@@ -390,6 +390,4 @@ check_input <- function(df, value, top_n, radius, cell_size, grid_precision) {
 }
 
 
-#' @importFrom dplyr %>%
-#' @export
-dplyr::`%>%`
+

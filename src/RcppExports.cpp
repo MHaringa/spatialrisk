@@ -169,6 +169,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// haversine_loop_cpp0
+DataFrame haversine_loop_cpp0(DataFrame x, NumericVector lat_centers, NumericVector lon_centers, double radius);
+RcppExport SEXP _spatialrisk_haversine_loop_cpp0(SEXP xSEXP, SEXP lat_centersSEXP, SEXP lon_centersSEXP, SEXP radiusSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lat_centers(lat_centersSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lon_centers(lon_centersSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    rcpp_result_gen = Rcpp::wrap(haversine_loop_cpp0(x, lat_centers, lon_centers, radius));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_spatialrisk_haversine_cpp_vec", (DL_FUNC) &_spatialrisk_haversine_cpp_vec, 5},
@@ -183,6 +197,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_spatialrisk_filter_full_cpp", (DL_FUNC) &_spatialrisk_filter_full_cpp, 3},
     {"_spatialrisk_highest_indices_cpp", (DL_FUNC) &_spatialrisk_highest_indices_cpp, 2},
     {"_spatialrisk_max_conc_per_cell_cpp", (DL_FUNC) &_spatialrisk_max_conc_per_cell_cpp, 5},
+    {"_spatialrisk_haversine_loop_cpp0", (DL_FUNC) &_spatialrisk_haversine_loop_cpp0, 4},
     {NULL, NULL, 0}
 };
 

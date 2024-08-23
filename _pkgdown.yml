@@ -6,12 +6,11 @@ reference:
   - title: "Spatial risk"
     contents:
       - concentration
-      - highest_concentration
-      - neighborhood_gh_search
+      - find_highest_concentration
       - plot.concentration
-      - plot.neighborhood
       - points_in_circle
       - haversine
+      - convert_crs_df
   - title: "Create maps"
     contents:
       - points_to_polygon
@@ -20,7 +19,6 @@ reference:
       - plot_points
   - title: "Spatial interpolation"
     contents:
-      - interpolate_krige
       - interpolate_spline
   - title: "Maps"
     desc: >

@@ -138,7 +138,7 @@ create_grid_points <- function(df, meters) {
 #' @keywords internal
 add_providers_to_map <- function(x, providers) {
   prov <- NULL
-  if ( !is.null(providers) ){
+  if (!is.null(providers)) {
     for (i in seq_along(providers)) {
       if (providers[i] %in% names(leaflet::providers)) {
         x <- leaflet::addProviderTiles(
@@ -148,7 +148,8 @@ add_providers_to_map <- function(x, providers) {
         )
         prov <- append(prov, providers[i])
       } else {
-        warning(paste("Provider ", providers[i], " is not available\n", sep = ""),
+        warning(paste("Provider ", providers[i], " is not available\n",
+                      sep = ""),
                 call. = FALSE)
       }
     }
