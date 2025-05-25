@@ -1,27 +1,29 @@
 
 # spatialrisk 0.7.2
 
-* `highest_concentration()` now uses focal calculations instead of geohashes to calculate the sum per cell
-* `plot_points()` now uses `mapview::mapview()` to plot the map 
+* Introduced `find_highest_concentration()`: a faster and more accurate alternative to `highest_concentration()`, leveraging focal statistics for optimal results.
+* Deprecated `highest_concentration()` in favor of the new, improved function.
+* Updated `plot_points()` to utilize `mapview::mapview()` for enhanced interactive map visualizations.
+* Revised the README to reflect these new features and updates.
 
 # spatialrisk 0.7.1
 
-* `plot_points()` now returns a warning when a specific provider tile is not available
+* `plot_points()` now returns a warning when a specific provider tile is not available.
 
 # spatialrisk 0.7.0
 
-* `neighborhood_gh_search()` now returns a more precise outcome when the radius of the circle is not equal to 200m
-* `sf::st_crs()` is used for `sf` objects to not show the message that old crs is detected anymore
+* `neighborhood_gh_search()` now returns a more precise outcome when the radius of the circle is not equal to 200m.
+* `sf::st_crs()` is used for `sf` objects to not show the message that old crs is detected anymore.
 
 # spatialrisk 0.6.9
 
-* `highest_concentration()` now returns correct highest concentration when the circle of the highest concentration overlaps more than one geohash
-* `plot.concentration()` now handles many lon/lat pairs better
+* `highest_concentration()` now returns correct highest concentration when the circle of the highest concentration overlaps more than one geohash.
+* `plot.concentration()` now handles many lon/lat pairs better.
 
 # spatialrisk 0.6.8
 
-* `highest_concentration()` is added to do a fast search for the coordinates of the highest concentration
-* `neighborhood_gh_search()` is added to look for even higher concentrations in the neighborhood of the coordinates found by `highest_concentration()`
+* `highest_concentration()` is added to do a fast search for the coordinates of the highest concentration.
+* `neighborhood_gh_search()` is added to look for even higher concentrations in the neighborhood of the coordinates found by `highest_concentration()`.
 
 # spatialrisk 0.6.7
 

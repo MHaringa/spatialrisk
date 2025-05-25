@@ -14,6 +14,7 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/find_highest_concentration.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/haversine.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/highest_conc.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/highest_concentration.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/index.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/insurance.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/interpolate_spline.html</loc></url>
@@ -21,13 +22,16 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/knmi_stations.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/map_points_to_cells.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/mw_create.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/neighborhood_gh_search.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_corop.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_gemeente.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_postcode2.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_postcode3.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_postcode4.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_provincie.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/plot.conc.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/plot.concentration.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/plot.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/plot_points.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle_vec.html</loc></url>

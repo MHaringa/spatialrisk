@@ -40,5 +40,11 @@ reference:
     contents:
       - Groningen
       - insurance
+  - title: "Deprecated"
+    contents:
+      - highest_concentration
+      - neighborhood_gh_search
+      - plot.neighborhood
+      - plot.conc
 
 

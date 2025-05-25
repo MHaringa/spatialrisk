@@ -47,30 +47,30 @@ choropleth <- function(sf_object, value = "output", id_name = "areaname",
     })
 
     # tmap4 code
-    # output <- tmap::tm_shape(sf_object) +
-    #   tmap::tm_polygons(value,
-    #                     id = id_name,
-    #                     fill.scale = tmap::tm_scale_intervals(
-    #                       style = "fisher",
-    #                       values = palette,
-    #                       n = n
-    #                     ),
-    #                     fill.legend = tmap::tm_legend(title = legend_title),
-    #                     fill_alpha = .5) +
-    #   tmap::tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas",
-    #                      "Esri.WorldTopoMap"))
-
-    # tmap3 code
     output <- tmap::tm_shape(sf_object) +
       tmap::tm_polygons(value,
                         id = id_name,
-                        palette = palette,
-                        style = "fisher",
-                        n = n,
-                        title = legend_title,
-                        alpha = .5) +
+                        fill.scale = tmap::tm_scale_intervals(
+                          style = "fisher",
+                          values = palette,
+                          n = n
+                        ),
+                        fill.legend = tmap::tm_legend(title = legend_title),
+                        fill_alpha = .5) +
       tmap::tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas",
                          "Esri.WorldTopoMap"))
+
+    # tmap3 code
+    # output <- tmap::tm_shape(sf_object) +
+    #   tmap::tm_polygons(value,
+    #                     id = id_name,
+    #                     palette = palette,
+    #                     style = "fisher",
+    #                     n = n,
+    #                     title = legend_title,
+    #                     alpha = .5) +
+    #   tmap::tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas",
+    #                      "Esri.WorldTopoMap"))
 
   } else {
     suppressMessages({
@@ -78,30 +78,30 @@ choropleth <- function(sf_object, value = "output", id_name = "areaname",
     })
 
     # tmap4 code
-    # output <- tmap::tm_shape(sf_object) +
-    #   tmap::tm_polygons(value,
-    #                     id = id_name,
-    #                     fill.scale = tmap::tm_scale_intervals(style = "fisher",
-    #                                                           values = palette,
-    #                                                           n = n),
-    #                     fill.legend = tmap::tm_legend(title = legend_title),
-    #                     lwd = .1) +
-    #   tmap::tm_compass(position = c("right", "bottom")) +
-    #   tmap::tm_scalebar(position = c("left", "bottom")) +
-    #   tmap::tm_layout(frame = FALSE)
-
-    # tmap3 code
     output <- tmap::tm_shape(sf_object) +
       tmap::tm_polygons(value,
                         id = id_name,
-                        palette = palette,
-                        style = "fisher",
-                        title = legend_title,
-                        n = n,
+                        fill.scale = tmap::tm_scale_intervals(style = "fisher",
+                                                              values = palette,
+                                                              n = n),
+                        fill.legend = tmap::tm_legend(title = legend_title),
                         lwd = .1) +
       tmap::tm_compass(position = c("right", "bottom")) +
-      tmap::tm_scale_bar(position = c("left", "bottom")) +
+      tmap::tm_scalebar(position = c("left", "bottom")) +
       tmap::tm_layout(frame = FALSE)
+
+    # tmap3 code
+    # output <- tmap::tm_shape(sf_object) +
+    #   tmap::tm_polygons(value,
+    #                     id = id_name,
+    #                     palette = palette,
+    #                     style = "fisher",
+    #                     title = legend_title,
+    #                     n = n,
+    #                     lwd = .1) +
+    #   tmap::tm_compass(position = c("right", "bottom")) +
+    #   tmap::tm_scale_bar(position = c("left", "bottom")) +
+    #   tmap::tm_layout(frame = FALSE)
   }
 
   output
