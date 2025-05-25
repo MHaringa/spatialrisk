@@ -1,13 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# spatialrisk <img src="logo.png" align="right" alt="" width="120" />
+# spatialrisk <img src="logo.png" align="right" width="120"/>
 
 <!-- badges: start -->
 
 [![CRAN
 Status](https://www.r-pkg.org/badges/version/spatialrisk)](https://cran.r-project.org/package=spatialrisk)
 [![Downloads](https://cranlogs.r-pkg.org/badges/spatialrisk?color=blue)](https://cran.r-project.org/package=spatialrisk)
+
 <!-- badges: end -->
 
 `spatialrisk` is specifically designed for efficient spatial risk
@@ -31,10 +32,11 @@ Or the development version from GitHub:
 remotes::install_github("MHaringa/spatialrisk")
 ```
 
-## Observations within a defined radius
+## Example 1: Observations Within a Defined Radius
 
-Filter all observations in `Groningen` that fall within a circle of a
-radius of 100m drawn around the point `(lon,lat) = (6.561561,53.21326)`:
+Filter all observations in `Groningen` located within a 100-meter radius
+circle centered at coordinates
+`(longitude, latitude) = (6.561561, 53.21326)`:
 
 ``` r
 library(spatialrisk)
@@ -98,7 +100,7 @@ isTRUE(sum(circle$amount) == conc$concentration[3])
 
     ## [1] TRUE
 
-## Example 3
+## Example 2: Find Highest Concentrations
 
 `spatialrisk` offers a fast and effective way to identify areas with the
 highest concentration of fire risks within a 200-meter radius—meeting a
@@ -251,12 +253,12 @@ By applying `find_highest_concentration()`, we isolate the point that
 offers the greatest cumulative coverage:
 
 ``` r
-hconc <- find_highest_concentration(Groningen, 
-                                    value = "amount", 
-                                    radius = 200)
+hc <- find_highest_concentration(Groningen, 
+                                 value = "amount", 
+                                 radius = 200)
 ```
 
-    ## Time difference of 0.5439441 secs
+    ## Time difference of 0.523304 secs
 
 ``` r
 hc[[1]]
@@ -332,7 +334,7 @@ hc[[2]]
     ## # ℹ 198 more rows
     ## # ℹ 3 more variables: distance_m <dbl>, id <int>, conc <dbl>
 
-## Example 4
+## Example 3: Creating Choropleth Maps
 
 `spatialrisk` also offers features for creating choropleth maps, which
 can be challenging in R. `points_to_polygon()` provides an elegant
