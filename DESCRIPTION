@@ -33,7 +33,7 @@ Imports:
     tmap,
     units,
     viridis
-Depends: R (>= 3.3)
+Depends: R (>= 4.1.0)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Suggests: 
