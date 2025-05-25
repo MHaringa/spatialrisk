@@ -1,150 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Groningen.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_gh_bbox_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_gh_nghbrs_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cells_above_threshold.html</loc>
-  </url>
-  <url>
-    <loc>/reference/choropleth.html</loc>
-  </url>
-  <url>
-    <loc>/reference/choropleth_ggplot2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/choropleth_sf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/choropleth_tmap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/conc_per_cell_new.html</loc>
-  </url>
-  <url>
-    <loc>/reference/concentration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/convert_crs_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/convert_df_to_sf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/europe_countries.html</loc>
-  </url>
-  <url>
-    <loc>/reference/find_highest_concentration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/haversine.html</loc>
-  </url>
-  <url>
-    <loc>/reference/highest_conc.html</loc>
-  </url>
-  <url>
-    <loc>/reference/highest_concentration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/insurance.html</loc>
-  </url>
-  <url>
-    <loc>/reference/interpolate_krige.html</loc>
-  </url>
-  <url>
-    <loc>/reference/interpolate_spline.html</loc>
-  </url>
-  <url>
-    <loc>/reference/knmi_historic_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/knmi_stations.html</loc>
-  </url>
-  <url>
-    <loc>/reference/lower_bound_fn.html</loc>
-  </url>
-  <url>
-    <loc>/reference/map_points_to_cells.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mw_create.html</loc>
-  </url>
-  <url>
-    <loc>/reference/neighborhood_gh_search.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nl_corop.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nl_gemeente.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nl_postcode1.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nl_postcode2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nl_postcode3.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nl_postcode4.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nl_provincie.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot.concentration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_points.html</loc>
-  </url>
-  <url>
-    <loc>/reference/points_in_circle.html</loc>
-  </url>
-  <url>
-    <loc>/reference/points_to_polygon.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>/reference/top_n_focals.html</loc>
-  </url>
-  <url>
-    <loc>/reference/update_db.html</loc>
-  </url>
-  <url>
-    <loc>/reference/update_focal.html</loc>
-  </url>
-  <url>
-    <loc>/reference/update_rasterize.html</loc>
-  </url>
-  <url>
-    <loc>/reference/world_countries.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://mharinga.github.io/spatialrisk/404.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/authors.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/index.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/news/index.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/Groningen.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/cells_above_threshold.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/choropleth.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/choropleth_ggplot2.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/conc_per_cell_new.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/concentration.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/convert_crs_df.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/convert_df_to_sf.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/find_highest_concentration.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/haversine.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/highest_conc.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/index.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/insurance.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/interpolate_spline.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/knmi_historic_data.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/knmi_stations.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/map_points_to_cells.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/mw_create.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/nl_corop.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/nl_gemeente.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/nl_postcode2.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/nl_postcode3.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/nl_postcode4.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/nl_provincie.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/plot.concentration.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/plot_points.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle_vec.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/points_to_polygon.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/top_n_focals.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/update_db.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/update_focal.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/update_rasterize.html</loc></url>
 </urlset>
+

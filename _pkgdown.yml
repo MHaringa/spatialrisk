@@ -1,3 +1,8 @@
+url: https://mharinga.github.io/spatialrisk/
+template:
+  bootstrap: 5
+  bslib:
+    base_font: {google: "Open Sans"}
 navbar:
   structure:
     left:  [home, reference, news]
@@ -9,6 +14,7 @@ reference:
       - find_highest_concentration
       - plot.concentration
       - points_in_circle
+      - points_in_circle_vec
       - haversine
       - convert_crs_df
   - title: "Create maps"

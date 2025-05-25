@@ -21,12 +21,12 @@
 #' @return tmap
 #'
 #' @importFrom tmap tmap_mode
-#' @importFrom tmap tm_shape
-#' @importFrom tmap tm_polygons
 #' @importFrom tmap tm_basemap
 #' @importFrom tmap tm_compass
-#' @importFrom tmap tm_scale_bar
 #' @importFrom tmap tm_layout
+#' @importFrom tmap tm_polygons
+#' @importFrom tmap tm_scale_bar
+#' @importFrom tmap tm_shape
 #' @import viridis
 #'
 #' @author Martin Haringa
@@ -46,6 +46,21 @@ choropleth <- function(sf_object, value = "output", id_name = "areaname",
       tmap::tmap_mode("view")
     })
 
+    # tmap4 code
+    # output <- tmap::tm_shape(sf_object) +
+    #   tmap::tm_polygons(value,
+    #                     id = id_name,
+    #                     fill.scale = tmap::tm_scale_intervals(
+    #                       style = "fisher",
+    #                       values = palette,
+    #                       n = n
+    #                     ),
+    #                     fill.legend = tmap::tm_legend(title = legend_title),
+    #                     fill_alpha = .5) +
+    #   tmap::tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas",
+    #                      "Esri.WorldTopoMap"))
+
+    # tmap3 code
     output <- tmap::tm_shape(sf_object) +
       tmap::tm_polygons(value,
                         id = id_name,
@@ -56,10 +71,26 @@ choropleth <- function(sf_object, value = "output", id_name = "areaname",
                         alpha = .5) +
       tmap::tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas",
                          "Esri.WorldTopoMap"))
+
   } else {
     suppressMessages({
       tmap::tmap_mode("plot")
     })
+
+    # tmap4 code
+    # output <- tmap::tm_shape(sf_object) +
+    #   tmap::tm_polygons(value,
+    #                     id = id_name,
+    #                     fill.scale = tmap::tm_scale_intervals(style = "fisher",
+    #                                                           values = palette,
+    #                                                           n = n),
+    #                     fill.legend = tmap::tm_legend(title = legend_title),
+    #                     lwd = .1) +
+    #   tmap::tm_compass(position = c("right", "bottom")) +
+    #   tmap::tm_scalebar(position = c("left", "bottom")) +
+    #   tmap::tm_layout(frame = FALSE)
+
+    # tmap3 code
     output <- tmap::tm_shape(sf_object) +
       tmap::tm_polygons(value,
                         id = id_name,

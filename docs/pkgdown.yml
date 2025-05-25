@@ -1,6 +1,8 @@
-pandoc: 3.1.11
-pkgdown: 2.0.9
+pandoc: '3.2'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-05-09T17:10Z
-
+last_built: 2024-10-14T12:11Z
+urls:
+  reference: https://mharinga.github.io/spatialrisk/reference
+  article: https://mharinga.github.io/spatialrisk/articles
