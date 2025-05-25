@@ -12,3 +12,4 @@
 ^pkgdown$
 ^logo.png
 ^CRAN-SUBMISSION$
+^\.github$
