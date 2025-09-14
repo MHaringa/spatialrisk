@@ -2,7 +2,7 @@
 % Please edit documentation in R/points_in_circle.R
 \name{points_in_circle}
 \alias{points_in_circle}
-\title{Filter observations within circle}
+\title{Find points within a circle around a center coordinate}
 \usage{
 points_in_circle(
   data,
@@ -10,32 +10,36 @@ points_in_circle(
   lat_center,
   lon = lon,
   lat = lat,
-  radius = 200
+  radius = 200,
+  sort = TRUE
 )
 }
 \arguments{
-\item{data}{data.frame with at least columns for longitude and latitude.}
+\item{data}{A data frame containing at least longitude and latitude columns.}
 
-\item{lon_center}{numeric. Representing the longitude of the circle's center.}
+\item{lon_center}{Numeric scalar, longitude of the circle center.}
 
-\item{lat_center}{numeric. Representing the latitude of the circle's center.}
+\item{lat_center}{Numeric scalar, latitude of the circle center.}
 
-\item{lon}{column name in \code{data} containing longitudes
-(default is \code{lon}).}
+\item{lon}{Name of the longitude column in \code{data}.}
 
-\item{lat}{column name in \code{data} containing latitudes
-(default is \code{lat}).}
+\item{lat}{Name of the latitude column in \code{data}.}
 
-\item{radius}{radius of the circle in meters (default is 200m).}
+\item{radius}{Numeric, circle radius in meters. Default is 200.}
+
+\item{sort}{Logical, if \code{TRUE} (default) results are sorted by distance
+from the center (closest first). If \code{FALSE}, the order of \code{data}
+is preserved.}
 }
 \value{
-A subset of the input data.frame containing only the observations
-that fall within the specified circle.
+A data frame subset of \code{data} with an extra column
+  \code{distance_m} giving the distance to the center point.
 }
 \description{
-Filter all observations in a data.frame that fall within a
-circle of a specified radius drawn around a given latitude and longitude
-point.
+This function selects rows from a data frame whose
+longitude/latitude coordinates fall within a given radius (in meters) from a
+specified center point. It also calculates the distance of each point to the
+center.
 }
 \examples{
 points_in_circle(Groningen, lon_center = 6.571561, lat_center = 53.21326,

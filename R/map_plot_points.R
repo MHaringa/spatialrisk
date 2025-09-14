@@ -1,13 +1,20 @@
-#' Create map with points
+#' Create interactive point map
 #'
-#' @description Create map for a data.frame containing points.
+#' @description Creates an interactive map for a data.frame containing
+#' point coordinates, colored by a selected variable.
 #'
-#' @param df data.frame containing columns for longitude and latitude.
-#' @param value column in \code{df} to be visualized.
-#' @param lon column in \code{df} containing longitude values.
-#' @param lat column in \code{df} containing latitude values.
-#' @param crs crs code for the coordinate reference system (default is 4326).
-#' @param at the breakpoints used for visualisation.
+#' @param df A data.frame containing columns for longitude and latitude.
+#' @param value A string giving the name of the column in \code{df} to be
+#'   visualized.
+#' @param lon A string with the name of the column containing longitude
+#'   values. Default is \code{"lon"}.
+#' @param lat A string with the name of the column containing latitude
+#'   values. Default is \code{"lat"}.
+#' @param crs Integer; EPSG code for the coordinate reference system.
+#'   Default is \code{4326}.
+#' @param at Optional numeric vector; breakpoints used for visualization.
+#'
+#' @return An interactive \code{mapview} object.
 #'
 #' @importFrom mapview mapview
 #' @importFrom sf st_as_sf
@@ -20,9 +27,9 @@
 plot_points <- function(df, value, lon = "lon", lat = "lat",
                         crs = 4326, at = NULL) {
 
-  if (value == "") {
-    stop(df,
-         " does not contain column specified in `value`. Specify with `value`.",
+  if (!value %in% names(df)) {
+    stop("Column '", value,
+         "' not found in `df`. Please specify an existing column with `value`.",
          call. = FALSE)
   }
 

@@ -59,16 +59,18 @@ points_to_polygon <- function(sf_map, df, oper, crs = 4326,
 
   suppressMessages({
     df_map_sf <- sf::st_join(shp_wgs84, df_sf)
-    outside <- df_sf[!lengths(sf::st_intersects(df_sf, shp_wgs84)), ]
+    idx_out <- lengths(sf::st_intersects(df_sf, shp_wgs84)) == 0
+    outside <- df_sf[idx_out, ]
   })
 
   if (nrow(outside) > 0) {
-    if (isTRUE(outside_print)) {
-      message("Points that are not within a polygon:\n",
-              paste0(capture.output(data.frame(outside)), collapse = "\n"))
+    msg <- if (isTRUE(outside_print)) {
+      paste("Points outside polygons:\n",
+            paste(capture.output(data.frame(outside)), collapse = "\n"))
     } else {
-      message(nrow(outside), " points fall not within a polygon.")
+      paste(nrow(outside), "points are outside any polygon.")
     }
+    message(msg)
   }
 
   # Change sf to data.frame

@@ -2,25 +2,33 @@
 % Please edit documentation in R/map_plot_points.R
 \name{plot_points}
 \alias{plot_points}
-\title{Create map with points}
+\title{Create interactive point map}
 \usage{
 plot_points(df, value, lon = "lon", lat = "lat", crs = 4326, at = NULL)
 }
 \arguments{
-\item{df}{data.frame containing columns for longitude and latitude.}
+\item{df}{A data.frame containing columns for longitude and latitude.}
 
-\item{value}{column in \code{df} to be visualized.}
+\item{value}{A string giving the name of the column in \code{df} to be
+visualized.}
 
-\item{lon}{column in \code{df} containing longitude values.}
+\item{lon}{A string with the name of the column containing longitude
+values. Default is \code{"lon"}.}
 
-\item{lat}{column in \code{df} containing latitude values.}
+\item{lat}{A string with the name of the column containing latitude
+values. Default is \code{"lat"}.}
 
-\item{crs}{crs code for the coordinate reference system (default is 4326).}
+\item{crs}{Integer; EPSG code for the coordinate reference system.
+Default is \code{4326}.}
 
-\item{at}{the breakpoints used for visualisation.}
+\item{at}{Optional numeric vector; breakpoints used for visualization.}
+}
+\value{
+An interactive \code{mapview} object.
 }
 \description{
-Create map for a data.frame containing points.
+Creates an interactive map for a data.frame containing
+point coordinates, colored by a selected variable.
 }
 \examples{
 \dontrun{

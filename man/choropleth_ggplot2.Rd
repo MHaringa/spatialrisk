@@ -2,7 +2,7 @@
 % Please edit documentation in R/map_ggplot2.R
 \name{choropleth_ggplot2}
 \alias{choropleth_ggplot2}
-\title{Map object of class sf using ggplot2}
+\title{Choropleth map of an sf object with ggplot2}
 \usage{
 choropleth_ggplot2(
   sf_object,
@@ -15,34 +15,55 @@ choropleth_ggplot2(
 )
 }
 \arguments{
-\item{sf_object}{object of class sf}
+\item{sf_object}{An object of class \code{sf} containing polygon geometries.}
 
-\item{value}{column to shade the polygons}
+\item{value}{Column in \code{sf_object} used to shade the polygons
+(default = \code{output}).}
 
-\item{n}{number of clusters (default is 7)}
+\item{n}{Integer. Number of clusters to use in Fisher classification
+(default = 7).}
 
-\item{dig.lab}{number of digits in legend (default is 2)}
+\item{dig.lab}{Integer. Number of digits to display in legend labels
+(default = 2).}
 
-\item{legend_title}{title of legend}
+\item{legend_title}{Character. Title for the legend (default = "Class").}
 
-\item{option}{a character string indicating the colormap option to use. Four
-options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
-(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
+\item{option}{Character string indicating the colormap option passed to
+\code{viridis}. Options are:
+\itemize{
+  \item \code{"magma"} (or \code{"A"})
+  \item \code{"inferno"} (or \code{"B"})
+  \item \code{"plasma"} (or \code{"C"})
+  \item \code{"viridis"} (or \code{"D"}, default)
+  \item \code{"cividis"} (or \code{"E"})
+}}
 
-\item{direction}{Sets the order of colors in the scale. If \code{1},
-the default, colors are ordered from darkest to lightest. If \code{-1},
-the order of colors is reversed.}
+\item{direction}{Numeric. Order of colors in the scale.
+If \code{1} (default), colors go from darkest to lightest.
+If \code{-1}, the order is reversed.}
 }
 \value{
-ggplot map
+A \code{ggplot} object containing the choropleth map.
 }
 \description{
-Takes an object produced by \code{choropleth_sf()}, and creates
-the correspoding choropleth map.
+Creates a choropleth map from an object of class \code{sf}.
+If the chosen variable can be classified into discrete intervals using
+Fisher's natural breaks, the polygons are shaded by cluster. Otherwise,
+the variable is visualized on a continuous scale.
+}
+\details{
+The function first attempts to classify the chosen variable into
+\code{n} clusters using Fisher's natural breaks
+(\code{classInt::classIntervals()}). If this fails (e.g. due to insufficient
+unique values), the function falls back to a continuous scale.
 }
 \examples{
-test <- points_to_polygon(nl_postcode2, insurance, sum(amount, na.rm = TRUE))
-choropleth_ggplot2(test)
+test <- points_to_polygon(
+  nl_postcode2,
+  insurance,
+  sum(amount, na.rm = TRUE)
+)
+choropleth_ggplot2(test, value = output)
 
 }
 \author{

@@ -35,7 +35,7 @@ Imports:
     viridis
 Depends: R (>= 4.1.0)
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: 
     colourvalues,
     GenSA,

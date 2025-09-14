@@ -17,44 +17,54 @@ concentration(
 )
 }
 \arguments{
-\item{sub}{data.frame of target points to calculate concentration risk for,
-including at least columns for longitude and latitude.}
+\item{sub}{A data.frame of target points for which concentration risk
+is calculated. Must include at least columns for longitude and latitude.}
 
-\item{full}{data.frame containing reference points, where the function finds
-locations within a radius from the target points. Should include at least
+\item{full}{A data.frame containing reference points. Must include at least
 columns for longitude, latitude, and the value of interest to summarize.}
 
-\item{value}{column name with value of interest to summarize in \code{full}.}
+\item{value}{Column name in \code{full} containing the values to be summed.}
 
-\item{lon_sub}{column name in \code{sub} for longitude
-(default is \code{lon}).}
+\item{lon_sub}{Column name in \code{sub} for longitude (default: \code{lon}).}
 
-\item{lat_sub}{column name in \code{sub} for latitude
-(default is \code{lat}).}
+\item{lat_sub}{Column name in \code{sub} for latitude (default: \code{lat}).}
 
-\item{lon_full}{column name in \code{full} for longitude in \code{full}
-(default is \code{lon}).}
+\item{lon_full}{Column name in \code{full} for longitude (default: \code{lon}).}
 
-\item{lat_full}{column name in \code{full} for latitude in \code{full}
-(default is \code{lat}).}
+\item{lat_full}{Column name in \code{full} for latitude (default: \code{lat}).}
 
-\item{radius}{numeric. Radius of the circle in meters (default is 200).}
+\item{radius}{Numeric. Radius of the circle in meters. Must be positive
+(default: 200).}
 
-\item{display_progress}{boolean indicating whether to show progress bar
-(TRUE/FALSE). Defaults to TRUE.}
+\item{display_progress}{Logical. Whether to display a progress bar
+(\code{TRUE}/\code{FALSE}). Default is \code{TRUE}.}
 }
 \value{
-A data.frame equal to \code{sub} including an additional
-column \code{concentration}.
+A data.frame equal to \code{sub} with an additional numeric column
+    \code{concentration} containing the summed values from \code{full}.
 }
 \description{
 Calculates the concentration, which is the sum of all
 observations within a circle of a certain radius.
 }
+\details{
+This function uses a C++ backend for efficient distance calculations
+(Haversine formula). For each point in \code{sub}, it finds all points in
+\code{full} within the specified radius and sums their \code{value}.
+}
 \examples{
-df <- data.frame(location = c("p1", "p2"), lon = c(6.561561, 6.561398),
- lat = c(53.21369, 53.21326))
-concentration(df, Groningen, value = amount, radius = 100)
+# Target points
+sub <- data.frame(location = c("p1", "p2"),
+                  lon = c(6.561561, 6.561398),
+                  lat = c(53.21369, 53.21326))
+
+# Reference points with values
+full <- data.frame(lon = c(6.5614, 6.5620, 6.5630),
+                   lat = c(53.2132, 53.2140, 53.2150),
+                   amount = c(10, 20, 15))
+
+# Calculate concentration within 100 meters
+concentration(sub, full, value = amount, radius = 100)
 
 }
 \author{

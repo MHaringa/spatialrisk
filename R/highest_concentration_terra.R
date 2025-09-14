@@ -1,26 +1,44 @@
 #' Find highest concentration
 #'
-#' @description Determines the central coordinates of a circle with a constant
+#' @description Identifies the central coordinates of a circle with a fixed
 #' radius that maximizes the coverage of demand points.
 #'
-#' @param df data.frame. Should include at least columns for longitude,
-#'     latitude, and the value of interest to summarize.
-#' @param value column name with value of interest to summarize in \code{df}.
-#' @param top_n positive integer value greater or equal to 1 (default is 1).
-#' @param radius numeric. Radius of the circle in meters (default is 200).
-#' @param cell_size numeric. Size of cell in meters (default is 100).
-#' @param grid_precision numeric. Precision of grid in meters (default is 1).
-#' @param lon column name in \code{df} with longitude (default is "lon").
-#' Should be in   EPSG:4326.
-#' @param lat column name in \code{df} with latitude (default is "lat").
-#' Should be in EPSG:4326.
-#' @param crs_metric numeric. The metric Coordinate Reference System (CRS) is
-#' used solely in the background calculations. For European coordinates,
-#' \href{https://epsg.io/3035}{EPSG:3035} (default) is recommended. For the
-#' United States, \href{https://epsg.io/6317}{EPSG:6317} can be utilized. For
-#' Asia and the Pacific regions, \href{https://epsg.io/8859}{EPSG:8859} is
-#' recommended.
-#' @param print_progress print progress iteration steps.
+#' @param df A data.frame containing demand points. Must include at least
+#'     columns for longitude, latitude, and the value of interest.
+#' @param value Column name in \code{df} with the value of interest to
+#'     summarize.
+#' @param top_n Positive integer greater or equal to 1 (default is 1).
+#'     Specifies how many highest concentration circles are returned.
+#'     If \code{top_n > 1}, then after each iteration the points belonging to
+#'     the highest concentration are removed from \code{df}. This prevents the
+#'     subsequent concentrations from being located in the same area, which
+#'     would otherwise repeatedly select overlapping points with the largest
+#'     values.
+#' @param radius Numeric. Radius of the circle in meters (default = 200).
+#' @param cell_size Numeric. Size of the grid cell in meters (default is 100).
+#'     Defines the resolution of the initial raster grid. The choice of cell
+#'     size depends on the size of the study area. For example, for a country
+#'     the size of the Netherlands, cells of 100 × 100 meters are typically
+#'     sufficient. For larger areas such as Germany, a cell size of 200 × 200
+#'     meters may be more appropriate. The choice of \code{cell_size} does not
+#'     affect the final result, only the computational speed.
+#' @param grid_precision Numeric. Precision of the search grid in meters
+#'     (default is 1). Determines the spacing of sub-points within each raster
+#'     cell. For example, with \code{cell_size = 100} and
+#'     \code{grid_precision = 1}, 10,000 sub-points (100 × 100) are evaluated
+#'     per cell. Larger values reduce the number of sub-points (and runtime),
+#'     but also reduce spatial accuracy.
+#' @param lon Column name in \code{df} for longitude (default = \code{"lon"}).
+#'     Must be in EPSG:4326.
+#' @param lat Column name in \code{df} for latitude (default = \code{"lat"}).
+#'     Must be in EPSG:4326.
+#' @param crs_metric Numeric. Metric Coordinate Reference System (CRS) used in
+#'     background calculations. For Europe use
+#'     \href{https://epsg.io/3035}{EPSG:3035} (default).
+#'     For the United States use \href{https://epsg.io/6317}{EPSG:6317}.
+#'     For Asia-Pacific use \href{https://epsg.io/8859}{EPSG:8859}.
+#' @param print_progress Logical. Whether to print progress messages
+#'     (\code{TRUE}/\code{FALSE}).
 #'
 #' @importFrom terra ext
 #' @importFrom terra focal
@@ -30,43 +48,35 @@
 #'
 #' @author Martin Haringa
 #'
-#' @details A recent regulation by the European Commission mandates insurance
-#' companies to report the maximum value of insured fire risk policies for all
-#' buildings partially or fully situated within a circle with a radius of 200
-#' meters  (see Article 132 - fire risk sub-module - of the Delegated
-#' Regulation). This article captures the risk of catastrophic fire or
-#' explosion, including as a result of terrorist attacks. The sub-module is
-#' based on the scenario that the insurance or reinsurance undertaking incurs a
-#' loss equal to the capital insured for each building located partly or fully
-#' within a radius of 200 meters.
+#' @details A recent regulation by the European Commission mandates insurers to
+#' report the maximum insured value of fire risk policies for all buildings
+#' partly or fully within a circle of radius 200 meters (see Article 132 - fire
+#' risk sub-module - of the Delegated Regulation). This captures the risk of
+#' catastrophic fire or explosion, including terrorist attacks.
 #'
-#' This problem resembles a Maximal Covering Location Problem (MCLP)
-#' with a fixed radius, belonging to the category of facility location problems.
-#' The main aim is to select the best locations for a predetermined number of
-#' facilities to achieve maximum coverage of demand points within a specified
-#' radius of each facility. In essence, the objective is to identify optimal
-#' facility locations to cover as many demand points as feasible, while ensuring
-#' that each demand point falls within the designated distance (radius) of at
-#' least one facility.
+#' The problem resembles a Maximal Covering Location Problem (MCLP) with a
+#' fixed radius, a classic facility location problem. The goal is to select the
+#' best locations to maximize coverage of demand points, ensuring each demand
+#' point lies within the radius of at least one selected facility.
 #'
 #' @references Commission Delegated Regulation (EU) (2015). Solvency II
 #' Delegated Act 2015/35. Official Journal of the European Union, 58:124.
 #'
 #' @return A list with two elements:
 #' \enumerate{
-#' \item A data.frame containing the \code{top_n} concentrations as specified
-#' by \code{top_n}.
-#' \item A data.frame containing the rows from \code{df} that correspond to the
-#' \code{top_n} concentrations.
+#' \item A data.frame with the \code{top_n} highest concentrations.
+#' \item A data.frame with the subset of \code{df} corresponding to those
+#' concentrations.
 #' }
 #'
 #' @examples
-#' x <- find_highest_concentration(Groningen, "amount")
+#' # Find single highest concentration
+#' x <- find_highest_concentration(Groningen, value = "amount")
 #' plot(x)
 #'
-#' y <- find_highest_concentration(
-#'     Groningen, "amount", top_n = 2, cell_size = 50
-#' )
+#' # Find top 2 concentrations with smaller grid cells
+#' y <- find_highest_concentration(Groningen, "amount",
+#'                                 top_n = 2, cell_size = 50)
 #' plot(y)
 #'
 #' @export

@@ -15,33 +15,40 @@ choropleth(
 )
 }
 \arguments{
-\item{sf_object}{object of class sf}
+\item{sf_object}{An object of class \code{sf}.}
 
-\item{value}{column name to shade the polygons}
+\item{value}{A string giving the name of the column used to shade the
+polygons.}
 
-\item{id_name}{column name of ids to plot}
+\item{id_name}{A string giving the name of the column containing polygon IDs
+(used for tooltips in interactive mode).}
 
-\item{mode}{choose between static ('plot' is default) and interactive
-map ('view')}
+\item{mode}{A string indicating whether to create a static map
+(\code{"plot"}, default) or an interactive map (\code{"view"}).}
 
-\item{n}{number of clusters (default is 7)}
+\item{n}{Integer; number of clusters. Default is \code{7}.}
 
-\item{legend_title}{title of legend}
+\item{legend_title}{A string giving the legend title.}
 
-\item{palette}{palette name or a vector of colors. See
-\code{tmaptools::palette_explorer()} for the named palettes.
-Use a \code{-} as prefix to reverse the palette. The default palette is
-"viridis".}
+\item{palette}{A palette name or vector of colors. See
+\code{tmaptools::palette_explorer()} for available palettes.
+Prefix the name with \code{"-"} to reverse the order. Default is
+\code{"viridis"}.}
 }
 \value{
-tmap
+A \code{tmap} object (static or interactive, depending on
+\code{mode}).
 }
 \description{
-Takes an object produced by \code{points_to_polygon()}, and
-creates the corresponding choropleth map. The given clustering is according
-to the Fisher-Jenks algorithm. This commonly used method for choropleths
-seeks to reduce the variance within classes and maximize the variance
-between classes.
+Creates a choropleth map from an `sf` object, typically produced
+by \code{points_to_polygon()}. Polygons are shaded according to values in a
+specified column, with clustering based on the Fisher–Jenks algorithm. This
+method minimizes within-class variance and maximizes between-class variance,
+making it a common choice for choropleth maps.
+}
+\details{
+The function uses the Fisher–Jenks algorithm
+(\code{style = "fisher"}) to classify values into \code{n} groups.
 }
 \examples{
 test <- points_to_polygon(nl_provincie, insurance, sum(amount, na.rm = TRUE))
