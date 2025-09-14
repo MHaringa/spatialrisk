@@ -9,7 +9,7 @@ observations within a circle of a certain radius."><meta property="og:image" con
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,53 +57,55 @@ observations within a circle of a certain radius.</p>
 
 
 <dl><dt id="arg-sub">sub<a class="anchor" aria-label="anchor" href="#arg-sub"></a></dt>
-<dd><p>data.frame of target points to calculate concentration risk for,
-including at least columns for longitude and latitude.</p></dd>
+<dd><p>A data.frame of target points for which concentration risk
+is calculated. Must include at least columns for longitude and latitude.</p></dd>
 
 
 <dt id="arg-full">full<a class="anchor" aria-label="anchor" href="#arg-full"></a></dt>
-<dd><p>data.frame containing reference points, where the function finds
-locations within a radius from the target points. Should include at least
+<dd><p>A data.frame containing reference points. Must include at least
 columns for longitude, latitude, and the value of interest to summarize.</p></dd>
 
 
 <dt id="arg-value">value<a class="anchor" aria-label="anchor" href="#arg-value"></a></dt>
-<dd><p>column name with value of interest to summarize in <code>full</code>.</p></dd>
+<dd><p>Column name in <code>full</code> containing the values to be summed.</p></dd>
 
 
 <dt id="arg-lon-sub">lon_sub<a class="anchor" aria-label="anchor" href="#arg-lon-sub"></a></dt>
-<dd><p>column name in <code>sub</code> for longitude
-(default is <code>lon</code>).</p></dd>
+<dd><p>Column name in <code>sub</code> for longitude (default: <code>lon</code>).</p></dd>
 
 
 <dt id="arg-lat-sub">lat_sub<a class="anchor" aria-label="anchor" href="#arg-lat-sub"></a></dt>
-<dd><p>column name in <code>sub</code> for latitude
-(default is <code>lat</code>).</p></dd>
+<dd><p>Column name in <code>sub</code> for latitude (default: <code>lat</code>).</p></dd>
 
 
 <dt id="arg-lon-full">lon_full<a class="anchor" aria-label="anchor" href="#arg-lon-full"></a></dt>
-<dd><p>column name in <code>full</code> for longitude in <code>full</code>
-(default is <code>lon</code>).</p></dd>
+<dd><p>Column name in <code>full</code> for longitude (default: <code>lon</code>).</p></dd>
 
 
 <dt id="arg-lat-full">lat_full<a class="anchor" aria-label="anchor" href="#arg-lat-full"></a></dt>
-<dd><p>column name in <code>full</code> for latitude in <code>full</code>
-(default is <code>lat</code>).</p></dd>
+<dd><p>Column name in <code>full</code> for latitude (default: <code>lat</code>).</p></dd>
 
 
 <dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
-<dd><p>numeric. Radius of the circle in meters (default is 200).</p></dd>
+<dd><p>Numeric. Radius of the circle in meters. Must be positive
+(default: 200).</p></dd>
 
 
 <dt id="arg-display-progress">display_progress<a class="anchor" aria-label="anchor" href="#arg-display-progress"></a></dt>
-<dd><p>boolean indicating whether to show progress bar
-(TRUE/FALSE). Defaults to TRUE.</p></dd>
+<dd><p>Logical. Whether to display a progress bar
+(<code>TRUE</code>/<code>FALSE</code>). Default is <code>TRUE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data.frame equal to <code>sub</code> including an additional
-column <code>concentration</code>.</p>
+    <p>A data.frame equal to <code>sub</code> with an additional numeric column
+    <code>concentration</code> containing the summed values from <code>full</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>This function uses a C++ backend for efficient distance calculations
+(Haversine formula). For each point in <code>sub</code>, it finds all points in
+<code>full</code> within the specified radius and sums their <code>value</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -112,12 +114,21 @@ column <code>concentration</code>.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"p1"</span>, <span class="st">"p2"</span><span class="op">)</span>, lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6.561561</span>, <span class="fl">6.561398</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span> lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">53.21369</span>, <span class="fl">53.21326</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">concentration</span><span class="op">(</span><span class="va">df</span>, <span class="va">Groningen</span>, value <span class="op">=</span> <span class="va">amount</span>, radius <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Target points</span></span></span>
+<span class="r-in"><span><span class="va">sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"p1"</span>, <span class="st">"p2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                  lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6.561561</span>, <span class="fl">6.561398</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                  lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">53.21369</span>, <span class="fl">53.21326</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Reference points with values</span></span></span>
+<span class="r-in"><span><span class="va">full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6.5614</span>, <span class="fl">6.5620</span>, <span class="fl">6.5630</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">53.2132</span>, <span class="fl">53.2140</span>, <span class="fl">53.2150</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   amount <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Calculate concentration within 100 meters</span></span></span>
+<span class="r-in"><span><span class="fu">concentration</span><span class="op">(</span><span class="va">sub</span>, <span class="va">full</span>, value <span class="op">=</span> <span class="va">amount</span>, radius <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   location      lon      lat concentration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       p1 6.561561 53.21369           775</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       p2 6.561398 53.21326          2271</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       p1 6.561561 53.21369            30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       p2 6.561398 53.21326            30</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

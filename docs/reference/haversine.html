@@ -11,7 +11,7 @@ distance or &quot;as the crow flies&quot;."><meta property="og:image" content="h
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,33 +50,40 @@ distance or "as the crow flies".</p>
 
 
 <dl><dt id="arg-lat-from">lat_from<a class="anchor" aria-label="anchor" href="#arg-lat-from"></a></dt>
-<dd><p>Latitude of the starting point.</p></dd>
+<dd><p>Numeric. Latitude(s) of the starting point(s) in decimal
+degrees (EPSG:4326).</p></dd>
 
 
 <dt id="arg-lon-from">lon_from<a class="anchor" aria-label="anchor" href="#arg-lon-from"></a></dt>
-<dd><p>Longitude of the starting point.</p></dd>
+<dd><p>Numeric. Longitude(s) of the starting point(s) in decimal
+degrees (EPSG:4326).</p></dd>
 
 
 <dt id="arg-lat-to">lat_to<a class="anchor" aria-label="anchor" href="#arg-lat-to"></a></dt>
-<dd><p>Latitude of the destination point.</p></dd>
+<dd><p>Numeric. Latitude(s) of the destination point(s) in decimal
+degrees (EPSG:4326).</p></dd>
 
 
 <dt id="arg-lon-to">lon_to<a class="anchor" aria-label="anchor" href="#arg-lon-to"></a></dt>
-<dd><p>Longitude of the destination point.</p></dd>
+<dd><p>Numeric. Longitude(s) of the destination point(s) in decimal
+degrees (EPSG:4326).</p></dd>
 
 
 <dt id="arg-r">r<a class="anchor" aria-label="anchor" href="#arg-r"></a></dt>
-<dd><p>Radius of the Earth in meters (default = 6378137).</p></dd>
+<dd><p>Numeric. Radius of the Earth in meters (default = 6378137).</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Vector of distances in the same unit as <code>r</code> (default in meters).</p>
+    <p>A numeric vector with distances in the same unit as <code>r</code>
+  (default in meters).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The Haversine ('half-versed-sine') formula was published by R.W.
 Sinnott in 1984, although it has been known for much longer.</p>
+<p>This function is fully vectorized: if multiple coordinates are supplied,
+it returns a distance for each pair of points.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -90,8 +97,17 @@ Sinnott in 1984, although it has been known for much longer.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">haversine</span><span class="op">(</span><span class="fl">53.24007</span>, <span class="fl">6.520386</span>, <span class="fl">53.24054</span>, <span class="fl">6.520386</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Single pair</span></span></span>
+<span class="r-in"><span><span class="fu">haversine</span><span class="op">(</span><span class="fl">53.24007</span>, <span class="fl">6.520386</span>, <span class="fl">53.24054</span>, <span class="fl">6.520386</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 52.32016</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Vectorized usage</span></span></span>
+<span class="r-in"><span><span class="va">lat_from</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">53.24</span>, <span class="fl">52.37</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">lon_from</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6.52</span>, <span class="fl">4.90</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">lat_to</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">48.85</span>, <span class="fl">51.92</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">lon_to</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.35</span>, <span class="fl">4.48</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">haversine</span><span class="op">(</span><span class="va">lat_from</span>, <span class="va">lon_from</span>, <span class="va">lat_to</span>, <span class="va">lon_to</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 568981.78  57728.29</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

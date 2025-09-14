@@ -1,5 +1,6 @@
-# spatialrisk (development version)
+# spatialrisk 0.7.3
 
+* Updated and improved all function documentation (roxygen2).
 
 # spatialrisk 0.7.2
 
