@@ -31,7 +31,7 @@
 #' @importFrom tmap tm_compass
 #' @importFrom tmap tm_layout
 #' @importFrom tmap tm_polygons
-#' @importFrom tmap tm_scale_bar
+#' @importFrom tmap tm_scalebar
 #' @importFrom tmap tm_shape
 #' @import viridis
 #'

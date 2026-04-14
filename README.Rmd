@@ -61,8 +61,8 @@ Filter all observations in `Groningen` located within a 100-meter radius circle 
 #|   Determine points in circle
 
 library(spatialrisk)
-circle <- points_in_circle(Groningen, lon_center = 6.571561, 
-                           lat_center = 53.21326, radius = 100)
+circle <- points_within_radius(Groningen, lon_center = 6.571561, 
+                               lat_center = 53.21326, radius = 100)
 circle
 ```
 
@@ -86,7 +86,7 @@ df <- data.frame(location = c("p1", "p2", "p3"),
                  lon = c(6.561561, 6.561398, 6.571561), 
                  lat = c(53.21369, 53.21326, 53.21326))
 
-conc <- concentration(df, Groningen, value = amount, radius = 100)
+conc <- radius_sum(df, Groningen, value = amount, radius = 100)
 conc
 
 ```
@@ -170,7 +170,7 @@ In this case, the method is applied to the Groningen dataset, which contains spa
 #| fig.alt: >
 #|   Show points
 
-plot_points(Groningen, value = "amount")
+map_points(Groningen, value = "amount")
 
 ```
 
@@ -193,9 +193,9 @@ By applying `find_highest_concentration()`, we isolate the point that offers the
 #| fig.alt: >
 #|   Calculate hightest concentration
 
-hc <- find_highest_concentration(Groningen, 
-                                 value = "amount", 
-                                 radius = 200)
+hc <- concentration_hotspot(Groningen, 
+                            value = "amount", 
+                            radius = 200)
 
 ```
 
@@ -204,7 +204,7 @@ hc <- find_highest_concentration(Groningen,
 #|   Check time for highest concentration calculation
 
 st <- Sys.time()
-hc <- spatialrisk::find_highest_concentration(spatialrisk::Groningen, "amount")
+hc <- spatialrisk::concentration_hotspot(spatialrisk::Groningen, "amount")
 print(Sys.time() - st)
 
 ```
@@ -244,10 +244,10 @@ It is also possible to display the coordinates for multiple high-concentration a
 #| fig.alt: >
 #|   Calculate the first three highest concentrations
 
-hconc <- find_highest_concentration(Groningen, 
-                                    value = "amount", 
-                                    radius = 200, 
-                                    top_n = 3)
+hconc <- concentration_hotspot(Groningen, 
+                               value = "amount", 
+                               radius = 200, 
+                               top_n = 3)
 
 ```
 

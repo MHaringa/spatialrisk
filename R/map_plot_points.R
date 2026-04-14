@@ -18,14 +18,16 @@
 #'
 #' @importFrom mapview mapview
 #' @importFrom sf st_as_sf
+#' @importFrom lifecycle deprecate_warn
 #'
-#' @examples \dontrun{
-#' plot_points(Groningen, value = "amount")
+#' @examples
+#' \dontrun{
+#' map_points(Groningen, value = "amount")
 #' }
 #'
 #' @export
-plot_points <- function(df, value, lon = "lon", lat = "lat",
-                        crs = 4326, at = NULL) {
+map_points <- function(df, value, lon = "lon", lat = "lat",
+                       crs = 4326, at = NULL) {
 
   if (!value %in% names(df)) {
     stop("Column '", value,
@@ -35,4 +37,16 @@ plot_points <- function(df, value, lon = "lon", lat = "lat",
 
   obj_sf <- sf::st_as_sf(df, coords = c(lon, lat), crs = crs)
   mapview::mapview(obj_sf, zcol = value, layer.name = value, at = at)
+}
+
+#' @rdname map_points
+#' @export
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `plot_points()` was renamed to [map_points()].
+plot_points <- function(df, value, lon = "lon", lat = "lat",
+                        crs = 4326, at = NULL) {
+  lifecycle::deprecate_warn("0.7.5", "plot_points()", "map_points()")
+  map_points(df = df, value = value, lon = lon, lat = lat, crs = crs, at = at)
 }
