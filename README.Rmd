@@ -56,10 +56,10 @@ These operations are building blocks for applied concentration analyses rather t
 The package includes example address-level data for Groningen.
 The column `amount` represents an example value attached to each location.
 
-```{r}
-suppressPackageStartupMessages(library(spatialrisk))
+```{r, warning = FALSE, message = FALSE}
+library(spatialrisk)
 
-portfolio <- Groningen[1:200, ]
+portfolio <- Groningen
 head(portfolio[, c("lon", "lat", "amount")])
 ```
 

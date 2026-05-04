@@ -89,9 +89,9 @@
 </h2>
 <p>The package includes example address-level data for Groningen. The column <code>amount</code> represents an example value attached to each location.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mharinga/spatialrisk" class="external-link">spatialrisk</a></span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mharinga/spatialrisk" class="external-link">spatialrisk</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">portfolio</span> <span class="op">&lt;-</span> <span class="va">Groningen</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">200</span>, <span class="op">]</span></span>
+<span><span class="va">portfolio</span> <span class="op">&lt;-</span> <span class="va">Groningen</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">portfolio</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"amount"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
 <span><span class="co">#&gt;     lon   lat amount</span></span>
@@ -115,9 +115,9 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">local_points</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4</span></span>
+<span><span class="co">#&gt; [1] 110</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">local_points</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1315</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 25668</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="fixed-radius-sums">Fixed-radius sums<a class="anchor" aria-label="anchor" href="#fixed-radius-sums"></a>
@@ -137,11 +137,11 @@
 <span><span class="co">#&gt; # A tibble: 5 × 3</span></span>
 <span><span class="co">#&gt;     lon   lat amount_200m</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1  6.57  53.2        1059</span></span>
-<span><span class="co">#&gt; 2  6.55  53.2          33</span></span>
-<span><span class="co">#&gt; 3  6.57  53.2          48</span></span>
-<span><span class="co">#&gt; 4  6.56  53.2          56</span></span>
-<span><span class="co">#&gt; 5  6.57  53.2          16</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  6.57  53.2        8612</span></span>
+<span><span class="co">#&gt; 2  6.55  53.2       16704</span></span>
+<span><span class="co">#&gt; 3  6.57  53.2        9120</span></span>
+<span><span class="co">#&gt; 4  6.56  53.2        7970</span></span>
+<span><span class="co">#&gt; 5  6.57  53.2        8633</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="concentration-hotspot">Concentration hotspot<a class="anchor" aria-label="anchor" href="#concentration-hotspot"></a>
@@ -164,8 +164,8 @@
 <span><span class="co">#&gt; Value: amount </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   id      lon      lat amount_sum</span></span>
-<span><span class="co">#&gt; 1  1 6.554816 53.19424       1315</span></span>
-<span><span class="co">#&gt; 2  2 6.572691 53.21873       1147</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  1 6.547323 53.23663      64308</span></span>
+<span><span class="co">#&gt; 2  2 6.528279 53.22564      42499</span></span></code></pre></div>
 <p>The result contains the selected centre coordinates and the corresponding summed value, named from <code>value</code>; for example <code>amount_sum</code>. The contributing observations are stored in <code>hotspot$contributing_points</code>.</p>
 <p>The default continuous method can place the circle centre between buildings. For comparison, <code>method = "observed"</code> searches only observed point locations as possible centres and is therefore useful as a fast benchmark.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -182,8 +182,8 @@
 <span>  observed <span class="op">=</span> <span class="va">observed_hotspot</span><span class="op">$</span><span class="va">hotspots</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;            id      lon      lat amount_sum</span></span>
-<span><span class="co">#&gt; continuous  1 6.554816 53.19424       1315</span></span>
-<span><span class="co">#&gt; observed    1 6.556074 53.19490       1205</span></span></code></pre></div>
+<span><span class="co">#&gt; continuous  1 6.547323 53.23663      64308</span></span>
+<span><span class="co">#&gt; observed    1 6.547288 53.23664      64172</span></span></code></pre></div>
 <p>The original grid-refinement workflow remains available with <code>method = "grid"</code>.</p>
 </div>
 </div>

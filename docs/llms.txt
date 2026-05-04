@@ -40,9 +40,9 @@ column `amount` represents an example value attached to each location.
 
 ``` r
 
-suppressPackageStartupMessages(library(spatialrisk))
+library(spatialrisk)
 
-portfolio <- Groningen[1:200, ]
+portfolio <- Groningen
 head(portfolio[, c("lon", "lat", "amount")])
 #> # A tibble: 6 × 3
 #>     lon   lat amount
@@ -72,9 +72,9 @@ local_points <- points_within_radius(
 )
 
 nrow(local_points)
-#> [1] 4
+#> [1] 110
 sum(local_points$amount)
-#> [1] 1315
+#> [1] 25668
 ```
 
 ### Fixed-radius sums
@@ -99,11 +99,11 @@ radius_sum(
 #> # A tibble: 5 × 3
 #>     lon   lat amount_200m
 #>   <dbl> <dbl>       <dbl>
-#> 1  6.57  53.2        1059
-#> 2  6.55  53.2          33
-#> 3  6.57  53.2          48
-#> 4  6.56  53.2          56
-#> 5  6.57  53.2          16
+#> 1  6.57  53.2        8612
+#> 2  6.55  53.2       16704
+#> 3  6.57  53.2        9120
+#> 4  6.56  53.2        7970
+#> 5  6.57  53.2        8633
 ```
 
 ### Concentration hotspot
@@ -134,8 +134,8 @@ hotspot
 #> Value: amount 
 #> 
 #>   id      lon      lat amount_sum
-#> 1  1 6.554816 53.19424       1315
-#> 2  2 6.572691 53.21873       1147
+#> 1  1 6.547323 53.23663      64308
+#> 2  2 6.528279 53.22564      42499
 ```
 
 The result contains the selected centre coordinates and the
@@ -163,8 +163,8 @@ rbind(
   observed = observed_hotspot$hotspots
 )
 #>            id      lon      lat amount_sum
-#> continuous  1 6.554816 53.19424       1315
-#> observed    1 6.556074 53.19490       1205
+#> continuous  1 6.547323 53.23663      64308
+#> observed    1 6.547288 53.23664      64172
 ```
 
 The original grid-refinement workflow remains available with
