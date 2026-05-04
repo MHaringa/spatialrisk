@@ -1,0 +1,85 @@
+---
+title: "Choropleth visualisation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Choropleth visualisation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  fig.path = "figures/visualisation-",
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This vignette shows how polygon data included in `spatialrisk` can be used to display aggregated values.
+The emphasis is on reporting and visualisation after a spatial aggregation step.
+
+Choropleth maps are useful for showing variation across administrative areas.
+They should not be interpreted as a substitute for fixed-radius concentration analysis on point-level data.
+
+## Data
+
+```{r, message = FALSE, warning = FALSE}
+library(spatialrisk)
+library(sf)
+library(dplyr)
+
+data(nl_gemeente)
+```
+
+The object `nl_gemeente` contains municipal geometries for the Netherlands as a simple feature object.
+For illustration, we create a small table with one value per municipality.
+In applied work, this table would typically contain observed or modelled values aggregated at municipality level.
+
+```{r}
+set.seed(1)
+municipality_values <- nl_gemeente |>
+  st_drop_geometry() |>
+  select(id, code, areaname) |>
+  mutate(value = runif(n(), min = 0, max = 100))
+```
+
+## Join values to geometries
+
+The values are joined back to the municipal geometries before plotting.
+
+```{r}
+map_data <- nl_gemeente |>
+  left_join(municipality_values, by = c("id", "code", "areaname"))
+```
+
+## Choropleth map
+
+The `choropleth()` function uses `tmap`.
+The `id` argument identifies the column used for polygon labels in interactive maps.
+
+```{r, eval = requireNamespace("tmap", quietly = TRUE)}
+choropleth(
+  map_data,
+  value = "value",
+  id = "areaname",
+  legend_title = "Value"
+)
+```
+
+## Relation to concentration analysis
+
+A choropleth map represents values attached to predefined polygons.
+Fixed-radius concentration analysis answers a different question: what is the total value within a circle of a specified radius around a possible centre?
+
+In insurance applications, both views can be useful.
+The fixed-radius calculation identifies local accumulation of exposure, while the choropleth map can be used to communicate summaries by municipality, province, or another reporting unit.
+
+## Summary
+
+This vignette demonstrated how to:
+
+- use an included simple feature object;
+- join aggregated values to polygon geometries;
+- create a choropleth map for reporting.

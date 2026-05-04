@@ -1,0 +1,20 @@
+#' KNMI weather stations
+#'
+#' @description A data frame containing station IDs and location metadata for
+#' official KNMI weather stations in the Netherlands.
+#'
+#' @format A data frame with 50 rows and 7 variables:
+#' \describe{
+#'   \item{station}{Station ID.}
+#'   \item{city}{City where the station is located.}
+#'   \item{lon}{Longitude of the station in EPSG:4326.}
+#'   \item{lat}{Latitude of the station in EPSG:4326.}
+#'   \item{altitude}{Altitude of the station in meters.}
+#'   \item{X}{Projected X coordinate of the station in EPSG:32631.}
+#'   \item{Y}{Projected Y coordinate of the station in EPSG:32631.}
+#' }
+#'
+#' @source Royal Netherlands Meteorological Institute (KNMI), adapted for
+#' package examples.
+#' @author Martin Haringa
+"knmi_stations"

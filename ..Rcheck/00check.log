@@ -1,0 +1,490 @@
+* using log directory ‘/Users/martin/Library/CloudStorage/Dropbox/Werk/AAV/Concentratierisico/spatialrisk/..Rcheck’
+* using R version 4.5.3 (2026-03-11)
+* using platform: aarch64-apple-darwin20
+* R was compiled by
+    Apple clang version 16.0.0 (clang-1600.0.26.6)
+    GNU Fortran (GCC) 14.2.0
+* running under: macOS Tahoe 26.4.1
+* using session charset: UTF-8
+* using options ‘--no-manual --no-build-vignettes’
+* checking for file ‘./DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘spatialrisk’ version ‘0.7.3’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... WARNING
+Subdirectory ‘spatialrisk/src’ contains apparent object files/libraries
+  concentration_hotspot_indexed.o concentration.o distance.o grid.o
+  haversine_cpp.o radius.o RcppExports.o spatialrisk.so utilities.o
+Object files/libraries should not be included in a source package.
+* checking if there is a namespace ... OK
+* checking for executable files ... WARNING
+Found the following executable file:
+  .git/objects/ce/98487d2294109082a73284a58c33dfb118e867
+Source packages should not contain undeclared executable files.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .DS_Store
+  .git/.DS_Store
+  .git/logs/.DS_Store
+  .git/objects/.DS_Store
+  .git/refs/.DS_Store
+  .gitignore
+  docs/.DS_Store
+  docs/reference/.DS_Store
+  docs/reference/figures/.DS_Store
+  man/.DS_Store
+  man/figures/.DS_Store
+  src/.gitignore
+  vignettes/.gitignore
+  ..Rcheck
+  .git
+  .github
+  .Rproj.user
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+* checking for portable file names ... WARNING
+Found the following file with a non-portable file name:
+  .git/index (Exemplaar met conflict van MacBook-Pro-van-Martin.local 2022-07-28)
+These are not fully portable file names.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+Found the following non-portable file paths:
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/points-0.0.1/points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/points-CSS-0.0.1/points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/Highest-0.0.1/Highest_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/Highest-CSS-0.0.1/Highest_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/Points-0.0.1/Points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/Points-CSS-0.0.1/Points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/Highest-0.0.1/Highest_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/Highest-CSS-0.0.1/Highest_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/Points-0.0.1/Points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/Points-CSS-0.0.1/Points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/Highest-0.0.1/Highest_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/Highest-CSS-0.0.1/Highest_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/Points-0.0.1/Points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/Points-CSS-0.0.1/Points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/points-0.0.1/points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/points-CSS-0.0.1/points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/Contributing_points-0.0.1/Contributing_points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/Contributing_points-CSS-0.0.1/Contributing_points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/Hotspot_radius-0.0.1/Hotspot_radius_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/Hotspot_radius-CSS-0.0.1/Hotspot_radius_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/Highest-0.0.1/Highest_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/Highest-CSS-0.0.1/Highest_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/Points-0.0.1/Points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/Points-CSS-0.0.1/Points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/points-0.0.1/points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/points-CSS-0.0.1/points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/Highest-0.0.1/Highest_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/Highest-CSS-0.0.1/Highest_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/Points-0.0.1/Points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/Points-CSS-0.0.1/Points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/chromajs-2.1.0/chroma.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/Contributing_points-0.0.1/Contributing_points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/Contributing_points-CSS-0.0.1/Contributing_points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/Hotspot_radius-0.0.1/Hotspot_radius_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/Hotspot_radius-CSS-0.0.1/Hotspot_radius_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/jquery-3.6.0/jquery-3.6.0.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/mapviewCSS-0.0.1/mapview.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/clipboard-0.0.1/setClipboardText.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/Contributing_points-0.0.1/Contributing_points_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/Contributing_points-CSS-0.0.1/Contributing_points_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/FlatGeoBuf-3.31.1/flatgeobuf-geojson.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/HomeButton-0.0.1/easy-button-src.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/HomeButton-0.0.1/glyphicons-21-home.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/HomeButton-0.0.1/home-button.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/Hotspot_radius-0.0.1/Hotspot_radius_layer.fgb
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/Hotspot_radius-CSS-0.0.1/Hotspot_radius_home-button.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/htmltools-fill-0.5.9/fill.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-1.3.1/images/layers-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-1.3.1/images/layers.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-1.3.1/images/marker-icon-2x.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-1.3.1/images/marker-icon.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-1.3.1/images/marker-shadow.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-binding-2.2.3/leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leafletfix-1.0.0/leafletfix.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/mapviewCSS-0.0.1/mapview-popup.css
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/Proj4Leaflet-1.0.1/proj4leaflet.js
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/rstudio_leaflet-1.3.1/images/1px.png
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css
+  spatialrisk/.Rproj.user/shared/notebooks/E6039FD2-fixed-radius-concentration/1/295203B554e95d94/chunks.json
+  spatialrisk/docs/articles/fixed-radius-concentration_files/Contributing_points-CSS-0.0.1/Contributing_points_home-button.css
+  spatialrisk/docs/articles/fixed-radius-concentration_files/Hotspot_radius-CSS-0.0.1/Hotspot_radius_home-button.css
+  spatialrisk/docs/articles/fixed-radius-concentration_files/leaflet-providers-3.0.0/leaflet-providers.js
+  spatialrisk/docs/articles/fixed-radius-concentration_files/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTl1gki5uc.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTl2Aki5uc.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTl2gki5uc.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTlDigH297Y.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTlmwki5uc.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTlpwki5uc.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTltAki.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTlugki5uc.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTluwki5uc.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTlxwki5uc.woff2
+  spatialrisk/docs/deps/Google_Sans_Code-0.4.10/pxihyogzv91QhV44Z_GQBHsGf5PuckJMZfIVTPZaiXEp_ht12EVEHsN1sCQNcmTlyAki5uc.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4iaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4jaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4kaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4saVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4taVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4uaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4vaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B5caVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.10/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B5OaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4iaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4jaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4kaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4saVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4taVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4uaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4vaVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B5caVIGxA.woff2
+  spatialrisk/docs/deps/Open_Sans-0.4.9/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B5OaVIGxA.woff2
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c167a85f1/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c201c928b/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3270697e/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c3fbe12e4/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c449b7e39/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/Contributing_points-CSS-0.0.1
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c48196b96/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c4a030fc9/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c6b7a6cad/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c738d62a5/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/Contributing_points-CSS-0.0.1
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/leaflet-providers-plugin-2.2.3
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8c740f31c6/lib/rstudio_leaflet-1.3.1/images
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/Contributing_points-CSS-0.0.1
+  spatialrisk/.Rproj.user/295203B5/viewer_history/viewhtmlbd8cbe0faea/lib/leaflet-providers-plugin-2.2.3
+
+Tarballs are only required to store paths of up to 100 bytes and cannot
+store those of more than 256 bytes, with restrictions including to 100
+bytes for the final component.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘spatialrisk’ can be installed ... OK
+* used C++ compiler: ‘Apple clang version 21.0.0 (clang-2100.0.123.102)’
+* used SDK: ‘MacOSX26.4.sdk’
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking LazyData ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking compiled code ... OK
+* checking files in ‘vignettes’ ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  ‘figures/fixed-radius-concentration-unnamed-chunk-4-1.png’
+  ‘figures/visualisation-unnamed-chunk-4-1.png’
+  ‘fixed-radius-concentration.Rmd’ ‘visualisation.Rmd’
+* checking examples ... OK
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘testthat.R’
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes ... WARNING
+Directory 'inst/doc' does not exist.
+Package vignettes without corresponding single PDF/HTML:
+  ‘fixed-radius-concentration.Rmd’
+  ‘visualisation.Rmd’
+* checking running R code from vignettes ... OK
+  ‘fixed-radius-concentration.Rmd’ using ‘UTF-8’... OK
+  ‘visualisation.Rmd’ using ‘UTF-8’... OK
+* checking re-building of vignette outputs ... SKIPPED
+* DONE
+Status: 6 WARNINGs, 2 NOTEs

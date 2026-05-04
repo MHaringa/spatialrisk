@@ -102,7 +102,7 @@ add_gh_bbox_sum <- function(hash_decode, full, lon_nm, lat_nm, radius) {
                         "lat" = full[[lat_nm]],
                         "value" = full[["_sum_insured"]])
 
-  block_df <- block_loop_cpp(sub_df, full_df, radius, display_progress = FALSE)
+  block_df <- block_loop_cpp(sub_df, full_df, radius)
   hash_decode$sum_bbox <- block_df$cumulation
 
   hash_decode

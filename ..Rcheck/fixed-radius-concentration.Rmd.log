@@ -1,0 +1,62 @@
+
+> knitr::opts_chunk$set(fig.path = "figures/fixed-radius-concentration-", 
++     collapse = TRUE, comment = "#>")
+
+> library(spatialrisk)
+
+> portfolio <- Groningen
+
+> portfolio <- portfolio[, c("lon", "lat", "amount")]
+
+> head(portfolio)
+# A tibble: 6 × 3
+    lon   lat amount
+  <dbl> <dbl>  <dbl>
+1  6.57  53.2     24
+2  6.55  53.2     33
+3  6.57  53.2     48
+4  6.56  53.2      7
+5  6.57  53.2     16
+6  6.56  53.2     28
+
+> local_points <- points_within_radius(portfolio, lon_center = 6.5549, 
++     lat_center = 53.1942, radius = 200)
+
+> head(local_points)
+# A tibble: 6 × 4
+    lon   lat amount distance_m
+  <dbl> <dbl>  <dbl>      <dbl>
+1  6.56  53.2    523       57.5
+2  6.56  53.2    513       64.5
+3  6.56  53.2    515       70.3
+4  6.55  53.2    246       70.6
+5  6.56  53.2    768       76.6
+6  6.55  53.2    238       79.2
+
+> nrow(local_points)
+[1] 110
+
+> sum(local_points$amount)
+[1] 25668
+
+> targets <- portfolio[1:5, c("lon", "lat")]
+
+> target_sums <- radius_sum(targets = targets, reference = portfolio, 
++     value = "amount", radius = 200, display_progress = FALSE, 
++     result_c .... [TRUNCATED] 
+
+> target_sums
+# A tibble: 5 × 3
+    lon   lat amount_200m
+  <dbl> <dbl>       <dbl>
+1  6.57  53.2        8612
+2  6.55  53.2       16704
+3  6.57  53.2        9120
+4  6.56  53.2        7970
+5  6.57  53.2        8633
+
+> hotspot <- concentration_hotspot(portfolio, value = "amount", 
++     radius = 200, cell_size = 100, grid_precision = 5, progress = FALSE, 
++     top .... [TRUNCATED] 
+
+> plot(hotspot)

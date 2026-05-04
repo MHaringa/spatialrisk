@@ -10,73 +10,237 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// haversine_cpp_vec
-Rcpp::NumericVector haversine_cpp_vec(Rcpp::NumericVector latFrom, Rcpp::NumericVector lonFrom, Rcpp::NumericVector latTo, Rcpp::NumericVector lonTo, double earth_radius);
-RcppExport SEXP _spatialrisk_haversine_cpp_vec(SEXP latFromSEXP, SEXP lonFromSEXP, SEXP latToSEXP, SEXP lonToSEXP, SEXP earth_radiusSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type latFrom(latFromSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lonFrom(lonFromSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type latTo(latToSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lonTo(lonToSEXP);
-    Rcpp::traits::input_parameter< double >::type earth_radius(earth_radiusSEXP);
-    rcpp_result_gen = Rcpp::wrap(haversine_cpp_vec(latFrom, lonFrom, latTo, lonTo, earth_radius));
-    return rcpp_result_gen;
-END_RCPP
-}
-// haversine_loop_cpp
-DataFrame haversine_loop_cpp(DataFrame x, double lat_center, double lon_center, double radius);
-RcppExport SEXP _spatialrisk_haversine_loop_cpp(SEXP xSEXP, SEXP lat_centerSEXP, SEXP lon_centerSEXP, SEXP radiusSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type lat_center(lat_centerSEXP);
-    Rcpp::traits::input_parameter< double >::type lon_center(lon_centerSEXP);
-    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
-    rcpp_result_gen = Rcpp::wrap(haversine_loop_cpp(x, lat_center, lon_center, radius));
-    return rcpp_result_gen;
-END_RCPP
-}
 // concentration_loop_cpp
-DataFrame concentration_loop_cpp(DataFrame sub, DataFrame ref, double radius, bool display_progress);
-RcppExport SEXP _spatialrisk_concentration_loop_cpp(SEXP subSEXP, SEXP refSEXP, SEXP radiusSEXP, SEXP display_progressSEXP) {
+Rcpp::DataFrame concentration_loop_cpp(Rcpp::DataFrame sub, Rcpp::DataFrame ref, double radius, bool display_progress, double r);
+RcppExport SEXP _spatialrisk_concentration_loop_cpp(SEXP subSEXP, SEXP refSEXP, SEXP radiusSEXP, SEXP display_progressSEXP, SEXP rSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type sub(subSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type ref(refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type sub(subSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type ref(refSEXP);
     Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
     Rcpp::traits::input_parameter< bool >::type display_progress(display_progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(concentration_loop_cpp(sub, ref, radius, display_progress));
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(concentration_loop_cpp(sub, ref, radius, display_progress, r));
     return rcpp_result_gen;
 END_RCPP
 }
 // block_loop_cpp
-DataFrame block_loop_cpp(DataFrame sub, DataFrame ref, double radius, bool display_progress);
-RcppExport SEXP _spatialrisk_block_loop_cpp(SEXP subSEXP, SEXP refSEXP, SEXP radiusSEXP, SEXP display_progressSEXP) {
+Rcpp::DataFrame block_loop_cpp(Rcpp::DataFrame sub, Rcpp::DataFrame ref, double radius);
+RcppExport SEXP _spatialrisk_block_loop_cpp(SEXP subSEXP, SEXP refSEXP, SEXP radiusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type sub(subSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type ref(refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type sub(subSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type ref(refSEXP);
     Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
-    Rcpp::traits::input_parameter< bool >::type display_progress(display_progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(block_loop_cpp(sub, ref, radius, display_progress));
+    rcpp_result_gen = Rcpp::wrap(block_loop_cpp(sub, ref, radius));
+    return rcpp_result_gen;
+END_RCPP
+}
+// concentration_loop_xy_cpp
+Rcpp::DataFrame concentration_loop_xy_cpp(Rcpp::DataFrame sub, Rcpp::DataFrame ref, double radius);
+RcppExport SEXP _spatialrisk_concentration_loop_xy_cpp(SEXP subSEXP, SEXP refSEXP, SEXP radiusSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type sub(subSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type ref(refSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    rcpp_result_gen = Rcpp::wrap(concentration_loop_xy_cpp(sub, ref, radius));
     return rcpp_result_gen;
 END_RCPP
 }
 // concentration_loop_cpp2
-DataFrame concentration_loop_cpp2(DataFrame sub, DataFrame ref, double radius);
+Rcpp::DataFrame concentration_loop_cpp2(Rcpp::DataFrame sub, Rcpp::DataFrame ref, double radius);
 RcppExport SEXP _spatialrisk_concentration_loop_cpp2(SEXP subSEXP, SEXP refSEXP, SEXP radiusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type sub(subSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type ref(refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type sub(subSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type ref(refSEXP);
     Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
     rcpp_result_gen = Rcpp::wrap(concentration_loop_cpp2(sub, ref, radius));
+    return rcpp_result_gen;
+END_RCPP
+}
+// indexed_concentration_best_cpp
+Rcpp::DataFrame indexed_concentration_best_cpp(Rcpp::NumericVector x_candidates, Rcpp::NumericVector y_candidates, Rcpp::NumericVector x_ref, Rcpp::NumericVector y_ref, Rcpp::NumericVector value_ref, Rcpp::IntegerVector ix_ref, double radius, double cell_width);
+RcppExport SEXP _spatialrisk_indexed_concentration_best_cpp(SEXP x_candidatesSEXP, SEXP y_candidatesSEXP, SEXP x_refSEXP, SEXP y_refSEXP, SEXP value_refSEXP, SEXP ix_refSEXP, SEXP radiusSEXP, SEXP cell_widthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_candidates(x_candidatesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_candidates(y_candidatesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_ref(x_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_ref(y_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value_ref(value_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ix_ref(ix_refSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type cell_width(cell_widthSEXP);
+    rcpp_result_gen = Rcpp::wrap(indexed_concentration_best_cpp(x_candidates, y_candidates, x_ref, y_ref, value_ref, ix_ref, radius, cell_width));
+    return rcpp_result_gen;
+END_RCPP
+}
+// indexed_points_in_radius_cpp
+Rcpp::DataFrame indexed_points_in_radius_cpp(double x_center, double y_center, Rcpp::NumericVector x_ref, Rcpp::NumericVector y_ref, Rcpp::NumericVector value_ref, Rcpp::IntegerVector ix_ref, double radius, double cell_width);
+RcppExport SEXP _spatialrisk_indexed_points_in_radius_cpp(SEXP x_centerSEXP, SEXP y_centerSEXP, SEXP x_refSEXP, SEXP y_refSEXP, SEXP value_refSEXP, SEXP ix_refSEXP, SEXP radiusSEXP, SEXP cell_widthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x_center(x_centerSEXP);
+    Rcpp::traits::input_parameter< double >::type y_center(y_centerSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_ref(x_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_ref(y_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value_ref(value_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ix_ref(ix_refSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type cell_width(cell_widthSEXP);
+    rcpp_result_gen = Rcpp::wrap(indexed_points_in_radius_cpp(x_center, y_center, x_ref, y_ref, value_ref, ix_ref, radius, cell_width));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pair_intersection_best_cpp
+Rcpp::DataFrame pair_intersection_best_cpp(Rcpp::NumericVector x_ref, Rcpp::NumericVector y_ref, Rcpp::NumericVector value_ref, Rcpp::IntegerVector ix_ref, double radius, double cell_width);
+RcppExport SEXP _spatialrisk_pair_intersection_best_cpp(SEXP x_refSEXP, SEXP y_refSEXP, SEXP value_refSEXP, SEXP ix_refSEXP, SEXP radiusSEXP, SEXP cell_widthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_ref(x_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_ref(y_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value_ref(value_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ix_ref(ix_refSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type cell_width(cell_widthSEXP);
+    rcpp_result_gen = Rcpp::wrap(pair_intersection_best_cpp(x_ref, y_ref, value_ref, ix_ref, radius, cell_width));
+    return rcpp_result_gen;
+END_RCPP
+}
+// haversine_cpp_vec
+Rcpp::NumericVector haversine_cpp_vec(Rcpp::NumericVector lat_from, Rcpp::NumericVector lon_from, Rcpp::NumericVector lat_to, Rcpp::NumericVector lon_to, double r);
+RcppExport SEXP _spatialrisk_haversine_cpp_vec(SEXP lat_fromSEXP, SEXP lon_fromSEXP, SEXP lat_toSEXP, SEXP lon_toSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lat_from(lat_fromSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lon_from(lon_fromSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lat_to(lat_toSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lon_to(lon_toSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(haversine_cpp_vec(lat_from, lon_from, lat_to, lon_to, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// haversine_cpp
+double haversine_cpp(double lat_from, double lon_from, double lat_to, double lon_to, double r);
+RcppExport SEXP _spatialrisk_haversine_cpp(SEXP lat_fromSEXP, SEXP lon_fromSEXP, SEXP lat_toSEXP, SEXP lon_toSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type lat_from(lat_fromSEXP);
+    Rcpp::traits::input_parameter< double >::type lon_from(lon_fromSEXP);
+    Rcpp::traits::input_parameter< double >::type lat_to(lat_toSEXP);
+    Rcpp::traits::input_parameter< double >::type lon_to(lon_toSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(haversine_cpp(lat_from, lon_from, lat_to, lon_to, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// add_cell_bounds_cpp
+Rcpp::DataFrame add_cell_bounds_cpp(Rcpp::DataFrame df, double size, double radius);
+RcppExport SEXP _spatialrisk_add_cell_bounds_cpp(SEXP dfSEXP, SEXP sizeSEXP, SEXP radiusSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< double >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    rcpp_result_gen = Rcpp::wrap(add_cell_bounds_cpp(df, size, radius));
+    return rcpp_result_gen;
+END_RCPP
+}
+// expand_grid_cpp
+Rcpp::DataFrame expand_grid_cpp(Rcpp::NumericVector seq1, Rcpp::NumericVector seq2);
+RcppExport SEXP _spatialrisk_expand_grid_cpp(SEXP seq1SEXP, SEXP seq2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type seq1(seq1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type seq2(seq2SEXP);
+    rcpp_result_gen = Rcpp::wrap(expand_grid_cpp(seq1, seq2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// filter_full_cpp
+Rcpp::DataFrame filter_full_cpp(Rcpp::DataFrame dffull, Rcpp::DataFrame subb, int i);
+RcppExport SEXP _spatialrisk_filter_full_cpp(SEXP dffullSEXP, SEXP subbSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type dffull(dffullSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type subb(subbSEXP);
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(filter_full_cpp(dffull, subb, i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// max_conc_per_cell_cpp
+Rcpp::DataFrame max_conc_per_cell_cpp(Rcpp::DataFrame dfsub, Rcpp::DataFrame dffull, int points, double size, double radius, double r);
+RcppExport SEXP _spatialrisk_max_conc_per_cell_cpp(SEXP dfsubSEXP, SEXP dffullSEXP, SEXP pointsSEXP, SEXP sizeSEXP, SEXP radiusSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type dfsub(dfsubSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type dffull(dffullSEXP);
+    Rcpp::traits::input_parameter< int >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< double >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(max_conc_per_cell_cpp(dfsub, dffull, points, size, radius, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// points_in_radius_cpp
+Rcpp::DataFrame points_in_radius_cpp(Rcpp::DataFrame x, double lat_center, double lon_center, double radius, double r);
+RcppExport SEXP _spatialrisk_points_in_radius_cpp(SEXP xSEXP, SEXP lat_centerSEXP, SEXP lon_centerSEXP, SEXP radiusSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type lat_center(lat_centerSEXP);
+    Rcpp::traits::input_parameter< double >::type lon_center(lon_centerSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(points_in_radius_cpp(x, lat_center, lon_center, radius, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// points_in_radius_multi_cpp
+Rcpp::DataFrame points_in_radius_multi_cpp(Rcpp::DataFrame x, Rcpp::NumericVector lat_centers, Rcpp::NumericVector lon_centers, double radius, double r);
+RcppExport SEXP _spatialrisk_points_in_radius_multi_cpp(SEXP xSEXP, SEXP lat_centersSEXP, SEXP lon_centersSEXP, SEXP radiusSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lat_centers(lat_centersSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lon_centers(lon_centersSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(points_in_radius_multi_cpp(x, lat_centers, lon_centers, radius, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// haversine_loop_cpp0
+Rcpp::DataFrame haversine_loop_cpp0(Rcpp::DataFrame x, Rcpp::NumericVector lat_centers, Rcpp::NumericVector lon_centers, double radius);
+RcppExport SEXP _spatialrisk_haversine_loop_cpp0(SEXP xSEXP, SEXP lat_centersSEXP, SEXP lon_centersSEXP, SEXP radiusSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lat_centers(lat_centersSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lon_centers(lon_centersSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    rcpp_result_gen = Rcpp::wrap(haversine_loop_cpp0(x, lat_centers, lon_centers, radius));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -91,21 +255,8 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// add_cell_bounds_cpp
-DataFrame add_cell_bounds_cpp(DataFrame df, double size, double radius);
-RcppExport SEXP _spatialrisk_add_cell_bounds_cpp(SEXP dfSEXP, SEXP sizeSEXP, SEXP radiusSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
-    Rcpp::traits::input_parameter< double >::type size(sizeSEXP);
-    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
-    rcpp_result_gen = Rcpp::wrap(add_cell_bounds_cpp(df, size, radius));
-    return rcpp_result_gen;
-END_RCPP
-}
 // seq_cpp
-NumericVector seq_cpp(double from, double to, int length_out);
+Rcpp::NumericVector seq_cpp(double from, double to, int length_out);
 RcppExport SEXP _spatialrisk_seq_cpp(SEXP fromSEXP, SEXP toSEXP, SEXP length_outSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -117,87 +268,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// expand_grid_cpp
-DataFrame expand_grid_cpp(NumericVector seq1, NumericVector seq2);
-RcppExport SEXP _spatialrisk_expand_grid_cpp(SEXP seq1SEXP, SEXP seq2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type seq1(seq1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type seq2(seq2SEXP);
-    rcpp_result_gen = Rcpp::wrap(expand_grid_cpp(seq1, seq2));
-    return rcpp_result_gen;
-END_RCPP
-}
-// filter_full_cpp
-DataFrame filter_full_cpp(DataFrame dffull, DataFrame subb, int i);
-RcppExport SEXP _spatialrisk_filter_full_cpp(SEXP dffullSEXP, SEXP subbSEXP, SEXP iSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type dffull(dffullSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type subb(subbSEXP);
-    Rcpp::traits::input_parameter< int >::type i(iSEXP);
-    rcpp_result_gen = Rcpp::wrap(filter_full_cpp(dffull, subb, i));
-    return rcpp_result_gen;
-END_RCPP
-}
 // highest_indices_cpp
-IntegerVector highest_indices_cpp(NumericVector x, int n);
+Rcpp::IntegerVector highest_indices_cpp(Rcpp::NumericVector x, int n);
 RcppExport SEXP _spatialrisk_highest_indices_cpp(SEXP xSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     rcpp_result_gen = Rcpp::wrap(highest_indices_cpp(x, n));
     return rcpp_result_gen;
 END_RCPP
 }
-// max_conc_per_cell_cpp
-DataFrame max_conc_per_cell_cpp(DataFrame dfsub, DataFrame dffull, int points, int size, double radius);
-RcppExport SEXP _spatialrisk_max_conc_per_cell_cpp(SEXP dfsubSEXP, SEXP dffullSEXP, SEXP pointsSEXP, SEXP sizeSEXP, SEXP radiusSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type dfsub(dfsubSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type dffull(dffullSEXP);
-    Rcpp::traits::input_parameter< int >::type points(pointsSEXP);
-    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
-    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
-    rcpp_result_gen = Rcpp::wrap(max_conc_per_cell_cpp(dfsub, dffull, points, size, radius));
-    return rcpp_result_gen;
-END_RCPP
-}
-// haversine_loop_cpp0
-DataFrame haversine_loop_cpp0(DataFrame x, NumericVector lat_centers, NumericVector lon_centers, double radius);
-RcppExport SEXP _spatialrisk_haversine_loop_cpp0(SEXP xSEXP, SEXP lat_centersSEXP, SEXP lon_centersSEXP, SEXP radiusSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lat_centers(lat_centersSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lon_centers(lon_centersSEXP);
-    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
-    rcpp_result_gen = Rcpp::wrap(haversine_loop_cpp0(x, lat_centers, lon_centers, radius));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_spatialrisk_haversine_cpp_vec", (DL_FUNC) &_spatialrisk_haversine_cpp_vec, 5},
-    {"_spatialrisk_haversine_loop_cpp", (DL_FUNC) &_spatialrisk_haversine_loop_cpp, 4},
-    {"_spatialrisk_concentration_loop_cpp", (DL_FUNC) &_spatialrisk_concentration_loop_cpp, 4},
-    {"_spatialrisk_block_loop_cpp", (DL_FUNC) &_spatialrisk_block_loop_cpp, 4},
+    {"_spatialrisk_concentration_loop_cpp", (DL_FUNC) &_spatialrisk_concentration_loop_cpp, 5},
+    {"_spatialrisk_block_loop_cpp", (DL_FUNC) &_spatialrisk_block_loop_cpp, 3},
+    {"_spatialrisk_concentration_loop_xy_cpp", (DL_FUNC) &_spatialrisk_concentration_loop_xy_cpp, 3},
     {"_spatialrisk_concentration_loop_cpp2", (DL_FUNC) &_spatialrisk_concentration_loop_cpp2, 3},
-    {"_spatialrisk_one_lon_in_meters", (DL_FUNC) &_spatialrisk_one_lon_in_meters, 1},
+    {"_spatialrisk_indexed_concentration_best_cpp", (DL_FUNC) &_spatialrisk_indexed_concentration_best_cpp, 8},
+    {"_spatialrisk_indexed_points_in_radius_cpp", (DL_FUNC) &_spatialrisk_indexed_points_in_radius_cpp, 8},
+    {"_spatialrisk_pair_intersection_best_cpp", (DL_FUNC) &_spatialrisk_pair_intersection_best_cpp, 6},
+    {"_spatialrisk_haversine_cpp_vec", (DL_FUNC) &_spatialrisk_haversine_cpp_vec, 5},
+    {"_spatialrisk_haversine_cpp", (DL_FUNC) &_spatialrisk_haversine_cpp, 5},
     {"_spatialrisk_add_cell_bounds_cpp", (DL_FUNC) &_spatialrisk_add_cell_bounds_cpp, 3},
-    {"_spatialrisk_seq_cpp", (DL_FUNC) &_spatialrisk_seq_cpp, 3},
     {"_spatialrisk_expand_grid_cpp", (DL_FUNC) &_spatialrisk_expand_grid_cpp, 2},
     {"_spatialrisk_filter_full_cpp", (DL_FUNC) &_spatialrisk_filter_full_cpp, 3},
-    {"_spatialrisk_highest_indices_cpp", (DL_FUNC) &_spatialrisk_highest_indices_cpp, 2},
-    {"_spatialrisk_max_conc_per_cell_cpp", (DL_FUNC) &_spatialrisk_max_conc_per_cell_cpp, 5},
+    {"_spatialrisk_max_conc_per_cell_cpp", (DL_FUNC) &_spatialrisk_max_conc_per_cell_cpp, 6},
+    {"_spatialrisk_points_in_radius_cpp", (DL_FUNC) &_spatialrisk_points_in_radius_cpp, 5},
+    {"_spatialrisk_points_in_radius_multi_cpp", (DL_FUNC) &_spatialrisk_points_in_radius_multi_cpp, 5},
     {"_spatialrisk_haversine_loop_cpp0", (DL_FUNC) &_spatialrisk_haversine_loop_cpp0, 4},
+    {"_spatialrisk_one_lon_in_meters", (DL_FUNC) &_spatialrisk_one_lon_in_meters, 1},
+    {"_spatialrisk_seq_cpp", (DL_FUNC) &_spatialrisk_seq_cpp, 3},
+    {"_spatialrisk_highest_indices_cpp", (DL_FUNC) &_spatialrisk_highest_indices_cpp, 2},
     {NULL, NULL, 0}
 };
 

@@ -7,8 +7,14 @@ always_allow_html: yes
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  fig.path = "man/figures/"
+  fig.path = "man/figures/README-",
+  collapse = TRUE,
+  comment = "#>"
 )
+
+if (requireNamespace("pkgload", quietly = TRUE)) {
+  pkgload::load_all(".", quiet = TRUE)
+}
 ```
 
 # spatialrisk <img src="logo.png" align="right" width="120"/>
@@ -19,315 +25,158 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-`spatialrisk` is specifically designed for efficient spatial risk calculations, allowing users to quickly sum all observations within a defined radius. With key functions implemented in C++ using Rcpp, the package ensures fast performance for various spatial analysis tasks, including optimizing location and resource allocation.
+`spatialrisk` provides tools for fixed-radius spatial concentration analysis in R.
+The package is aimed at applied workflows in which point-level values must be aggregated locally, for example to identify insurance concentration hotspots under a prescribed radius.
+
+The central question is practical: given a portfolio of point locations with associated values, which locations have the largest total value within a circle of fixed radius?
+This type of problem occurs in insurance risk management, but the same operations are useful in other spatial point pattern applications.
 
 ## Installation
 
-Install `spatialrisk` from CRAN:
-
 ```{r, eval = FALSE}
-#| fig.alt: >
-#|   Install packages
- 
 install.packages("spatialrisk")
-```
 
-Or the development version from GitHub:
-
-```{r gh-installation, eval = FALSE}
-#| fig.alt: >
-#|   Install remote packages
-
-# install.packages("remotes")
+# Development version
 remotes::install_github("MHaringa/spatialrisk")
 ```
 
-```{r, include = FALSE}
-#| fig.alt: >
-#|   Load libraries
+## Main operations
 
-library(htmltools)
-library(htmlwidgets)
-library(webshot)
-# install_phantomjs(version = "2.1.1", baseURL = "https://github.com/wch/webshot/releases/download/v0.3.1/")
-```
+The package is intentionally focused on a small set of operations.
 
-## Example 1: Observations Within a Defined Radius
+1. identify points within a fixed radius;
+2. compute fixed-radius sums around target locations;
+3. search for locations with maximum local concentration;
+4. aggregate point values to polygons for reporting or visualisation.
 
-Filter all observations in `Groningen` located within a 100-meter radius circle centered at coordinates `(longitude, latitude) = (6.561561, 53.21326)`:
+These operations are building blocks for applied concentration analyses rather than a general spatial modelling framework.
 
-```{r example, eval = TRUE, message = FALSE, warning = FALSE}
-#| fig.alt: >
-#|   Determine points in circle
+## Applied example
 
-library(spatialrisk)
-circle <- points_within_radius(Groningen, lon_center = 6.571561, 
-                               lat_center = 53.21326, radius = 100)
-circle
-```
-
-The sum of all observations within this circle is equal to:
+The package includes example address-level data for Groningen.
+The column `amount` represents an example value attached to each location.
 
 ```{r}
-#| fig.alt: >
-#|   Calculate the sum of the points in circle
+suppressPackageStartupMessages(library(spatialrisk))
 
-sum(circle$amount)
-
+portfolio <- Groningen[1:200, ]
+head(portfolio[, c("lon", "lat", "amount")])
 ```
 
-Next, calculate the sum of all observations within a specified radius. `concentration()` computes the total sum of all observations within a circle of a given radius for multiple locations. For each row in `df`, it finds the sum of all observations in `Groningen` that fall within a 100-meter radius from the specified (lon, lat) coordinates.
+### Points contributing to a local concentration
 
-```{r example2, eval = TRUE}
-#| fig.alt: >
-#|   Calculate the concentration
-
-df <- data.frame(location = c("p1", "p2", "p3"), 
-                 lon = c(6.561561, 6.561398, 6.571561), 
-                 lat = c(53.21369, 53.21326, 53.21326))
-
-conc <- radius_sum(df, Groningen, value = amount, radius = 100)
-conc
-
-```
-
-Show that result is indeed equal to the result from the previous example:
+`points_within_radius()` returns the observations within a given distance from a specified centre.
+This is useful for inspecting which policies, buildings, or other exposure points contribute to a local aggregate.
 
 ```{r}
-#| fig.alt: >
-#|   Check whether outcome is the same
+local_points <- points_within_radius(
+  portfolio,
+  lon_center = 6.5549,
+  lat_center = 53.1942,
+  radius = 200
+)
 
-isTRUE(sum(circle$amount) == conc$concentration[3])
-
+nrow(local_points)
+sum(local_points$amount)
 ```
 
-## Example 2: Find Highest Concentrations
+### Fixed-radius sums
 
-`spatialrisk` offers a fast and effective way to identify areas with the highest concentration of fire risks within a 200-meter radius—meeting a key requirement of the European Directive 2009/138 (Solvency II) and aligned with the principles of the Maximal Covering Location Problem (MCLP). While the directive doesn't mandate a specific method, `spatialrisk` provides a clear and systematic approach to mapping high-risk clusters. This helps insurers accurately assess their maximum exposure to catastrophic fire events and adjust their solvency capital requirements in line with Solvency II standards.
-
-Under Solvency II, the fire risk challenge involves calculating the capital requirement for fire-related events—such as fires, explosions, and terrorist attacks—by identifying the largest concentration of insured assets at risk. This can be approached as a location optimization problem: finding the optimal center of a fixed-radius circle that captures the maximum total value of insured fire risks within that area. The structure of this problem closely mirrors the **Maximal Covering Location Problem (MCLP)**, a well-established model in operations research used to maximize coverage within a limited range.
-
-**The Maximal Covering Location Problem (MCLP)**
-
-Originally proposed by Church and ReVelle in 1974, the Maximal Covering Location Problem (MCLP) focuses on placing facilities in locations that maximize coverage of demand points within a predefined distance. In this context:
-
-1.  **Demand points** represent locations that require coverage, such as populations, assets, or infrastructure.
-2.  **Facilities** are placed to cover as many of these points as possible, within a fixed coverage radius.
-3.  The goal is to **maximize total demand covered** using a limited number of facilities and a set coverage distance.
-
-**Strategic Rationale for Applying MCLP to Fire Risk Assessment**
-
-The Solvency II directive requires insurers to assess their capital exposure to fire risk by identifying the highest concentration of insured assets within a 200-meter radius. This challenge aligns closely with the Maximal Covering Location Problem (MCLP), a proven model from operations research used to optimize coverage within a fixed area. The similarities are clear:
-
-1.  **Valuable Assets as Demand Points:** Each insured building or asset is treated as a demand point, similar to how MCLP models locations needing coverage.
-2.  **Fixed 200-Meter Radius:** The regulatory requirement mirrors MCLP’s coverage radius—assets are either within range or not.
-3.  **Focus on Maximum Exposure:** Just as MCLP aims to maximize covered demand, the fire risk assessment seeks to identify the location with the greatest insured value concentration.
-
-### Algorithm: Maximal Covering Location Problem (MCLP) via Raster Analysis
-
-#### Overview
-
-This algorithm presents a practical and scalable solution for identifying high-risk locations using the Maximal Covering Location Problem (MCLP), implemented through spatial raster analysis. Built on the robust capabilities of the `terra` package in R, the approach transforms complex spatial data into actionable insights. It enables insurers and urban planners to pinpoint areas of highest risk concentration.
-
-#### Key Steps in the Process
-
-**1. Aggregating Spatial Risk Data** <br> *Objective: Create a simplified, high-level view of demand concentrations.*
-
--   Spatial data points (e.g., insured assets) are converted into a raster grid with 50 x 50 meter cells.
--   Each cell summarizes the total insured value within its boundaries, creating a spatial heatmap of risk exposure.
-
-**2. Highlighting High-Risk Clusters** <br> *Objective: Identify areas where demand values cluster within proximity.*
-
--   Using focal statistics, the algorithm analyzes each cell and its neighbors to highlight broader risk concentrations.
--   A weighting matrix refines this analysis, revealing where the most significant clusters lie.
-
-**3. Focusing the Search** <br> *Objective: Narrow in on the top risk zones.*
-
--   The algorithm selects the top five areas with the highest aggregated risk values.
--   Within each, it builds a detailed 20 x 20 grid (400 sub-points) to begin exploring optimal facility or response locations.
-
-**4. Refining to High-Potential Zones** <br> *Objective: Eliminate low-impact areas and zoom in on promising locations.*
-
--   Only zones that exceed a calculated risk threshold (lower bound) are retained.
--   These areas are then mapped at a finer 1-meter resolution, concentrating analysis where it matters most.
-
-**5. Pinpointing Optimal Locations** <br> *Objective: Identify the exact spots offering maximum coverage potential.*
-
--   A high-resolution grid is generated within the selected areas.
--   The algorithm evaluates each point’s ability to cover surrounding demand, producing a shortlist of optimal locations for intervention, resource allocation, or risk management.
-
-#### Illustrative Example: Identifying Areas of Highest Risk Concentration
-
-As a practical application of the above methodology, this example demonstrates how the algorithm can calculate the total demand (e.g., insured value) within a fixed radius around multiple locations.
-
-`find_highest_concentration()` is used to determine the central coordinates of a circle with a constant radius that captures the maximum sum of surrounding demand points. This enables decision-makers—such as insurers or urban planners—to pinpoint where risk is most densely concentrated and where targeted action can yield the greatest impact.
-
-In this case, the method is applied to the Groningen dataset, which contains spatial risk points relevant to the analysis.
-
-**Visualization:**<br> Display all spatial demand points from the Groningen dataset as a foundation for identifying optimal coverage locations.
-
-```{r example3a, eval = FALSE, message = FALSE, warning = FALSE}
-#| fig.alt: >
-#|   Show points
-
-map_points(Groningen, value = "amount")
-
-```
-
-```{r, fig.alt = "Map with points in Groningen", echo = FALSE}
-# ![](man/figures/example3a-1.png)
-knitr::include_graphics("man/figures/example3a-1.png") 
-```
-
-<br>
-
-------------------------------------------------------------------------
-
-**Determine the Optimal Central Location for Maximum Risk Coverage:** <br> In this step, the goal is to determine the central coordinates of a circular area that captures the highest concentration of demand. Using a fixed radius, the algorithm systematically scans all potential locations, calculating the total risk value within each surrounding area.
-
-To support fast and scalable analysis, all core functions are written in C++. This ensures high-performance computation, allowing the algorithm to handle large and complex spatial datasets with exceptional speed and efficiency.
-
-By applying `find_highest_concentration()`, we isolate the point that offers the greatest cumulative coverage:
-
-```{r, eval = FALSE, echo = TRUE}
-#| fig.alt: >
-#|   Calculate hightest concentration
-
-hc <- concentration_hotspot(Groningen, 
-                            value = "amount", 
-                            radius = 200)
-
-```
-
-```{r, echo = FALSE, eval = TRUE, message = FALSE, warning = FALSE}
-#| fig.alt: >
-#|   Check time for highest concentration calculation
-
-st <- Sys.time()
-hc <- spatialrisk::concentration_hotspot(spatialrisk::Groningen, "amount")
-print(Sys.time() - st)
-
-```
+`radius_sum()` evaluates the same idea for one or more target locations.
+The output is the target data with an additional column containing the total value from the reference data within the specified radius.
 
 ```{r}
-#| fig.alt: >
-#|   Show output for the highest concentration
+targets <- portfolio[1:5, c("lon", "lat")]
 
-hc[[1]]
-
+radius_sum(
+  targets = targets,
+  reference = portfolio,
+  value = "amount",
+  radius = 200,
+  progress = FALSE,
+  result_col = "amount_200m"
+)
 ```
 
-**Visualizing the Area of Highest Concentration:** <br> Plot the individual points located within the highest concentration zone. The total sum of their values corresponds to the reported concentration figure.
+### Concentration hotspot
 
-This area represents the highest demand concentration in the Groningen dataset. It notably includes two apartment buildings containing a large number of insured objects, which significantly contribute to the overall risk exposure.
-
-```{r, echo = TRUE, eval = FALSE}
-#| fig.alt: >
-#|   Show highest concentration
-
-plot(hc)
-
-```
-
-```{r, fig.alt = "Map with highest concentrations", echo = FALSE}
-# ![](man/figures/unnamed-chunk-9-1.png)
-knitr::include_graphics("man/figures/unnamed-chunk-9-1.png") 
-```
-
-<br>
-
-------------------------------------------------------------------------
-
-It is also possible to display the coordinates for multiple high-concentration areas. To visualize the second and third highest concentrations:
-
-```{r, eval = TRUE, echo = TRUE}
-#| fig.alt: >
-#|   Calculate the first three highest concentrations
-
-hconc <- concentration_hotspot(Groningen, 
-                               value = "amount", 
-                               radius = 200, 
-                               top_n = 3)
-
-```
-
-Create interactive map:
-
-```{r, eval = FALSE, echo = TRUE}
-#| fig.alt: >
-#|   Show highest concentrations on interactive map
-
-plot(hconc)
-
-```
-
-```{r, fig.alt = "Interactive map with highest concentrations", echo = FALSE}
-# ![](man/figures/unnamed-chunk-11-1.png)
-knitr::include_graphics("man/figures/unnamed-chunk-11-1.png") 
-```
-
-<br>
-
-------------------------------------------------------------------------
-
-Display the objects located within the highest concentration circle:
+`concentration_hotspot()` searches for the centre of a fixed-radius circle with the largest aggregated value.
+In an insurance setting this can be used to identify the local portfolio concentration that is relevant for a regulatory or internal risk limit.
+By default, `method = "continuous"` searches for a centre that may lie between
+buildings. Internally, it uses a coarse spatial screening step followed by
+local pair-intersection refinement.
 
 ```{r}
-#| fig.alt: >
-#|   Show objects in the highest circle
+hotspot <- concentration_hotspot(
+  portfolio,
+  value = "amount",
+  radius = 200,
+  cell_size = 100,
+  progress = FALSE, 
+  top_n = 2
+)
 
-hc[[2]]
-
+hotspot
 ```
 
-## Example 3: Creating Choropleth Maps
+The result contains the selected centre coordinates and the corresponding summed value, named from `value`; for example `amount_sum`.
+The contributing observations are stored in `hotspot$contributing_points`.
 
-`spatialrisk` also offers features for creating choropleth maps, which can be challenging in R. `points_to_polygon()` provides an elegant solution to this issue.
+The default continuous method can place the circle centre between buildings.
+For comparison, `method = "observed"` searches only observed point locations as
+possible centres and is therefore useful as a fast benchmark.
 
-Typically, creating choropleths involves aggregating data at the regional level of the shapefile and then merging this aggregated data with the shapefile. However, this method can be problematic if the names in the data do not match those in the shapefile, such as when there are differences in punctuation or spelling in area names. To address this, `points_to_polygon()` uses the longitude and latitude of a point to accurately map it to the corresponding region. This approach simplifies the creation of choropleth maps at various regional levels.
+```{r}
+observed_hotspot <- concentration_hotspot(
+  portfolio,
+  value = "amount",
+  radius = 200,
+  method = "observed",
+  progress = FALSE
+)
 
-For example, `points_to_polygon()` can be used to visualize the total sum insured at the municipality level across the Netherlands:
-
-```{r example4, eval = FALSE, message = FALSE, warning = FALSE}
-#| fig.alt: >
-#|   Map the points to the polygons
-
-gemeente_sf <- points_to_polygon(nl_gemeente, insurance, sum(amount, na.rm = TRUE))
-
+rbind(
+  continuous = hotspot$hotspots[1, ],
+  observed = observed_hotspot$hotspots
+)
 ```
 
-`choropleth()` generates a map from the simple feature object created in the previous step. There are two ways to create a choropleth map: if you set the mode to plot, it produces a static map. The clustering in this case is based on the Fisher-Jenks algorithm, a widely used method for classifying data in choropleth maps.
+The original grid-refinement workflow remains available with `method = "grid"`.
 
-```{r example4b, eval = FALSE, message = FALSE, warning = FALSE}
-#| fig.alt: >
-#|   Show choropleth on municipality level
+## Polygon summaries
 
-choropleth(gemeente_sf, mode = "plot", legend_title = "Sum insured (EUR)", n = 5)
+Point-level concentration analysis is often followed by reporting at an administrative or portfolio-management level.
+For that purpose, `summarise_points_by_polygon()` joins points to polygons and summarises a numeric value.
 
+```{r, message = FALSE}
+province_summary <- summarise_points_by_polygon(
+  polygons = nl_provincie,
+  points = insurance,
+  value = "amount",
+  fun = sum,
+  outside = "ignore"
+)
+
+sf::st_drop_geometry(province_summary)[, c("areaname", "amount_sum")]
 ```
 
-```{r, fig.alt = "Static choropleth on gemeente level", echo = FALSE}
-# ![](man/figures/nl_choro1.png)
-knitr::include_graphics("man/figures/nl_choro1.png") 
-```
+## Scope
 
-<br>
+`spatialrisk` does not estimate a statistical model and does not assign a probability distribution to the observed values.
+It provides deterministic spatial aggregation tools for fixed-radius concentration problems.
+Interpretation of the resulting concentration measures remains application-specific.
 
-If `mode` is set to `view` an interactive map is created:
+Core computations are implemented in C++ via Rcpp for efficient evaluation on larger point datasets.
 
-```{r example4c, eval = FALSE, echo = TRUE}
-#| fig.alt: >
-#|   Show interactive choropleth on municipality level
+## Vignettes
 
-choropleth(gemeente_sf, mode = "view", legend_title = "Sum insured (EUR)")
+The main vignette introduces fixed-radius concentration analysis in an applied insurance setting.
+A second vignette shows how aggregated values can be displayed with choropleth maps.
 
-```
+## Reference
 
-```{r, fig.alt = "Interactive choropleth on gemeente level", echo = FALSE}
-# ![](man/figures/nl_choro2.png)
-knitr::include_graphics("man/figures/nl_choro2.png") 
-```
+The fixed-radius hotspot problem is related to the maximum covering location problem described by Church (1974) <doi:10.1007/BF01942293>.
 
-<br>
+If you use this package in academic work, it can be cited as:
 
-The following simple feature objects are available in `spatialrisk`: `nl_provincie`, `nl_corop`, `nl_gemeente`, `nl_postcode1`, `nl_postcode2`, `nl_postcode3`, `nl_postcode4`, `world_countries`, and `europe_countries`.
+> Haringa, M. (2026). spatialrisk: Spatial concentration and radius-based risk calculations in R.

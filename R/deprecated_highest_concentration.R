@@ -79,7 +79,7 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
                                   display_progress = TRUE) {
 
   lifecycle::deprecate_warn(
-    when = "0.7.2",
+    when = "0.8.0",
     what = "highest_concentration()",
     details = "Please use `find_highest_concentration()` instead."
   )
@@ -265,7 +265,7 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
                                    verbose = TRUE, seed = 1) {
 
   lifecycle::deprecate_warn(
-    when = "0.7.2",
+    when = "0.8.0",
     what = "neighborhood_gh_search()",
     details = "Please use `find_highest_concentration()` instead."
   )

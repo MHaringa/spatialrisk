@@ -1,0 +1,23 @@
+* installing *source* package ‘spatialrisk’ ...
+** this is package ‘spatialrisk’ version ‘0.7.3’
+** using staged installation
+** libs
+using C++ compiler: ‘Apple clang version 21.0.0 (clang-2100.0.123.102)’
+using SDK: ‘MacOSX26.4.sdk’
+make: Nothing to be done for `all'.
+installing to /Users/martin/Library/CloudStorage/Dropbox/Werk/AAV/Concentratierisico/spatialrisk/..Rcheck/00LOCK-spatialrisk/00new/spatialrisk/libs
+** R
+** data
+*** moving datasets to lazyload DB
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (spatialrisk)

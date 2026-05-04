@@ -13,3 +13,5 @@
 ^logo.png
 ^CRAN-SUBMISSION$
 ^\.github$
+^\.positai$
+^\.claude$

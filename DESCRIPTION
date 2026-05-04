@@ -1,50 +1,52 @@
 Package: spatialrisk
 Type: Package
-Title: Calculating Spatial Risk
-Version: 0.7.3
+Title: Spatial Concentration and Radius-Based Risk Calculations
+Version: 0.8.0
 Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), 
     email = "mtharinga@gmail.com"))
+Author: Martin Haringa [aut, cre]
 Maintainer: Martin Haringa <mtharinga@gmail.com>
 BugReports: https://github.com/mharinga/spatialrisk/issues
-Description: Provides methods for spatial risk calculations, focusing on 
-    efficient determination of the sum of observations within a circle of a 
-    given radius. These methods are particularly relevant for applications such 
-    as insurance, where recent European Commission regulations require the 
-    calculation of the maximum insured value of fire risk policies for all 
-    buildings that are partly or fully located within a 200 m radius. The 
-    underlying problem is described by Church (1974) <doi:10.1007/BF01942293>.
+Description: Provides methods for spatial concentration and radius-based risk 
+    calculations. The package focuses on efficient determination of the sum of 
+    observations within a given radius, identifying local concentration 
+    hotspots, and aggregating point data to polygon geometries. These methods 
+    are useful for applications such as insurance, urban analytics, 
+    environmental exposure analysis, and other spatial point pattern workflows. 
+    The underlying maximum covering problem is described by Church (1974) 
+    <doi:10.1007/BF01942293>.
 License: GPL (>= 2)
 URL: https://github.com/mharinga/spatialrisk, https://mharinga.github.io/spatialrisk/
 LazyData: true
 LinkingTo: Rcpp, RcppProgress
+Depends: R (>= 4.1.0)
 Imports: 
-    classInt,
     data.table, 
     dplyr,
     fs,
-    ggplot2,
     lifecycle,
-    mapview, 
     Rcpp,
     RcppProgress, 
     rlang,
     sf,
     terra,
-    tmap,
-    units,
-    viridis
-Depends: R (>= 4.1.0)
+    units
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Suggests: 
+    classInt,
     colourvalues,
     GenSA,
     geohashTools,
+    ggplot2,
     knitr,
     leafem,
     leafgl,
     leaflet,
+    mapview,
     mgcv,
     rmarkdown, 
     testthat, 
+    tmap,
     vroom
+VignetteBuilder: knitr

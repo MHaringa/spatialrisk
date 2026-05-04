@@ -2,7 +2,7 @@
 % Please edit documentation in R/haversine.R
 \name{haversine}
 \alias{haversine}
-\title{Haversine great circle distance}
+\title{Haversine great-circle distance}
 \usage{
 haversine(lat_from, lon_from, lat_to, lon_to, r = 6378137)
 }
@@ -22,8 +22,8 @@ degrees (EPSG:4326).}
 \item{r}{Numeric. Radius of the Earth in meters (default = 6378137).}
 }
 \value{
-A numeric vector with distances in the same unit as \code{r}
-  (default in meters).
+A numeric vector with distances in the same unit as `r`
+  (default: meters).
 }
 \description{
 Calculates the shortest distance between two points on the
@@ -31,17 +31,12 @@ Earth's surface using the Haversine formula, also known as the great-circle
 distance or "as the crow flies".
 }
 \details{
-The Haversine ('half-versed-sine') formula was published by R.W.
-Sinnott in 1984, although it has been known for much longer.
-
-This function is fully vectorized: if multiple coordinates are supplied,
-it returns a distance for each pair of points.
+This function is vectorized: if multiple coordinates are supplied,
+it returns one distance for each corresponding pair of points.
 }
 \examples{
-# Single pair
 haversine(53.24007, 6.520386, 53.24054, 6.520386)
 
-# Vectorized usage
 lat_from <- c(53.24, 52.37)
 lon_from <- c(6.52, 4.90)
 lat_to   <- c(48.85, 51.92)
@@ -51,8 +46,5 @@ haversine(lat_from, lon_from, lat_to, lon_to)
 }
 \references{
 Sinnott, R.W, 1984. Virtues of the Haversine. Sky and Telescope
-68(2): 159.
-}
-\author{
-Martin Haringa
+  68(2): 159.
 }

@@ -1,0 +1,32 @@
+Package: spatialrisk
+Type: Package
+Title: Spatial Concentration and Radius-Based Risk Calculations
+Version: 0.7.3
+Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), 
+    email = "mtharinga@gmail.com"))
+Author: Martin Haringa [aut, cre]
+Maintainer: Martin Haringa <mtharinga@gmail.com>
+BugReports: https://github.com/mharinga/spatialrisk/issues
+Description: Provides methods for spatial concentration and radius-based risk 
+    calculations. The package focuses on efficient determination of the sum of 
+    observations within a given radius, identifying local concentration 
+    hotspots, and aggregating point data to polygon geometries. These methods 
+    are useful for applications such as insurance, urban analytics, 
+    environmental exposure analysis, and other spatial point pattern workflows. 
+    The underlying maximum covering problem is described by Church (1974) 
+    <doi:10.1007/BF01942293>.
+License: GPL (>= 2)
+URL: https://github.com/mharinga/spatialrisk,
+        https://mharinga.github.io/spatialrisk/
+LazyData: true
+LinkingTo: Rcpp, RcppProgress
+Depends: R (>= 4.1.0)
+Imports: data.table, dplyr, fs, lifecycle, Rcpp, RcppProgress, rlang,
+        sf, terra, units
+Encoding: UTF-8
+RoxygenNote: 7.3.3
+Suggests: classInt, colourvalues, GenSA, geohashTools, ggplot2, knitr,
+        leafem, leafgl, leaflet, mapview, mgcv, rmarkdown, testthat,
+        tmap, vroom
+VignetteBuilder: knitr
+Built: R 4.5.3; aarch64-apple-darwin20; 2026-05-04 06:48:08 UTC; unix

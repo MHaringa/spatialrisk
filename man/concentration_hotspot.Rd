@@ -2,81 +2,139 @@
 % Please edit documentation in R/highest_concentration_terra.R
 \name{concentration_hotspot}
 \alias{concentration_hotspot}
-\alias{max_cover_circle}
-\alias{find_highest_concentration}
-\title{Identify highest concentration hotspot}
+\title{Identify fixed-radius concentration hotspots}
 \usage{
 concentration_hotspot(
-  df,
+  data,
   value,
   top_n = 1,
   radius = 200,
   cell_size = 100,
   grid_precision = 1,
+  max_refinement_points = 1000,
   lon = "lon",
   lat = "lat",
   crs_metric = 3035,
-  print_progress = TRUE
-)
-
-max_cover_circle(
-  df,
-  value,
-  top_n = 1,
-  radius = 200,
-  cell_size = 100,
-  grid_precision = 1,
-  lon = "lon",
-  lat = "lat",
-  crs_metric = 3035,
-  print_progress = TRUE
-)
-
-find_highest_concentration(
-  df,
-  value,
-  top_n = 1,
-  radius = 200,
-  cell_size = 100,
-  grid_precision = 1,
-  lon = "lon",
-  lat = "lat",
-  crs_metric = 3035,
-  print_progress = TRUE
+  progress = TRUE,
+  method = c("continuous", "grid", "observed")
 )
 }
 \arguments{
-\item{df}{A data.frame containing demand points. Must include at least
-columns for longitude, latitude, and the value of interest.}
+\item{data}{A data.frame containing point-level exposures. Must include columns
+for longitude, latitude, and the value of interest.}
 
-\item{value}{Column name in `df` with the value of interest to summarize.}
+\item{value}{A string giving the name of the numeric column in \code{data} to
+aggregate within each radius.}
 
-\item{top_n}{Positive integer greater or equal to 1 (default is 1).
-Specifies how many highest concentration circles are returned.}
+\item{top_n}{Positive integer greater or equal to 1. Specifies how many
+non-overlapping hotspots are returned. Default is \code{1}.}
 
-\item{radius}{Numeric. Radius of the circle in meters (default = 200).}
+\item{radius}{Numeric. Radius of the circle in meters. This is typically the
+regulatory or scenario radius. Default is \code{200}.}
 
-\item{cell_size}{Numeric. Size of the grid cell in meters (default is 100).}
+\item{cell_size}{Numeric. Size of the initial screening cells in meters.
+This is used by \code{method = "continuous"} and \code{method = "grid"}.
+Smaller values give a finer initial search but increase computation time.
+\code{method = "observed"} searches observed point locations and does not
+use this value as a search-grid resolution. Default is \code{100}.}
 
-\item{grid_precision}{Numeric. Precision of the search grid in meters
-(default is 1).}
+\item{grid_precision}{Numeric. Approximate spacing in meters used for
+grid-based refinement. This is used by \code{method = "grid"} and by
+\code{method = "continuous"} only when the local subset is larger than
+\code{max_refinement_points} and the method falls back to grid refinement.
+It is not used by \code{method = "observed"}. Smaller values evaluate more
+candidate centres and increase search precision. Default is \code{1}.}
 
-\item{lon}{Column name in `df` for longitude (default = `"lon"`).}
+\item{max_refinement_points}{Positive integer. Maximum number of local points
+used for pair-intersection refinement. If the local subset contains more
+points, \code{method = "continuous"} automatically falls back to the grid
+refinement used by \code{method = "grid"}. Default is \code{1000}.}
 
-\item{lat}{Column name in `df` for latitude (default = `"lat"`).}
+\item{lon}{A string giving the longitude column in \code{data}. Default is
+\code{"lon"}.}
 
-\item{crs_metric}{Numeric. Metric CRS for calculations (default = 3035).}
+\item{lat}{A string giving the latitude column in \code{data}. Default is
+\code{"lat"}.}
 
-\item{print_progress}{Logical. Whether to print progress messages.}
+\item{crs_metric}{Numeric. EPSG code for a projected CRS with meter units,
+used for distances, buffers, raster cells, and pair-intersection
+calculations. The default \code{3035} is ETRS89 / LAEA Europe and is a
+suitable default for Europe-wide applications. For other regions, choose a
+metric CRS appropriate to the study area, for example a local UTM zone,
+\code{5070} for the conterminous United States, or \code{3577} for
+Australia. For Asian portfolios there is no single universal choice; use a
+national projected CRS or the relevant UTM zone. Default is \code{3035}.}
+
+\item{progress}{Logical. Whether to print progress messages for the main
+hotspot search steps. This is useful for larger portfolios and for
+\code{top_n > 1}. Default is \code{TRUE}.}
+
+\item{method}{Hotspot search strategy. \code{"continuous"} is the default
+and searches for a centre that may lie between observed points.
+\code{"observed"} searches only observed point locations as candidate
+centres. \code{"grid"} uses the original grid-refinement workflow.}
 }
 \value{
-An object of class `hotspot` (list with concentration and points).
+An object of class \code{hotspot}. The main components are
+  \code{hotspots}, containing the selected centre coordinates and summed
+  values, and \code{contributing_points}, containing the points inside the
+  selected hotspot radii. The summed value column is named from \code{value};
+  for example, \code{value = "amount"} creates an \code{amount_sum} column.
+  In \code{contributing_points}, \code{data_row} gives the row number of the
+  contributing point in the original input data.
 }
 \description{
-Identifies the central coordinates of a circle with a fixed
-radius that maximizes the coverage of demand points.
+Identifies centre coordinates of fixed-radius circles with high
+local concentration. In insurance applications this can be used to find
+locations where the total insured value within a prescribed radius is largest.
+}
+\details{
+The default \code{method = "continuous"} first uses terra
+  rasterisation and focal sums to locate an approximate hotspot area. It then
+  refines the local result by evaluating observed local points and the circle
+  centres implied by local point pairs. The local refinement subset is chosen
+  automatically around the terra-selected approximate centre, using a
+  conservative margin based on \code{radius} and \code{cell_size}. If more
+  than \code{max_refinement_points} local points are involved, it falls back
+  to the grid refinement used by \code{method = "grid"}. In that fallback
+  case, \code{grid_precision} controls the local refinement grid; otherwise
+  the pair-intersection step does not use \code{grid_precision}. The
+  pair-refined result is exact only within the terra-selected local search
+  area. The \code{"observed"} method is fast and deterministic, but can miss
+  a larger hotspot when the optimal centre lies between observed points. The
+  \code{"grid"} method uses a grid-based search with local refinement;
+  smaller \code{grid_precision} values generally increase precision and
+  computation time.
+}
+\examples{
+portfolio <- Groningen[1:200, c("lon", "lat", "amount")]
 
-`r lifecycle::badge("deprecated")`
+hotspot <- concentration_hotspot(
+  portfolio,
+  value = "amount",
+  radius = 200,
+  cell_size = 100,
+  progress = FALSE,
+  top_n = 2
+)
 
-`find_highest_concentration()` was renamed to [concentration_hotspot()].
+hotspot$hotspots
+head(hotspot$contributing_points)
+
+observed_hotspot <- concentration_hotspot(
+  portfolio,
+  value = "amount",
+  radius = 200,
+  method = "observed",
+  progress = FALSE
+)
+
+rbind(
+  continuous = hotspot$hotspots[1, ],
+  observed = observed_hotspot$hotspots
+)
+
+}
+\author{
+Martin Haringa
 }

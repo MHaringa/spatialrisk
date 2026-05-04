@@ -269,30 +269,32 @@ update_focal <- function(old_focal, new_rasterized, extent, mw) {
 #' @description Determine the concentrations within the highest focal cells for
 #' the current iteration.
 #'
-#' @param high_foc data.frame containing cell ids with the top n focal values
-#'     from the current iteration.
+#' @param candidate_cells data.frame containing cell ids with focal values
+#'     selected for refinement in the current iteration.
 #' @param dff data.frame with all observations
 #' @param value column name in `dff` to find concentrations for.
 #' @param size size of cell in meters.
 #' @param points number of points per `size`.
-#' @param db data.frame containing previously saved highest concentrations.
+#' @param cache data.frame containing previously saved highest concentrations.
 #' @param radius radius of circle in meters.
-#' @param crs_from crs from
-#' @param crs_to crs to
+#' @param crs_metric metric CRS used for candidate cell coordinates.
+#' @param lon longitude column name.
+#' @param lat latitude column name.
 #'
 #' @author Martin Haringa
 #'
 #' @keywords internal
-conc_per_cell_new <- function(high_foc, dff, value, size, points, db, radius,
-                              crs_from, crs_to, lon, lat) {
-  ix_new <- setdiff(high_foc$cell, db$cell)
-  hf_new <- high_foc[high_foc$cell %in% ix_new, ]
-  hf_new <- convert_crs_df(hf_new, crs_from, crs_to)
+concentration_per_candidate_cell <- function(candidate_cells, dff, value, size,
+                                             points, cache, radius,
+                                             crs_metric, lon, lat) {
+  ix_new <- setdiff(candidate_cells$cell, cache$cell)
+  cells_to_refine <- candidate_cells[candidate_cells$cell %in% ix_new, ]
+  cells_to_refine <- convert_crs_df(cells_to_refine, crs_metric, 4326)
   colnames(dff)[colnames(dff) == value] <- "value"
   colnames(dff)[colnames(dff) == lon] <- "lon"
   colnames(dff)[colnames(dff) == lat] <- "lat"
-  if (!is.null(hf_new)) {
-    mc <- max_conc_per_cell_cpp(hf_new, dff, points, size, radius)
+  if (!is.null(cells_to_refine)) {
+    mc <- max_conc_per_cell_cpp(cells_to_refine, dff, points, size, radius)
     colnames(mc)[colnames(mc) == "lon"] <- lon
     colnames(mc)[colnames(mc) == "lat"] <- lat
     mc
@@ -301,25 +303,35 @@ conc_per_cell_new <- function(high_foc, dff, value, size, points, db, radius,
   }
 }
 
+conc_per_cell_new <- function(high_foc, dff, value, size, points, db, radius,
+                              crs_from, crs_to, lon, lat) {
+  concentration_per_candidate_cell(high_foc, dff, value, size, points, db,
+                                   radius, crs_from, lon, lat)
+}
+
 
 #' Find the highest concentration for the current iteration
 #'
 #' @description Find the highest concentration for the current iteration.
 #'
-#' @param hf_conc_new highest concentrations from the current iteration,
-#'     retrieved from \code{conc_per_cell_new()}.
-#' @param high_foc data.frame containing cell ids with the top n focal values
-#'     from the current iteration.
-#' @param db data.frame containing previously saved highest concentrations.
+#' @param new_candidates highest concentrations from the current iteration.
+#' @param candidate_cells data.frame containing cell ids with focal values
+#'     selected for refinement in the current iteration.
+#' @param cache data.frame containing previously saved highest concentrations.
 #'
 #' @author Martin Haringa
 #'
 #' @keywords internal
-highest_conc <- function(hf_conc_new, high_foc, db) {
-  ix_old <- setdiff(high_foc$cell, hf_conc_new$cell)
-  hf_conc_old <- db[db$cell %in% ix_old, ]
-  hf_conc <- rbind(hf_conc_old, hf_conc_new)
+highest_concentration_candidate <- function(new_candidates, candidate_cells,
+                                            cache) {
+  ix_old <- setdiff(candidate_cells$cell, new_candidates$cell)
+  cached_candidates <- cache[cache$cell %in% ix_old, ]
+  hf_conc <- rbind(cached_candidates, new_candidates)
   hf_conc[which.max(hf_conc$concentration), ]
+}
+
+highest_conc <- function(hf_conc_new, high_foc, db) {
+  highest_concentration_candidate(hf_conc_new, high_foc, db)
 }
 
 
@@ -327,18 +339,21 @@ highest_conc <- function(hf_conc_new, high_foc, db) {
 #'
 #' @description Save highest concentrations per cell for subsequent iterations.
 #'
-#' @param hf_conc_new highest concentrations from the current iteration,
-#'     obtained from \code{conc_per_cell_new()}.
-#' @param db data.frame containing previously saved highest concentrations.
+#' @param new_candidates highest concentrations from the current iteration.
+#' @param cache data.frame containing previously saved highest concentrations.
 #' @param cells cells containing points associated with the current highest
-#'     concentration to be removed from \code{db}.
+#'     concentration to be removed from \code{cache}.
 #'
 #' @author Martin Haringa
 #'
 #' @keywords internal
-update_db <- function(hf_conc_new, db, cells) {
-  rb <- rbind(db, hf_conc_new)
+update_hotspot_cache <- function(new_candidates, cache, cells) {
+  rb <- rbind(cache, new_candidates)
   rb[!rb$cell %in% cells, ]
+}
+
+update_db <- function(hf_conc_new, db, cells) {
+  update_hotspot_cache(hf_conc_new, db, cells)
 }
 
 
@@ -349,32 +364,45 @@ update_db <- function(hf_conc_new, db, cells) {
 #' @noRd
 check_input <- function(df, value, top_n, radius, cell_size, grid_precision) {
 
+  if (!is.data.frame(df)) {
+    rlang::abort("`df` must be a data.frame.", call = NULL)
+  }
+
+  if (!is.character(value) || length(value) != 1L || is.na(value)) {
+    rlang::abort("`value` must be a single non-missing string.", call = NULL)
+  }
+
   if (!value %in% colnames(df)) {
     msg <- "Can't find concentrations for columns that don't exist."
     error_msg <- paste0("Column `", value, "` doesn't exist.")
     rlang::abort(c(msg, "x" = error_msg), call = NULL)
   }
 
-  if (!is.numeric(top_n) || round(top_n) != top_n || top_n <= 0) {
+  if (!is.numeric(top_n) || length(top_n) != 1L || is.na(top_n) ||
+      !is.finite(top_n) || round(top_n) != top_n || top_n <= 0) {
     msg <- paste0("Can't find the `top_n = ", top_n, "` highest concentrations")
     error_msg <- paste0("`top_n = ", top_n, "` is not a positive integer.")
     rlang::abort(c(msg, "x" = error_msg), call = NULL)
   }
 
-  if (!is.numeric(radius) || radius <= 0) {
+  if (!is.numeric(radius) || length(radius) != 1L || is.na(radius) ||
+      !is.finite(radius) || radius <= 0) {
     msg <- paste0("Can't find concentrations with `radius = ", radius, "`.")
     error_msg <- paste0("`radius` is not a positive number.")
     rlang::abort(c(msg, "x" = error_msg), call = NULL)
   }
 
-  if (!is.numeric(cell_size) || cell_size <= 0) {
+  if (!is.numeric(cell_size) || length(cell_size) != 1L || is.na(cell_size) ||
+      !is.finite(cell_size) || cell_size <= 0) {
     msg <- paste0("Can't find concentrations with `cell_size = ",
                   cell_size, "`.")
     error_msg <- paste0("`cell_size` is not a positive number.")
     rlang::abort(c(msg, "x" = error_msg), call = NULL)
   }
 
-  if (!is.numeric(grid_precision) || grid_precision <= 0) {
+  if (!is.numeric(grid_precision) || length(grid_precision) != 1L ||
+      is.na(grid_precision) || !is.finite(grid_precision) ||
+      grid_precision <= 0) {
     msg <- paste0("Can't find concentrations with `grid_precision = ",
                   grid_precision, "`.")
     error_msg <- paste0("`grid_precision` is not a positive number.")
@@ -387,7 +415,54 @@ check_input <- function(df, value, top_n, radius, cell_size, grid_precision) {
                         " > `radius` = ", radius, ".")
     rlang::abort(c(msg, "x" = error_msg), call = NULL)
   }
+
+  if (grid_precision > cell_size) {
+    msg <- paste0("Can't find concentrations with `grid_precision` > ",
+                  "`cell_size`.")
+    error_msg <- paste0("`grid_precision` = ", grid_precision,
+                        " > `cell_size` = ", cell_size, ".")
+    rlang::abort(c(msg, "x" = error_msg), call = NULL)
+  }
 }
 
 
+#' @keywords internal
+check_coordinate_vectors <- function(lat_from, lon_from, lat_to, lon_to) {
+  coords <- list(
+    lat_from = lat_from,
+    lon_from = lon_from,
+    lat_to = lat_to,
+    lon_to = lon_to
+  )
 
+  if (!all(vapply(coords, is.numeric, logical(1)))) {
+    stop(
+      "`lat_from`, `lon_from`, `lat_to`, and `lon_to` must be numeric.",
+      call. = FALSE
+    )
+  }
+
+  n <- length(lat_from)
+
+  if (!all(lengths(coords) == n)) {
+    stop(
+      "`lat_from`, `lon_from`, `lat_to`, and `lon_to` must have the same length.",
+      call. = FALSE
+    )
+  }
+
+  invisible(NULL)
+}
+
+
+#' @keywords internal
+check_earth_radius <- function(r) {
+  if (!is.numeric(r) || length(r) != 1L || is.na(r) || r <= 0) {
+    stop(
+      "`r` must be a single positive numeric value.",
+      call. = FALSE
+    )
+  }
+
+  invisible(NULL)
+}

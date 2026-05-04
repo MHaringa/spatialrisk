@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Calculating Spatial Risk • spatialrisk</title>
+<title>Spatial Concentration and Radius-Based Risk Calculations • spatialrisk</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -13,12 +13,14 @@
 <link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Open_Sans-0.4.10/font.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Inter-0.4.10/font.css" rel="stylesheet">
+<link href="deps/Google_Sans_Code-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Calculating Spatial Risk">
-<meta name="description" content="Provides methods for spatial risk calculations, focusing on efficient determination of the sum of observations within a circle of a given radius. These methods are particularly relevant for applications such as insurance, where recent European Commission regulations require the calculation of the maximum insured value of fire risk policies for all buildings that are partly or fully located within a 200 m radius. The underlying problem is described by Church (1974) &lt;doi:10.1007/BF01942293&gt;.">
-<meta property="og:description" content="Provides methods for spatial risk calculations, focusing on efficient determination of the sum of observations within a circle of a given radius. These methods are particularly relevant for applications such as insurance, where recent European Commission regulations require the calculation of the maximum insured value of fire risk policies for all buildings that are partly or fully located within a 200 m radius. The underlying problem is described by Church (1974) &lt;doi:10.1007/BF01942293&gt;.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="Spatial Concentration and Radius-Based Risk Calculations">
+<meta name="description" content="Provides methods for spatial concentration and radius-based risk calculations. The package focuses on efficient determination of the sum of observations within a given radius, identifying local concentration hotspots, and aggregating point data to polygon geometries. These methods are useful for applications such as insurance, urban analytics, environmental exposure analysis, and other spatial point pattern workflows. The underlying maximum covering problem is described by Church (1974) &lt;doi:10.1007/BF01942293&gt;.">
+<meta property="og:description" content="Provides methods for spatial concentration and radius-based risk calculations. The package focuses on efficient determination of the sum of observations within a given radius, identifying local concentration hotspots, and aggregating point data to polygon geometries. These methods are useful for applications such as insurance, urban analytics, environmental exposure analysis, and other spatial point pattern workflows. The underlying maximum covering problem is described by Church (1974) &lt;doi:10.1007/BF01942293&gt;.">
 <meta property="og:image" content="https://mharinga.github.io/spatialrisk/logo.png">
 </head>
 <body>
@@ -29,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +40,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
@@ -58,210 +61,179 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p><code>spatialrisk</code> is specifically designed for efficient spatial risk calculations, allowing users to quickly sum all observations within a defined radius. With key functions implemented in C++ using Rcpp, the package ensures fast performance for various spatial analysis tasks, including optimizing location and resource allocation.</p>
+<p><code>spatialrisk</code> provides tools for fixed-radius spatial concentration analysis in R. The package is aimed at applied workflows in which point-level values must be aggregated locally, for example to identify insurance concentration hotspots under a prescribed radius.</p>
+<p>The central question is practical: given a portfolio of point locations with associated values, which locations have the largest total value within a circle of fixed radius? This type of problem occurs in insurance risk management, but the same operations are useful in other spatial point pattern applications.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Install <code>spatialrisk</code> from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"spatialrisk"</span><span class="op">)</span></span></code></pre></div>
-<p>Or the development version from GitHub:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"spatialrisk"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Development version</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MHaringa/spatialrisk"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example-1-observations-within-a-defined-radius">Example 1: Observations Within a Defined Radius<a class="anchor" aria-label="anchor" href="#example-1-observations-within-a-defined-radius"></a>
+<h2 id="main-operations">Main operations<a class="anchor" aria-label="anchor" href="#main-operations"></a>
 </h2>
-<p>Filter all observations in <code>Groningen</code> located within a 100-meter radius circle centered at coordinates <code>(longitude, latitude) = (6.561561, 53.21326)</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mharinga/spatialrisk" class="external-link">spatialrisk</a></span><span class="op">)</span></span>
-<span><span class="va">circle</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/points_in_circle.html">points_in_circle</a></span><span class="op">(</span><span class="va">Groningen</span>, lon_center <span class="op">=</span> <span class="fl">6.571561</span>, </span>
-<span>                           lat_center <span class="op">=</span> <span class="fl">53.21326</span>, radius <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span><span class="va">circle</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="do">## # A tibble: 14 × 10</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">##    street   number letter suffix postal_code city    lon   lat amount distance_m</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="do">##    &lt;chr&gt;     &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">##  1 Heresin…      5 &lt;NA&gt;   &lt;NA&gt;   9711EP      Gron…  6.57  53.2      5       31.4</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="do">##  2 Heresin…     11 &lt;NA&gt;   &lt;NA&gt;   9711ER      Gron…  6.57  53.2     11       47.8</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="do">##  3 Zuiderp…   1003 &lt;NA&gt;   &lt;NA&gt;   9724AK      Gron…  6.57  53.2   1003       57.6</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="do">##  4 Heresin…     13 &lt;NA&gt;   &lt;NA&gt;   9711ER      Gron…  6.57  53.2     13       68.1</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="do">##  5 Hereple…     10 &lt;NA&gt;   &lt;NA&gt;   9711GA      Gron…  6.57  53.2     10       74.6</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="do">##  6 Heresin…     16 &lt;NA&gt;   &lt;NA&gt;   9711ES      Gron…  6.57  53.2     16       84.1</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="do">##  7 Heresin…      6 &lt;NA&gt;   &lt;NA&gt;   9711ES      Gron…  6.57  53.2      6       86.2</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="do">##  8 Heresin…      6 a      &lt;NA&gt;   9711ES      Gron…  6.57  53.2      6       87.8</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="do">##  9 Heresin…      6 b      &lt;NA&gt;   9711ES      Gron…  6.57  53.2      6       90.9</span></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="do">## 10 Heresin…     20 &lt;NA&gt;   &lt;NA&gt;   9711ET      Gron…  6.57  53.2     20       91.5</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="do">## 11 Heresin…     20 a      &lt;NA&gt;   9711ET      Gron…  6.57  53.2     20       93.0</span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="do">## 12 Heresin…     15 a      &lt;NA&gt;   9711ER      Gron…  6.57  53.2     15       95.1</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="do">## 13 Zuiderp…   1007 &lt;NA&gt;   &lt;NA&gt;   9724AK      Gron…  6.57  53.2   1007       97.2</span></span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="do">## 14 Zuiderp…     25 a      &lt;NA&gt;   9724AJ      Gron…  6.57  53.2     25       97.8</span></span></code></pre></div>
-<p>The sum of all observations within this circle is equal to:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">circle</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="do">## [1] 2163</span></span></code></pre></div>
-<p>Next, calculate the sum of all observations within a specified radius. <code><a href="reference/concentration.html">concentration()</a></code> computes the total sum of all observations within a circle of a given radius for multiple locations. For each row in <code>df</code>, it finds the sum of all observations in <code>Groningen</code> that fall within a 100-meter radius from the specified (lon, lat) coordinates.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"p1"</span>, <span class="st">"p2"</span>, <span class="st">"p3"</span><span class="op">)</span>, </span>
-<span>                 lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6.561561</span>, <span class="fl">6.561398</span>, <span class="fl">6.571561</span><span class="op">)</span>, </span>
-<span>                 lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">53.21369</span>, <span class="fl">53.21326</span>, <span class="fl">53.21326</span><span class="op">)</span><span class="op">)</span></span>
+<p>The package is intentionally focused on a small set of operations.</p>
+<ol style="list-style-type: decimal">
+<li>identify points within a fixed radius;</li>
+<li>compute fixed-radius sums around target locations;</li>
+<li>search for locations with maximum local concentration;</li>
+<li>aggregate point values to polygons for reporting or visualisation.</li>
+</ol>
+<p>These operations are building blocks for applied concentration analyses rather than a general spatial modelling framework.</p>
+</div>
+<div class="section level2">
+<h2 id="applied-example">Applied example<a class="anchor" aria-label="anchor" href="#applied-example"></a>
+</h2>
+<p>The package includes example address-level data for Groningen. The column <code>amount</code> represents an example value attached to each location.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mharinga/spatialrisk" class="external-link">spatialrisk</a></span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">conc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/concentration.html">concentration</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">Groningen</span>, value <span class="op">=</span> <span class="va">amount</span>, radius <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span><span class="va">conc</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">##   location      lon      lat concentration</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## 1       p1 6.561561 53.21369           775</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">## 2       p2 6.561398 53.21326          2271</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="do">## 3       p3 6.571561 53.21326          2163</span></span></code></pre></div>
-<p>Show that result is indeed equal to the result from the previous example:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">circle</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span> <span class="op">==</span> <span class="va">conc</span><span class="op">$</span><span class="va">concentration</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="example-2-find-highest-concentrations">Example 2: Find Highest Concentrations<a class="anchor" aria-label="anchor" href="#example-2-find-highest-concentrations"></a>
-</h2>
-<p><code>spatialrisk</code> offers a fast and effective way to identify areas with the highest concentration of fire risks within a 200-meter radius—meeting a key requirement of the European Directive 2009/138 (Solvency II) and aligned with the principles of the Maximal Covering Location Problem (MCLP). While the directive doesn’t mandate a specific method, <code>spatialrisk</code> provides a clear and systematic approach to mapping high-risk clusters. This helps insurers accurately assess their maximum exposure to catastrophic fire events and adjust their solvency capital requirements in line with Solvency II standards.</p>
-<p>Under Solvency II, the fire risk challenge involves calculating the capital requirement for fire-related events—such as fires, explosions, and terrorist attacks—by identifying the largest concentration of insured assets at risk. This can be approached as a location optimization problem: finding the optimal center of a fixed-radius circle that captures the maximum total value of insured fire risks within that area. The structure of this problem closely mirrors the <strong>Maximal Covering Location Problem (MCLP)</strong>, a well-established model in operations research used to maximize coverage within a limited range.</p>
-<p><strong>The Maximal Covering Location Problem (MCLP)</strong></p>
-<p>Originally proposed by Church and ReVelle in 1974, the Maximal Covering Location Problem (MCLP) focuses on placing facilities in locations that maximize coverage of demand points within a predefined distance. In this context:</p>
-<ol style="list-style-type: decimal">
-<li>
-<strong>Demand points</strong> represent locations that require coverage, such as populations, assets, or infrastructure.</li>
-<li>
-<strong>Facilities</strong> are placed to cover as many of these points as possible, within a fixed coverage radius.</li>
-<li>The goal is to <strong>maximize total demand covered</strong> using a limited number of facilities and a set coverage distance.</li>
-</ol>
-<p><strong>Strategic Rationale for Applying MCLP to Fire Risk Assessment</strong></p>
-<p>The Solvency II directive requires insurers to assess their capital exposure to fire risk by identifying the highest concentration of insured assets within a 200-meter radius. This challenge aligns closely with the Maximal Covering Location Problem (MCLP), a proven model from operations research used to optimize coverage within a fixed area. The similarities are clear:</p>
-<ol style="list-style-type: decimal">
-<li>
-<strong>Valuable Assets as Demand Points:</strong> Each insured building or asset is treated as a demand point, similar to how MCLP models locations needing coverage.</li>
-<li>
-<strong>Fixed 200-Meter Radius:</strong> The regulatory requirement mirrors MCLP’s coverage radius—assets are either within range or not.</li>
-<li>
-<strong>Focus on Maximum Exposure:</strong> Just as MCLP aims to maximize covered demand, the fire risk assessment seeks to identify the location with the greatest insured value concentration.</li>
-</ol>
+<span><span class="va">portfolio</span> <span class="op">&lt;-</span> <span class="va">Groningen</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">200</span>, <span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">portfolio</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"amount"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span><span class="co">#&gt;     lon   lat amount</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1  6.57  53.2     24</span></span>
+<span><span class="co">#&gt; 2  6.55  53.2     33</span></span>
+<span><span class="co">#&gt; 3  6.57  53.2     48</span></span>
+<span><span class="co">#&gt; 4  6.56  53.2      7</span></span>
+<span><span class="co">#&gt; 5  6.57  53.2     16</span></span>
+<span><span class="co">#&gt; 6  6.56  53.2     28</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="algorithm-maximal-covering-location-problem-mclp-via-raster-analysis">Algorithm: Maximal Covering Location Problem (MCLP) via Raster Analysis<a class="anchor" aria-label="anchor" href="#algorithm-maximal-covering-location-problem-mclp-via-raster-analysis"></a>
+<h3 id="points-contributing-to-a-local-concentration">Points contributing to a local concentration<a class="anchor" aria-label="anchor" href="#points-contributing-to-a-local-concentration"></a>
 </h3>
-<div class="section level4">
-<h4 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h4>
-<p>This algorithm presents a practical and scalable solution for identifying high-risk locations using the Maximal Covering Location Problem (MCLP), implemented through spatial raster analysis. Built on the robust capabilities of the <code>terra</code> package in R, the approach transforms complex spatial data into actionable insights. It enables insurers and urban planners to pinpoint areas of highest risk concentration.</p>
+<p><code><a href="reference/points_within_radius.html">points_within_radius()</a></code> returns the observations within a given distance from a specified centre. This is useful for inspecting which policies, buildings, or other exposure points contribute to a local aggregate.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">local_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/points_within_radius.html">points_within_radius</a></span><span class="op">(</span></span>
+<span>  <span class="va">portfolio</span>,</span>
+<span>  lon_center <span class="op">=</span> <span class="fl">6.5549</span>,</span>
+<span>  lat_center <span class="op">=</span> <span class="fl">53.1942</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fl">200</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">local_points</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">local_points</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1315</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="key-steps-in-the-process">Key Steps in the Process<a class="anchor" aria-label="anchor" href="#key-steps-in-the-process"></a>
-</h4>
-<p><strong>1. Aggregating Spatial Risk Data</strong> <br><em>Objective: Create a simplified, high-level view of demand concentrations.</em></p>
-<ul>
-<li>Spatial data points (e.g., insured assets) are converted into a raster grid with 50 x 50 meter cells.</li>
-<li>Each cell summarizes the total insured value within its boundaries, creating a spatial heatmap of risk exposure.</li>
-</ul>
-<p><strong>2. Highlighting High-Risk Clusters</strong> <br><em>Objective: Identify areas where demand values cluster within proximity.</em></p>
-<ul>
-<li>Using focal statistics, the algorithm analyzes each cell and its neighbors to highlight broader risk concentrations.</li>
-<li>A weighting matrix refines this analysis, revealing where the most significant clusters lie.</li>
-</ul>
-<p><strong>3. Focusing the Search</strong> <br><em>Objective: Narrow in on the top risk zones.</em></p>
-<ul>
-<li>The algorithm selects the top five areas with the highest aggregated risk values.</li>
-<li>Within each, it builds a detailed 20 x 20 grid (400 sub-points) to begin exploring optimal facility or response locations.</li>
-</ul>
-<p><strong>4. Refining to High-Potential Zones</strong> <br><em>Objective: Eliminate low-impact areas and zoom in on promising locations.</em></p>
-<ul>
-<li>Only zones that exceed a calculated risk threshold (lower bound) are retained.</li>
-<li>These areas are then mapped at a finer 1-meter resolution, concentrating analysis where it matters most.</li>
-</ul>
-<p><strong>5. Pinpointing Optimal Locations</strong> <br><em>Objective: Identify the exact spots offering maximum coverage potential.</em></p>
-<ul>
-<li>A high-resolution grid is generated within the selected areas.</li>
-<li>The algorithm evaluates each point’s ability to cover surrounding demand, producing a shortlist of optimal locations for intervention, resource allocation, or risk management.</li>
-</ul>
+<div class="section level3">
+<h3 id="fixed-radius-sums">Fixed-radius sums<a class="anchor" aria-label="anchor" href="#fixed-radius-sums"></a>
+</h3>
+<p><code><a href="reference/radius_sum.html">radius_sum()</a></code> evaluates the same idea for one or more target locations. The output is the target data with an additional column containing the total value from the reference data within the specified radius.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">targets</span> <span class="op">&lt;-</span> <span class="va">portfolio</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/radius_sum.html">radius_sum</a></span><span class="op">(</span></span>
+<span>  targets <span class="op">=</span> <span class="va">targets</span>,</span>
+<span>  reference <span class="op">=</span> <span class="va">portfolio</span>,</span>
+<span>  value <span class="op">=</span> <span class="st">"amount"</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  result_col <span class="op">=</span> <span class="st">"amount_200m"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 3</span></span>
+<span><span class="co">#&gt;     lon   lat amount_200m</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1  6.57  53.2        1059</span></span>
+<span><span class="co">#&gt; 2  6.55  53.2          33</span></span>
+<span><span class="co">#&gt; 3  6.57  53.2          48</span></span>
+<span><span class="co">#&gt; 4  6.56  53.2          56</span></span>
+<span><span class="co">#&gt; 5  6.57  53.2          16</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="illustrative-example-identifying-areas-of-highest-risk-concentration">Illustrative Example: Identifying Areas of Highest Risk Concentration<a class="anchor" aria-label="anchor" href="#illustrative-example-identifying-areas-of-highest-risk-concentration"></a>
-</h4>
-<p>As a practical application of the above methodology, this example demonstrates how the algorithm can calculate the total demand (e.g., insured value) within a fixed radius around multiple locations.</p>
-<p><code><a href="reference/find_highest_concentration.html">find_highest_concentration()</a></code> is used to determine the central coordinates of a circle with a constant radius that captures the maximum sum of surrounding demand points. This enables decision-makers—such as insurers or urban planners—to pinpoint where risk is most densely concentrated and where targeted action can yield the greatest impact.</p>
-<p>In this case, the method is applied to the Groningen dataset, which contains spatial risk points relevant to the analysis.</p>
-<p><strong>Visualization:</strong><br> Display all spatial demand points from the Groningen dataset as a foundation for identifying optimal coverage locations.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_points.html">plot_points</a></span><span class="op">(</span><span class="va">Groningen</span>, value <span class="op">=</span> <span class="st">"amount"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/example3a-1.png" alt="Map with points in Groningen" width="672"></p>
-<p><br></p>
-<hr>
-<p><strong>Determine the Optimal Central Location for Maximum Risk Coverage:</strong> <br> In this step, the goal is to determine the central coordinates of a circular area that captures the highest concentration of demand. Using a fixed radius, the algorithm systematically scans all potential locations, calculating the total risk value within each surrounding area.</p>
-<p>To support fast and scalable analysis, all core functions are written in C++. This ensures high-performance computation, allowing the algorithm to handle large and complex spatial datasets with exceptional speed and efficiency.</p>
-<p>By applying <code><a href="reference/find_highest_concentration.html">find_highest_concentration()</a></code>, we isolate the point that offers the greatest cumulative coverage:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/find_highest_concentration.html">find_highest_concentration</a></span><span class="op">(</span><span class="va">Groningen</span>, </span>
-<span>                                 value <span class="op">=</span> <span class="st">"amount"</span>, </span>
-<span>                                 radius <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="do">## Time difference of 0.523304 secs</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hc</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="do">##        lon      lat concentration cell id</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="do">## 1 6.547326 53.23658         64438 3642  1</span></span></code></pre></div>
-<p><strong>Visualizing the Area of Highest Concentration:</strong> <br> Plot the individual points located within the highest concentration zone. The total sum of their values corresponds to the reported concentration figure.</p>
-<p>This area represents the highest demand concentration in the Groningen dataset. It notably includes two apartment buildings containing a large number of insured objects, which significantly contribute to the overall risk exposure.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hc</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/unnamed-chunk-9-1.png" alt="Map with highest concentrations" width="672"></p>
-<p><br></p>
-<hr>
-<p>It is also possible to display the coordinates for multiple high-concentration areas. To visualize the second and third highest concentrations:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hconc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/find_highest_concentration.html">find_highest_concentration</a></span><span class="op">(</span><span class="va">Groningen</span>, </span>
-<span>                                    value <span class="op">=</span> <span class="st">"amount"</span>, </span>
-<span>                                    radius <span class="op">=</span> <span class="fl">200</span>, </span>
-<span>                                    top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="do">## Finished 1 of 3Finished 2 of 3Finished 3 of 3</span></span></code></pre></div>
-<p>Create interactive map:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hconc</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/unnamed-chunk-11-1.png" alt="Interactive map with highest concentrations" width="672"></p>
-<p><br></p>
-<hr>
-<p>Display the objects located within the highest concentration circle:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hc</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="do">## # A tibble: 208 × 13</span></span>
-<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="do">##    street        number letter suffix postal_code city    lon   lat amount    ix</span></span>
-<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="do">##    &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;</span></span>
-<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="do">##  1 Elzenlaan        135 &lt;NA&gt;   &lt;NA&gt;   9741ND      Gron…  6.55  53.2    135 20449</span></span>
-<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a><span class="do">##  2 Elzenlaan        139 &lt;NA&gt;   &lt;NA&gt;   9741ND      Gron…  6.55  53.2    139 23229</span></span>
-<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="do">##  3 Elzenlaan         70 &lt;NA&gt;   &lt;NA&gt;   9741NG      Gron…  6.55  53.2     70   585</span></span>
-<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="do">##  4 Elzenlaan         68 &lt;NA&gt;   &lt;NA&gt;   9741NG      Gron…  6.55  53.2     68 14677</span></span>
-<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="do">##  5 Duindoornstr…      1 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     12 16828</span></span>
-<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a><span class="do">##  6 Duindoornstr…     17 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     17 12829</span></span>
-<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a><span class="do">##  7 Duindoornstr…     15 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     15 16004</span></span>
-<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a><span class="do">##  8 Duindoornstr…     21 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     21 11748</span></span>
-<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a><span class="do">##  9 Duindoornstr…     13 &lt;NA&gt;   &lt;NA&gt;   9741NM      Gron…  6.55  53.2     13  2006</span></span>
-<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a><span class="do">## 10 Ranonkelstra…     38 &lt;NA&gt;   &lt;NA&gt;   9741LT      Gron…  6.55  53.2     38 19696</span></span>
-<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a><span class="do">## # ℹ 198 more rows</span></span>
-<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a><span class="do">## # ℹ 3 more variables: distance_m &lt;dbl&gt;, id &lt;int&gt;, conc &lt;dbl&gt;</span></span></code></pre></div>
-</div>
+<div class="section level3">
+<h3 id="concentration-hotspot">Concentration hotspot<a class="anchor" aria-label="anchor" href="#concentration-hotspot"></a>
+</h3>
+<p><code><a href="reference/concentration_hotspot.html">concentration_hotspot()</a></code> searches for the centre of a fixed-radius circle with the largest aggregated value. In an insurance setting this can be used to identify the local portfolio concentration that is relevant for a regulatory or internal risk limit. By default, <code>method = "continuous"</code> searches for a centre that may lie between buildings. Internally, it uses a coarse spatial screening step followed by local pair-intersection refinement.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hotspot</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/concentration_hotspot.html">concentration_hotspot</a></span><span class="op">(</span></span>
+<span>  <span class="va">portfolio</span>,</span>
+<span>  value <span class="op">=</span> <span class="st">"amount"</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  cell_size <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>  top_n <span class="op">=</span> <span class="fl">2</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">hotspot</span></span>
+<span><span class="co">#&gt; &lt;hotspot&gt;</span></span>
+<span><span class="co">#&gt; Number of hotspots: 2 </span></span>
+<span><span class="co">#&gt; Radius: 200 meters</span></span>
+<span><span class="co">#&gt; Value: amount </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   id      lon      lat amount_sum</span></span>
+<span><span class="co">#&gt; 1  1 6.554816 53.19424       1315</span></span>
+<span><span class="co">#&gt; 2  2 6.572691 53.21873       1147</span></span></code></pre></div>
+<p>The result contains the selected centre coordinates and the corresponding summed value, named from <code>value</code>; for example <code>amount_sum</code>. The contributing observations are stored in <code>hotspot$contributing_points</code>.</p>
+<p>The default continuous method can place the circle centre between buildings. For comparison, <code>method = "observed"</code> searches only observed point locations as possible centres and is therefore useful as a fast benchmark.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">observed_hotspot</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/concentration_hotspot.html">concentration_hotspot</a></span><span class="op">(</span></span>
+<span>  <span class="va">portfolio</span>,</span>
+<span>  value <span class="op">=</span> <span class="st">"amount"</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"observed"</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  continuous <span class="op">=</span> <span class="va">hotspot</span><span class="op">$</span><span class="va">hotspots</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>,</span>
+<span>  observed <span class="op">=</span> <span class="va">observed_hotspot</span><span class="op">$</span><span class="va">hotspots</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;            id      lon      lat amount_sum</span></span>
+<span><span class="co">#&gt; continuous  1 6.554816 53.19424       1315</span></span>
+<span><span class="co">#&gt; observed    1 6.556074 53.19490       1205</span></span></code></pre></div>
+<p>The original grid-refinement workflow remains available with <code>method = "grid"</code>.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="example-3-creating-choropleth-maps">Example 3: Creating Choropleth Maps<a class="anchor" aria-label="anchor" href="#example-3-creating-choropleth-maps"></a>
+<h2 id="polygon-summaries">Polygon summaries<a class="anchor" aria-label="anchor" href="#polygon-summaries"></a>
 </h2>
-<p><code>spatialrisk</code> also offers features for creating choropleth maps, which can be challenging in R. <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> provides an elegant solution to this issue.</p>
-<p>Typically, creating choropleths involves aggregating data at the regional level of the shapefile and then merging this aggregated data with the shapefile. However, this method can be problematic if the names in the data do not match those in the shapefile, such as when there are differences in punctuation or spelling in area names. To address this, <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> uses the longitude and latitude of a point to accurately map it to the corresponding region. This approach simplifies the creation of choropleth maps at various regional levels.</p>
-<p>For example, <code><a href="reference/points_to_polygon.html">points_to_polygon()</a></code> can be used to visualize the total sum insured at the municipality level across the Netherlands:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gemeente_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/points_to_polygon.html">points_to_polygon</a></span><span class="op">(</span><span class="va">nl_gemeente</span>, <span class="va">insurance</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">amount</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/choropleth.html">choropleth()</a></code> generates a map from the simple feature object created in the previous step. There are two ways to create a choropleth map: if you set the mode to plot, it produces a static map. The clustering in this case is based on the Fisher-Jenks algorithm, a widely used method for classifying data in choropleth maps.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">gemeente_sf</span>, mode <span class="op">=</span> <span class="st">"plot"</span>, legend_title <span class="op">=</span> <span class="st">"Sum insured (EUR)"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/nl_choro1.png" alt="Static choropleth on gemeente level" width="672"></p>
-<p><br></p>
-<p>If <code>mode</code> is set to <code>view</code> an interactive map is created:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">gemeente_sf</span>, mode <span class="op">=</span> <span class="st">"view"</span>, legend_title <span class="op">=</span> <span class="st">"Sum insured (EUR)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/nl_choro2.png" alt="Interactive choropleth on gemeente level" width="672"></p>
-<p><br></p>
-<p>The following simple feature objects are available in <code>spatialrisk</code>: <code>nl_provincie</code>, <code>nl_corop</code>, <code>nl_gemeente</code>, <code>nl_postcode1</code>, <code>nl_postcode2</code>, <code>nl_postcode3</code>, <code>nl_postcode4</code>, <code>world_countries</code>, and <code>europe_countries</code>.</p>
+<p>Point-level concentration analysis is often followed by reporting at an administrative or portfolio-management level. For that purpose, <code><a href="reference/summarise_points_by_polygon.html">summarise_points_by_polygon()</a></code> joins points to polygons and summarises a numeric value.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">province_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/summarise_points_by_polygon.html">summarise_points_by_polygon</a></span><span class="op">(</span></span>
+<span>  polygons <span class="op">=</span> <span class="va">nl_provincie</span>,</span>
+<span>  points <span class="op">=</span> <span class="va">insurance</span>,</span>
+<span>  value <span class="op">=</span> <span class="st">"amount"</span>,</span>
+<span>  fun <span class="op">=</span> <span class="va">sum</span>,</span>
+<span>  outside <span class="op">=</span> <span class="st">"ignore"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">province_summary</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"areaname"</span>, <span class="st">"amount_sum"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;         areaname amount_sum</span></span>
+<span><span class="co">#&gt; 1        Drenthe   56766689</span></span>
+<span><span class="co">#&gt; 2      Flevoland   55795037</span></span>
+<span><span class="co">#&gt; 3      Friesland   78581984</span></span>
+<span><span class="co">#&gt; 4     Gelderland  269468412</span></span>
+<span><span class="co">#&gt; 5      Groningen  106580080</span></span>
+<span><span class="co">#&gt; 6        Limburg  140680821</span></span>
+<span><span class="co">#&gt; 7  Noord-Brabant  377776132</span></span>
+<span><span class="co">#&gt; 8  Noord-Holland  593255924</span></span>
+<span><span class="co">#&gt; 9     Overijssel  148939513</span></span>
+<span><span class="co">#&gt; 10       Utrecht  226377123</span></span>
+<span><span class="co">#&gt; 11       Zeeland   82251913</span></span>
+<span><span class="co">#&gt; 12  Zuid-Holland  697040028</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
+</h2>
+<p><code>spatialrisk</code> does not estimate a statistical model and does not assign a probability distribution to the observed values. It provides deterministic spatial aggregation tools for fixed-radius concentration problems. Interpretation of the resulting concentration measures remains application-specific.</p>
+<p>Core computations are implemented in C++ via Rcpp for efficient evaluation on larger point datasets.</p>
+</div>
+<div class="section level2">
+<h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
+</h2>
+<p>The main vignette introduces fixed-radius concentration analysis in an applied insurance setting. A second vignette shows how aggregated values can be displayed with choropleth maps.</p>
+</div>
+<div class="section level2">
+<h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+</h2>
+<p>The fixed-radius hotspot problem is related to the maximum covering location problem described by Church (1974) <a href="doi:10.1007/BF01942293" class="uri">doi:10.1007/BF01942293</a>.</p>
+<p>If you use this package in academic work, it can be cited as:</p>
+<blockquote>
+<p>Haringa, M. (2026). spatialrisk: Spatial concentration and radius-based risk calculations in R.</p>
+</blockquote>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -312,7 +284,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
