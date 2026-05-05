@@ -1,7 +1,7 @@
 Package: spatialrisk
 Type: Package
 Title: Spatial Concentration and Radius-Based Risk Calculations
-Version: 0.8.0
+Version: 0.8.0.9000
 Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), 
     email = "mtharinga@gmail.com"))
 Author: Martin Haringa [aut, cre]
@@ -9,9 +9,9 @@ Maintainer: Martin Haringa <mtharinga@gmail.com>
 BugReports: https://github.com/mharinga/spatialrisk/issues
 Description: Provides methods for spatial concentration and radius-based risk 
     calculations. The package focuses on efficient determination of the sum of 
-    observations within a given radius, identifying local concentration 
-    hotspots, and aggregating point data to polygon geometries. These methods 
-    are useful for applications such as insurance, urban analytics, 
+    observations within a given radius, identifying areas of high local 
+    concentration, and aggregating point data to polygon geometries. These 
+    methods are useful for applications such as insurance, urban analytics, 
     environmental exposure analysis, and other spatial point pattern workflows. 
     The underlying maximum covering problem is described by Church (1974) 
     <doi:10.1007/BF01942293>.

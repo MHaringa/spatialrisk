@@ -1,3 +1,5 @@
+# spatialrisk (development version)
+
 # spatialrisk 0.8.0
 
 ## Main API changes
