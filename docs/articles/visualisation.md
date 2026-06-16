@@ -63,8 +63,6 @@ choropleth(
 )
 ```
 
-![](figures/visualisation-unnamed-chunk-4-1.png)
-
 ## Relation to concentration analysis
 
 A choropleth map represents values attached to predefined polygons.

@@ -5,11 +5,9 @@
 Core functions for selecting points and computing aggregated values
 within a fixed radius.
 
-- [`points_in_circle()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
-  [`points_within_radius()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
+- [`points_within_radius()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
   : Find points within radius around one or more center coordinates
-- [`concentration()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
-  [`radius_sum()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
+- [`radius_sum()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
   : Sum values within a radius around target coordinates
 - [`haversine()`](https://mharinga.github.io/spatialrisk/reference/haversine.md)
   : Haversine great-circle distance
@@ -20,6 +18,11 @@ Functions for identifying locations with high spatial concentration.
 
 - [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
   : Identify fixed-radius concentration hotspots
+- [`prepare_spatialrisk()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+  [`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+  [`optimize_hotspot()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+  [`plot(`*`<spatialrisk_hotspot_workflow>`*`)`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+  : Prepare fixed-radius concentration hotspot analysis
 - [`plot(`*`<hotspot>`*`)`](https://mharinga.github.io/spatialrisk/reference/plot.hotspot.md)
   : Plot concentration hotspot results
 
@@ -28,13 +31,11 @@ Functions for identifying locations with high spatial concentration.
 Functions for visualising spatial point data and aggregated spatial
 values.
 
-- [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
-  [`map_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
+- [`map_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
   : Create interactive point map
 - [`choropleth()`](https://mharinga.github.io/spatialrisk/reference/choropleth.md)
   : Create choropleth map
-- [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md)
-  [`summarise_points_by_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md)
+- [`summarise_points_by_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md)
   : Summarise point values by polygon
 
 ## Spatial data objects
@@ -77,21 +78,20 @@ Example datasets used in documentation and examples.
 
 ## Deprecated
 
-- [`concentration()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
-  [`radius_sum()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
-  : Sum values within a radius around target coordinates
-- [`find_highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/spatialrisk-deprecated.md)
-  : Deprecated aliases
+- [`concentration()`](https://mharinga.github.io/spatialrisk/reference/concentration.md)
+  : Deprecated alias for radius_sum()
+- [`points_in_circle()`](https://mharinga.github.io/spatialrisk/reference/points_in_circle.md)
+  : Deprecated alias for points_within_radius()
+- [`find_highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/find_highest_concentration.md)
+  : Deprecated alias for concentration_hotspot()
 - [`highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/highest_concentration.md)
   : Highest concentration risk
 - [`neighborhood_gh_search()`](https://mharinga.github.io/spatialrisk/reference/neighborhood_gh_search.md)
   : Search for coordinates with higher concentrations within geohash
-- [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
-  [`map_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
-  : Create interactive point map
-- [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md)
-  [`summarise_points_by_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md)
-  : Summarise point values by polygon
+- [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/plot_points.md)
+  : Deprecated alias for map_points()
+- [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/points_to_polygon.md)
+  : Deprecated alias for summarise_points_by_polygon()
 - [`choropleth_ggplot2()`](https://mharinga.github.io/spatialrisk/reference/choropleth_ggplot2.md)
   : Choropleth map of an sf object with ggplot2
 - [`interpolate_spline()`](https://mharinga.github.io/spatialrisk/reference/interpolate_spline.md)

@@ -5,7 +5,7 @@ maximizes the coverage of total fire risk insured.
 \`highest_concentration()\` returns the coordinates (lon/lat) and the
 corresponding concentration. The concentration is defined as the sum of
 all observations within a circle of a certain radius. See
-[`concentration`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
+[`concentration`](https://mharinga.github.io/spatialrisk/reference/concentration.md)
 for determining concentration for pre-defined coordinates.
 
 ## Usage

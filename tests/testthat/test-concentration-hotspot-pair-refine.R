@@ -121,6 +121,21 @@ test_that("continuous top_n removes selected points", {
   expect_length(intersect(first_row, second_row), 0)
 })
 
+test_that("continuous top_n concentrations are non-increasing", {
+  x <- Groningen[1:300, c("lon", "lat", "amount")]
+
+  out <- concentration_hotspot(
+    x,
+    value = "amount",
+    top_n = 4,
+    radius = 200,
+    cell_size = 100,
+    progress = FALSE
+  )
+
+  expect_true(all(diff(out$hotspots$amount_sum) <= 0))
+})
+
 test_that("continuous falls back to grid refinement above point limit", {
   x <- Groningen[1:200, c("lon", "lat", "amount")]
 

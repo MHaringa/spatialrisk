@@ -1,6 +1,33 @@
 # Changelog
 
+## spatialrisk 0.8.1
+
+- Added a decomposed hotspot workflow with
+  [`prepare_spatialrisk()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+  [`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+  and
+  [`optimize_hotspot()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md).
+  These functions expose the preparation, candidate-selection, and
+  optimisation steps used by
+  [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md),
+  while keeping
+  [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
+  available as the main wrapper for the complete workflow.
+- Improved `concentration_hotspot(method = "continuous")` and
+  [`optimize_hotspot()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+  so pair-intersection refinement is evaluated over all focal candidate
+  cells above the lower bound, rather than only around the top focal
+  cell. Candidate centres are now scored against the full remaining
+  portfolio before the best hotspot is selected. This avoids cases where
+  a later `top_n` hotspot could have a higher concentration than the
+  first reported hotspot.
+- Added a regression test to check that continuous `top_n` hotspot
+  concentrations are non-increasing after contributing points are
+  removed between iterations.
+
 ## spatialrisk 0.8.0
+
+CRAN release: 2026-05-04
 
 ### Main API changes
 
@@ -20,35 +47,35 @@
   an experimental Rcpp spatial-indexing alternative that searches
   observed point locations only.
 - Deprecated
-  [`find_highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/spatialrisk-deprecated.md)
+  [`find_highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/find_highest_concentration.md)
   in favour of
   [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md).
   The deprecated function remains available for existing code.
 - Renamed the
-  [`concentration()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
+  [`concentration()`](https://mharinga.github.io/spatialrisk/reference/concentration.md)
   workflow to
   [`radius_sum()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md),
   with clearer `targets` and `reference` arguments. The old
-  [`concentration()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
+  [`concentration()`](https://mharinga.github.io/spatialrisk/reference/concentration.md)
   function remains available as a deprecated compatibility wrapper.
 - Renamed `radius_sum(display_progress = )` to `radius_sum(progress = )`
   for consistency with
   [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md).
 - Renamed
-  [`points_in_circle()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
+  [`points_in_circle()`](https://mharinga.github.io/spatialrisk/reference/points_in_circle.md)
   to
   [`points_within_radius()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md).
   The old function remains available as a deprecated compatibility
   wrapper.
 - Replaced
-  [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md)
+  [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/points_to_polygon.md)
   with
   [`summarise_points_by_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md),
   which more clearly describes joining point data to polygons and
   summarising a numeric point attribute. The old function remains
   available as a deprecated compatibility wrapper.
 - Renamed
-  [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
+  [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/plot_points.md)
   to
   [`map_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md).
   The old function remains available as a deprecated compatibility
@@ -128,7 +155,7 @@ CRAN release: 2025-09-14
 CRAN release: 2025-05-25
 
 - Introduced
-  [`find_highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/spatialrisk-deprecated.md):
+  [`find_highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/find_highest_concentration.md):
   a faster and more accurate alternative to
   [`highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/highest_concentration.md),
   leveraging focal statistics for optimal results.
@@ -136,7 +163,7 @@ CRAN release: 2025-05-25
   [`highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/highest_concentration.md)
   in favor of the new, improved function.
 - Updated
-  [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
+  [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/plot_points.md)
   to utilize
   [`mapview::mapview()`](https://r-spatial.github.io/mapview/reference/mapView.html)
   for enhanced interactive map visualizations.
@@ -146,7 +173,7 @@ CRAN release: 2025-05-25
 
 CRAN release: 2024-02-21
 
-- [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
+- [`plot_points()`](https://mharinga.github.io/spatialrisk/reference/plot_points.md)
   now returns a warning when a specific provider tile is not available.
 
 ## spatialrisk 0.7.0
@@ -186,14 +213,14 @@ CRAN release: 2021-05-18
 CRAN release: 2020-04-23
 
 - A package website is added using pkgdown.
-- [`concentration()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
+- [`concentration()`](https://mharinga.github.io/spatialrisk/reference/concentration.md)
   and
-  [`points_in_circle()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
+  [`points_in_circle()`](https://mharinga.github.io/spatialrisk/reference/points_in_circle.md)
   now return error messages when the data does not contain columns for
   `lon` and `lat`.
-- [`concentration()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
+- [`concentration()`](https://mharinga.github.io/spatialrisk/reference/concentration.md)
   and
-  [`points_in_circle()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
+  [`points_in_circle()`](https://mharinga.github.io/spatialrisk/reference/points_in_circle.md)
   have updated documentation.
 - [`haversine()`](https://mharinga.github.io/spatialrisk/reference/haversine.md)
   now returns NA when coordinates are missing.
@@ -202,7 +229,7 @@ CRAN release: 2020-04-23
 
 CRAN release: 2020-03-21
 
-- [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md)
+- [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/points_to_polygon.md)
   is updated to keep spatialrisk and a new version of dplyr working
   together smoothly.
 
@@ -262,14 +289,14 @@ CRAN release: 2019-07-29
 CRAN release: 2019-04-30
 
 - In
-  [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md),
+  [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/points_to_polygon.md),
   `outside_print` shows the points that are not within any polygon.
 
 ## spatialrisk 0.6.0
 
 CRAN release: 2019-04-08
 
-- [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md)
+- [`points_to_polygon()`](https://mharinga.github.io/spatialrisk/reference/points_to_polygon.md)
   is added.
 - Data sets `europe_countries()` and `world_countries()` are added.
 
@@ -278,7 +305,7 @@ CRAN release: 2019-04-08
 CRAN release: 2019-03-01
 
 - In
-  [`concentration()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
+  [`concentration()`](https://mharinga.github.io/spatialrisk/reference/concentration.md)
   the algorithm for testing if a point is inside a circle is updated by
   testing whether the point is inside a square diamond inside the
   square.

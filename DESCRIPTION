@@ -1,7 +1,7 @@
 Package: spatialrisk
 Type: Package
 Title: Spatial Concentration and Radius-Based Risk Calculations
-Version: 0.8.0.9000
+Version: 0.8.1
 Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), 
     email = "mtharinga@gmail.com"))
 Author: Martin Haringa [aut, cre]
@@ -32,7 +32,6 @@ Imports:
     terra,
     units
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 Suggests: 
     classInt,
     colourvalues,
@@ -50,3 +49,4 @@ Suggests:
     tmap,
     vroom
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

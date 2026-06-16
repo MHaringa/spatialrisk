@@ -3,7 +3,11 @@
 Identifies centre coordinates of fixed-radius circles with high local
 concentration. In insurance applications this can be used to find
 locations where the total insured value within a prescribed radius is
-largest.
+largest. This function is a wrapper around the decomposed workflow
+[`prepare_spatialrisk`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+[`select_candidates`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+and
+[`optimize_hotspot`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md).
 
 ## Usage
 
@@ -129,7 +133,31 @@ result is exact only within the terra-selected local search area. The
 hotspot when the optimal centre lies between observed points. The
 `"grid"` method uses a grid-based search with local refinement; smaller
 `grid_precision` values generally increase precision and computation
-time.
+time. Use
+[`prepare_spatialrisk`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+[`select_candidates`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+and
+[`optimize_hotspot`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+when these steps need to be run or inspected separately.
+
+The pairwise-intersection method treats the hotspot problem as a
+fixed-radius weighted circle placement problem. Candidate centers are
+generated from observed point locations and from intersections of
+radius-\`r\` circles around pairs of observations. For point
+observations with non-negative values in a projected metric coordinate
+system, this candidate set is sufficient to find the exact optimum for
+the first hotspot.
+
+For \`top_n \> 1\`, hotspots are selected greedily: after each hotspot
+is found, the covered observations are removed before the next hotspot
+is computed. Each step is exact conditional on the remaining
+observations, but the full sequence is not necessarily globally optimal
+as a joint multi-circle problem.
+
+## References
+
+Chazelle, B. M. and Lee, D. T. (1986). On a circle placement problem.
+Computing, 36(1–2), 1–16. doi:10.1007/BF02238188.
 
 ## Author
 
@@ -154,15 +182,13 @@ hotspot$hotspots
 #> 1  1 6.554816 53.19424       1315
 #> 2  2 6.572691 53.21873       1147
 head(hotspot$contributing_points)
-#> # A tibble: 6 × 7
-#>      id data_row   lon   lat amount distance_m amount_sum
-#>   <int>    <int> <dbl> <dbl>  <dbl>      <dbl>      <dbl>
-#> 1     1       60  6.56  53.2    110       200.       1315
-#> 2     1       66  6.56  53.2    728       112.       1315
-#> 3     1      130  6.56  53.2     36       200.       1315
-#> 4     1      159  6.56  53.2    441       192.       1315
-#> 5     2        1  6.57  53.2     24       167.       1147
-#> 6     2      134  6.57  53.2     23       165.       1147
+#>   id data_row      lon      lat amount distance_m amount_sum
+#> 1  1       60 6.557329 53.19326    110   200.0000       1315
+#> 2  1       66 6.556074 53.19490    728   111.5856       1315
+#> 3  1      130 6.557804 53.19414     36   200.0000       1315
+#> 4  1      159 6.555898 53.19584    441   192.4426       1315
+#> 5  2        1 6.570229 53.21846     24   167.1041       1147
+#> 6  2      134 6.570342 53.21826     23   165.2818       1147
 
 observed_hotspot <- concentration_hotspot(
   portfolio,

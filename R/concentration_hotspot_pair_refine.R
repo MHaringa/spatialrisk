@@ -7,6 +7,7 @@ concentration_hotspot_pair_refine <- function(
     cell_size = 100,
     grid_precision = 1,
     max_refinement_points = 1000,
+    threshold = NULL,
     lon = "lon",
     lat = "lat",
     crs_metric = 3035,
@@ -16,6 +17,7 @@ concentration_hotspot_pair_refine <- function(
   validate_pair_refine_input(data, value, top_n, radius, cell_size,
                              grid_precision, max_refinement_points, lon, lat,
                              crs_metric, progress)
+  check_hotspot_threshold(threshold)
 
   data$ix <- seq_len(nrow(data))
   original <- data
@@ -26,7 +28,8 @@ concentration_hotspot_pair_refine <- function(
   pts_lst <- vector("list", top_n)
   conc_lst <- vector("list", top_n)
   output_col <- hotspot_sum_column(value)
-  threshold <- NA_real_
+  input_threshold <- threshold
+  threshold_out <- NA_real_
   refinement_methods <- character(top_n)
 
   hotspot_progress(progress, "Using continuous hotspot search.")
@@ -34,59 +37,56 @@ concentration_hotspot_pair_refine <- function(
   for (i in seq_len(top_n)) {
     hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
                      ": terra focal screening.")
-    approximate <- terra_screening_center(state$focal)
-    threshold <- approximate$concentration[1]
-
-    local_ix <- local_pair_refine_subset(metric, approximate$x[1],
-                                         approximate$y[1], radius,
-                                         cell_size)
-    if (length(local_ix) == 0L) {
-      rlang::abort("No points found in local pair-refinement search area.",
+    threshold_i <- if (is.null(input_threshold)) {
+      estimate_hotspot_candidate_threshold(
+        state$focal,
+        data,
+        list(value = value, cell_size = cell_size, radius = radius,
+             crs_metric = crs_metric, lon = lon, lat = lat)
+      )
+    } else {
+      input_threshold
+    }
+    threshold_out <- threshold_i
+    candidate_cells <- cells_above_threshold_with_values(state$focal,
+                                                         threshold_i)
+    if (nrow(candidate_cells) == 0L) {
+      rlang::abort("No candidate cells found above the hotspot threshold.",
                    call = NULL)
     }
 
-    local_metric <- metric[local_ix, , drop = FALSE]
     hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
-                     ": local refinement subset has ", nrow(local_metric),
-                     " points.")
+                     ": ", nrow(candidate_cells),
+                     " focal candidate cells above lower bound.")
 
-    if (nrow(local_metric) <= max_refinement_points) {
+    pair_candidate <- pair_refine_candidate_cells(
+      candidate_cells = candidate_cells,
+      metric = metric,
+      value = value,
+      radius = radius,
+      cell_size = cell_size,
+      max_refinement_points = max_refinement_points
+    )
+    hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
+                     ": largest local refinement subset has ",
+                     pair_candidate$local_points, " points.")
+
+    if (!isTRUE(pair_candidate$use_grid)) {
       hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
-                       ": pair-intersection refinement.")
-      best <- pair_intersection_best_cpp(
-        x_ref = local_metric$x,
-        y_ref = local_metric$y,
-        value_ref = local_metric[[value]],
-        ix_ref = local_metric$ix,
-        radius = radius,
-        cell_width = radius
-      )
-
-      selected <- indexed_points_in_radius_cpp(
-        x_center = best$x[1],
-        y_center = best$y[1],
-        x_ref = metric$x,
-        y_ref = metric$y,
-        value_ref = metric[[value]],
-        ix_ref = metric$ix,
-        radius = radius,
-        cell_width = radius
-      )
-
-      if (nrow(selected) == 0L) {
-        rlang::abort("No points found inside selected hotspot radius.",
-                     call = NULL)
-      }
-
-      center_ll <- convert_crs_df(data.frame(x = best$x[1], y = best$y[1]),
+                       ": pair-intersection refinement over candidate cells.")
+      selected <- pair_candidate$selected
+      center_ll <- convert_crs_df(data.frame(x = pair_candidate$x,
+                                             y = pair_candidate$y),
                                   crs_from = crs_metric, crs_to = 4326,
                                   lon_from = "x", lat_from = "y",
                                   lon_to = lon, lat_to = lat)
       refinement_methods[[i]] <- "pair_intersections"
     } else {
       hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
-                       ": local subset exceeds max_refinement_points = ",
+                       ": a candidate area exceeds max_refinement_points = ",
                        max_refinement_points, "; using grid refinement.")
+      # Very dense local subsets can make the pair construction too expensive;
+      # the grid fallback preserves a bounded runtime for large portfolios.
       candidate <- refine_terra_hotspot_candidate(
         focal = state$focal,
         data = data,
@@ -138,6 +138,8 @@ concentration_hotspot_pair_refine <- function(
                      ".")
 
     if (top_n > 1 && i < top_n) {
+      # Removing selected contributors before the next iteration gives
+      # non-overlapping hotspot assignments, matching the reporting use case.
       data <- data[!data$ix %in% selected$ix, , drop = FALSE]
       metric <- metric[!metric$ix %in% selected$ix, , drop = FALSE]
 
@@ -164,7 +166,7 @@ concentration_hotspot_pair_refine <- function(
     radius = radius,
     rasterized = state$rasterized,
     focal = state$focal,
-    threshold = threshold,
+    threshold = threshold_out,
     value = value,
     lon = lon,
     lat = lat,
@@ -173,6 +175,74 @@ concentration_hotspot_pair_refine <- function(
   attr(out, "method") <- "continuous"
   attr(out, "refinement_methods") <- refinement_methods
   out
+}
+
+pair_refine_candidate_cells <- function(candidate_cells, metric, value, radius,
+                                        cell_size, max_refinement_points) {
+  best_concentration <- -Inf
+  best_x <- NA_real_
+  best_y <- NA_real_
+  best_selected <- NULL
+  max_local_points <- 0L
+
+  for (j in seq_len(nrow(candidate_cells))) {
+    local_ix <- local_pair_refine_subset(metric, candidate_cells$x[j],
+                                         candidate_cells$y[j], radius,
+                                         cell_size)
+    max_local_points <- max(max_local_points, length(local_ix))
+    if (length(local_ix) == 0L) {
+      next
+    }
+
+    if (length(local_ix) > max_refinement_points) {
+      return(list(use_grid = TRUE, local_points = length(local_ix)))
+    }
+
+    local_metric <- metric[local_ix, , drop = FALSE]
+    # In the continuous fixed-radius problem, an optimum can occur at a point
+    # location or at one of the two circle centres induced by a pair of points.
+    best_local <- pair_intersection_best_cpp(
+      x_ref = local_metric$x,
+      y_ref = local_metric$y,
+      value_ref = local_metric[[value]],
+      ix_ref = local_metric$ix,
+      radius = radius,
+      cell_width = radius
+    )
+
+    selected <- indexed_points_in_radius_cpp(
+      x_center = best_local$x[1],
+      y_center = best_local$y[1],
+      x_ref = metric$x,
+      y_ref = metric$y,
+      value_ref = metric[[value]],
+      ix_ref = metric$ix,
+      radius = radius,
+      cell_width = radius
+    )
+
+    full_concentration <- sum(selected$value)
+    if (full_concentration > best_concentration) {
+      best_concentration <- full_concentration
+      best_x <- best_local$x[1]
+      best_y <- best_local$y[1]
+      best_selected <- selected
+    }
+  }
+
+  if (is.null(best_selected) || nrow(best_selected) == 0L) {
+    rlang::abort("No points found inside selected hotspot radius.",
+                 call = NULL)
+  }
+
+  list(
+    use_grid = FALSE,
+    x = best_x,
+    y = best_y,
+    concentration = best_concentration,
+    local_points = max_local_points,
+    selected = best_selected
+  )
 }
 
 #' @noRd

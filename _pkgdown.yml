@@ -23,7 +23,6 @@ reference:
     desc: >
       Core functions for selecting points and computing aggregated values within a fixed radius.
     contents:
-      - points_in_circle
       - points_within_radius
       - radius_sum
       - haversine
@@ -32,6 +31,9 @@ reference:
       Functions for identifying locations with high spatial concentration.
     contents:
       - concentration_hotspot
+      - prepare_spatialrisk
+      - select_candidates
+      - optimize_hotspot
       - plot.hotspot
   - title: "Visualisation"
     desc: >
@@ -66,6 +68,7 @@ reference:
   - title: "Deprecated"
     contents:
       - concentration
+      - points_in_circle
       - find_highest_concentration
       - highest_concentration
       - neighborhood_gh_search

@@ -1,25 +1,27 @@
 # Deprecated compatibility wrappers.
 # Keep these small and remove after lifecycle escalation in a later release.
 
-#' Deprecated aliases
+#' Deprecated alias for radius_sum()
 #'
 #' @description
-#' These functions are deprecated compatibility wrappers. Use the replacement
-#' functions shown in the warning messages.
+#' `concentration()` is deprecated. Use [radius_sum()] instead.
 #'
-#' @name spatialrisk-deprecated
-NULL
-
-#' @rdname radius_sum
-#' @export
-#' @param sub Deprecated. Use \code{targets} instead.
-#' @param full Deprecated. Use \code{reference} instead.
+#' @param sub Deprecated. Use \code{targets} in [radius_sum()] instead.
+#' @param full Deprecated. Use \code{reference} in [radius_sum()] instead.
+#' @param value Column name with values to sum.
 #' @param lon_sub Deprecated. Use \code{lon_targets} instead.
 #' @param lat_sub Deprecated. Use \code{lat_targets} instead.
 #' @param lon_full Deprecated. Use \code{lon_reference} instead.
 #' @param lat_full Deprecated. Use \code{lat_reference} instead.
+#' @param radius Radius in meters.
 #' @param display_progress Deprecated. Use \code{progress} in
 #'   \code{radius_sum()} instead.
+#' @param result_col Name of the output column.
+#'
+#' @return See [radius_sum()].
+#'
+#' @export
+#' @keywords internal
 concentration <- function(sub, full, value,
                           lon_sub = lon, lat_sub = lat,
                           lon_full = lon, lat_full = lat,
@@ -40,11 +42,23 @@ concentration <- function(sub, full, value,
              result_col = result_col)
 }
 
-#' @rdname points_within_radius
-#' @export
-#' @description Deprecated.
+#' Deprecated alias for points_within_radius()
 #'
-#' `points_in_circle()` was renamed to [points_within_radius()].
+#' @description
+#' `points_in_circle()` is deprecated. Use [points_within_radius()] instead.
+#'
+#' @param data A data.frame containing point coordinates.
+#' @param lon_center Longitude of the circle centre.
+#' @param lat_center Latitude of the circle centre.
+#' @param lon Column name with longitude.
+#' @param lat Column name with latitude.
+#' @param radius Radius in meters.
+#' @param sort Logical. Whether to sort output by distance.
+#'
+#' @return See [points_within_radius()].
+#'
+#' @export
+#' @keywords internal
 points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat,
                              radius = 200, sort = TRUE) {
   lifecycle::deprecate_warn("0.8.0", "points_in_circle()",
@@ -62,12 +76,24 @@ points_in_circle <- function(data, lon_center, lat_center, lon = lon, lat = lat,
                        sort = sort)
 }
 
-#' @rdname map_points
-#' @export
-#' @description Deprecated.
-#' @param df Deprecated. Use \code{data} instead.
+#' Deprecated alias for map_points()
 #'
-#' `plot_points()` was renamed to [map_points()].
+#' @description
+#' `plot_points()` is deprecated. Use [map_points()] instead.
+#'
+#' @param df Deprecated. Use \code{data} instead.
+#' @param value Optional column used to colour points.
+#' @param lon Column name with longitude.
+#' @param lat Column name with latitude.
+#' @param crs Coordinate reference system of the input coordinates.
+#' @param at Optional break points passed to [map_points()].
+#' @param layer_name Optional layer name.
+#' @param ... Additional arguments passed to [map_points()].
+#'
+#' @return See [map_points()].
+#'
+#' @export
+#' @keywords internal
 plot_points <- function(df, value = NULL, lon = "lon", lat = "lat",
                         crs = 4326, at = NULL, layer_name = NULL, ...) {
   lifecycle::deprecate_warn("0.8.0", "plot_points()", "map_points()")
@@ -75,15 +101,22 @@ plot_points <- function(df, value = NULL, lon = "lon", lat = "lat",
              at = at, layer_name = layer_name, ...)
 }
 
-#' @rdname summarise_points_by_polygon
-#' @export
-#' @description Deprecated.
+#' Deprecated alias for summarise_points_by_polygon()
+#'
+#' @description
+#' `points_to_polygon()` is deprecated. Use [summarise_points_by_polygon()]
+#' instead.
+#'
 #' @param sf_map Deprecated. Use \code{polygons} instead.
 #' @param df Deprecated. Use \code{points} instead.
 #' @param oper Deprecated expression used to aggregate values.
+#' @param crs Coordinate reference system of the point coordinates.
 #' @param outside_print Deprecated. Use \code{outside} instead.
 #'
-#' `points_to_polygon()` was renamed to [summarise_points_by_polygon()].
+#' @return See [summarise_points_by_polygon()].
+#'
+#' @export
+#' @keywords internal
 points_to_polygon <- function(sf_map, df, oper, crs = 4326,
                               outside_print = FALSE) {
   lifecycle::deprecate_warn("0.8.0", "points_to_polygon()",
@@ -131,9 +164,12 @@ points_to_polygon <- function(sf_map, df, oper, crs = 4326,
   out
 }
 
-#' @rdname spatialrisk-deprecated
-#' @export
-#' @description Deprecated.
+#' Deprecated alias for concentration_hotspot()
+#'
+#' @description
+#' `find_highest_concentration()` is deprecated. Use [concentration_hotspot()]
+#' instead.
+#'
 #' @param df Deprecated wrapper argument.
 #' @param value Deprecated wrapper argument.
 #' @param top_n Deprecated wrapper argument.
@@ -145,7 +181,10 @@ points_to_polygon <- function(sf_map, df, oper, crs = 4326,
 #' @param crs_metric Deprecated wrapper argument.
 #' @param print_progress Deprecated wrapper argument.
 #'
-#' `find_highest_concentration()` was renamed to [concentration_hotspot()].
+#' @return See [concentration_hotspot()].
+#'
+#' @export
+#' @keywords internal
 find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
                                        cell_size = 100, grid_precision = 1,
                                        lon = "lon", lat = "lat",
@@ -184,6 +223,7 @@ find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
 #' `choropleth_ggplot2()` is deprecated. Use [choropleth()] instead.
 #'
 #' @export
+#' @keywords internal
 choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2,
                                legend_title = "Class", option = "D",
                                direction = 1) {
@@ -253,6 +293,7 @@ choropleth_ggplot2 <- function(sf_object, value = output, n = 7, dig.lab = 2,
 #' the sphere}}
 #'
 #' @export
+#' @keywords internal
 interpolate_spline <- function(observations, targets, value, lon_obs = lon,
                                lat_obs = lat, lon_targets = lon,
                                lat_targets = lat, k = 50) {

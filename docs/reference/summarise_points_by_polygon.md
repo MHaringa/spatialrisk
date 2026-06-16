@@ -1,15 +1,11 @@
 # Summarise point values by polygon
 
-Deprecated.
-
 Spatially joins point data to polygon geometries and summarises a
 numeric point attribute for each polygon.
 
 ## Usage
 
 ``` r
-points_to_polygon(sf_map, df, oper, crs = 4326, outside_print = FALSE)
-
 summarise_points_by_polygon(
   polygons,
   points,
@@ -26,30 +22,6 @@ summarise_points_by_polygon(
 ```
 
 ## Arguments
-
-- sf_map:
-
-  Deprecated. Use `polygons` instead.
-
-- df:
-
-  Deprecated. Use `points` instead.
-
-- oper:
-
-  Deprecated expression used to aggregate values.
-
-- crs:
-
-  Coordinate reference system of the point coordinates. Default is
-  `4326`.
-
-- outside_print:
-
-  Deprecated. Use `outside` instead.
-
-  \`points_to_polygon()\` was renamed to
-  \[summarise_points_by_polygon()\].
 
 - polygons:
 
@@ -78,6 +50,11 @@ summarise_points_by_polygon(
 
   A string with the name of the latitude column in `points`. Default is
   `"lat"`.
+
+- crs:
+
+  Coordinate reference system of the point coordinates. Default is
+  `4326`.
 
 - output_col:
 

@@ -1,9 +1,5 @@
 # Find points within radius around one or more center coordinates
 
-Deprecated.
-
-\`points_in_circle()\` was renamed to \[points_within_radius()\].
-
 This function selects rows from a data frame whose longitude/latitude
 coordinates fall within a given radius (in meters) from one or more
 specified center points. It also calculates the distance of each point
@@ -12,16 +8,6 @@ to the center.
 ## Usage
 
 ``` r
-points_in_circle(
-  data,
-  lon_center,
-  lat_center,
-  lon = lon,
-  lat = lat,
-  radius = 200,
-  sort = TRUE
-)
-
 points_within_radius(
   data,
   lon_center,

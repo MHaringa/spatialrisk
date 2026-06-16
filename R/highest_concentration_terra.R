@@ -3,6 +3,9 @@
 #' @description Identifies centre coordinates of fixed-radius circles with high
 #' local concentration. In insurance applications this can be used to find
 #' locations where the total insured value within a prescribed radius is largest.
+#' This function is a wrapper around the decomposed workflow
+#' \code{\link{prepare_spatialrisk}}, \code{\link{select_candidates}}, and
+#' \code{\link{optimize_hotspot}}.
 #'
 #' @param data A data.frame containing point-level exposures. Must include columns
 #'   for longitude, latitude, and the value of interest.
@@ -70,7 +73,26 @@
 #'   a larger hotspot when the optimal centre lies between observed points. The
 #'   \code{"grid"} method uses a grid-based search with local refinement;
 #'   smaller \code{grid_precision} values generally increase precision and
-#'   computation time.
+#'   computation time. Use \code{\link{prepare_spatialrisk}},
+#'   \code{\link{select_candidates}}, and \code{\link{optimize_hotspot}} when
+#'   these steps need to be run or inspected separately.
+#'
+#' @details
+#' The pairwise-intersection method treats the hotspot problem as a fixed-radius
+#' weighted circle placement problem. Candidate centers are generated from
+#' observed point locations and from intersections of radius-`r` circles around
+#' pairs of observations. For point observations with non-negative values in a
+#' projected metric coordinate system, this candidate set is sufficient to find
+#' the exact optimum for the first hotspot.
+#'
+#' For `top_n > 1`, hotspots are selected greedily: after each hotspot is found,
+#' the covered observations are removed before the next hotspot is computed.
+#' Each step is exact conditional on the remaining observations, but the full
+#' sequence is not necessarily globally optimal as a joint multi-circle problem.
+#'
+#' @references
+#' Chazelle, B. M. and Lee, D. T. (1986). On a circle placement problem.
+#' Computing, 36(1--2), 1--16. doi:10.1007/BF02238188.
 #'
 #' @examples
 #' portfolio <- Groningen[1:200, c("lon", "lat", "amount")]
@@ -114,45 +136,15 @@ concentration_hotspot <- function(data, value, top_n = 1, radius = 200,
 
   method <- match.arg(method)
   value <- validate_hotspot_value(value)
-
-  if (method == "observed") {
-    hotspot_progress(progress, "Using observed-points hotspot search.")
-    return(concentration_hotspot_indexed(
-      data = data,
-      value = value,
-      top_n = top_n,
-      radius = radius,
-      lon = lon,
-      lat = lat,
-      crs_metric = crs_metric,
-      print_progress = progress,
-      cell_size = radius
-    ))
-  }
-
-  if (method == "continuous") {
-    return(concentration_hotspot_pair_refine(
-      data = data,
-      value = value,
-      top_n = top_n,
-      radius = radius,
-      cell_size = cell_size,
-      grid_precision = grid_precision,
-      max_refinement_points = max_refinement_points,
-      lon = lon,
-      lat = lat,
-      crs_metric = crs_metric,
-      progress = progress
-    ))
-  }
-
-  validate_terra_hotspot_input(data, value, top_n, radius, cell_size,
-                               grid_precision, lon, lat, crs_metric,
-                               progress)
-  hotspot_progress(progress, "Using grid-refinement hotspot search.")
-  concentration_hotspot_terra(data, value, top_n, radius, cell_size,
-                              grid_precision, lon, lat, crs_metric,
-                              progress)
+  # Keep the user-facing function as a thin wrapper so the paper workflow can
+  # be inspected through the exported preparation, screening, and optimisation steps.
+  model <- prepare_spatialrisk(data = data, value = value, radius = radius,
+                               lon = lon, lat = lat, crs_metric = crs_metric,
+                               cell_size = cell_size)
+  model <- select_candidates(model, grid_precision = grid_precision,
+                             max_refinement_points = max_refinement_points,
+                             method = method, progress = progress)
+  optimize_hotspot(model, top_n = top_n, progress = progress)
 }
 
 concentration_hotspot_terra <- function(data, value, top_n, radius, cell_size,
@@ -173,6 +165,8 @@ concentration_hotspot_terra <- function(data, value, top_n, radius, cell_size,
     hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
                      ": terra focal screening.")
 
+    # The focal raster is a screening device: only cells whose moving-window
+    # sum can beat the current lower bound are refined on a denser local grid.
     candidate <- refine_terra_hotspot_candidate(
       focal = state$focal,
       data = data,
@@ -197,6 +191,8 @@ concentration_hotspot_terra <- function(data, value, top_n, radius, cell_size,
                      ": selected concentration ", hc$concentration[1], ".")
 
     if (top_n > 1 && i < top_n) {
+      # Subsequent hotspots are searched on the remaining portfolio, producing
+      # non-overlapping hotspot assignments for interpretation and reporting.
       data <- data[!data$ix %in% pic$ix, ]
 
       if (nrow(data) == 0) {
@@ -259,6 +255,8 @@ initialise_terra_hotspot_state <- function(data, value, radius, cell_size,
   raster <- terra::rast(spatvctr, res = cell_size)
   rasterized <- terra::rasterize(spatvctr, raster, field = value, fun = sum)
   mw <- mw_create(raster, radius)
+  # Focal values are local radius sums on the raster and provide the coarse
+  # concentration surface used for candidate screening.
   focal <- terra::focal(rasterized, w = mw, fun = "sum", na.rm = TRUE)
 
   list(
@@ -293,6 +291,8 @@ refine_terra_hotspot_candidate <- function(focal, data, value, cell_size,
     threshold_cache
   )
   threshold <- lower_bound$concentration[1]
+  # The lower bound is obtained from a quick refinement of the best focal cells;
+  # all cells below it cannot improve the currently observed candidate value.
   candidate_cells <- cells_above_threshold(focal, threshold)
   refinement_points <- max(1L, floor(cell_size / grid_precision))
   refined_candidates <- concentration_per_candidate_cell(
@@ -552,8 +552,10 @@ check_hotspot_columns <- function(data, value, lon, lat) {
 
   required <- c(lon, lat, value)
   if (!all(required %in% names(data))) {
-    stop("`data` must contain columns '", lon, "', '", lat, "', and '",
-         value, "'.", call. = FALSE)
+    missing <- setdiff(required, names(data))
+    stop("Column", if (length(missing) > 1L) "s " else " ",
+         paste0("'", missing, "'", collapse = ", "),
+         " doesn't exist in `data`.", call. = FALSE)
   }
 
   numeric_cols <- required[

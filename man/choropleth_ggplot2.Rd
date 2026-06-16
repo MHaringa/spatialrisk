@@ -39,3 +39,4 @@ Deprecated. Use [choropleth()] instead.
 \details{
 `choropleth_ggplot2()` is deprecated. Use [choropleth()] instead.
 }
+\keyword{internal}

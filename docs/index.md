@@ -143,6 +143,30 @@ corresponding summed value, named from `value`; for example
 `amount_sum`. The contributing observations are stored in
 `hotspot$contributing_points`.
 
+The wrapper can also be decomposed when the candidate-selection step
+needs to be inspected.
+
+``` r
+
+model <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
+                             cell_size = 100)
+model <- select_candidates(model, progress = FALSE)
+step_hotspot <- optimize_hotspot(model, top_n = 2, progress = FALSE)
+
+step_hotspot$hotspots
+#>   id      lon      lat amount_sum
+#> 1  1 6.547323 53.23663      64308
+#> 2  2 6.528279 53.22564      42499
+```
+
+Calling `plot(model)` before candidate selection shows the rasterised
+portfolio sum per cell. After
+[`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+`plot(model)` shows only the focal candidate cells above the
+automatically estimated lower bound. The lower bound can also be
+supplied explicitly, for example
+`select_candidates(model, threshold = 1000)`.
+
 The default continuous method can place the circle centre between
 buildings. For comparison, `method = "observed"` searches only observed
 point locations as possible centres and is therefore useful as a fast

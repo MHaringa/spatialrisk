@@ -62,8 +62,7 @@ choropleth(
 
 - ...:
 
-  Additional arguments passed to
-  [`tmap::tm_polygons()`](https://r-tmap.github.io/tmap/reference/tm_polygons.html).
+  Additional arguments passed to `tmap::tm_polygons()`.
 
 ## Value
 
@@ -84,6 +83,7 @@ Martin Haringa
 test <- summarise_points_by_polygon(nl_provincie, insurance, "amount")
 #> 109 points are outside any polygon.
 choropleth(test, value = "amount_sum")
-
+#> Error: tmap is needed for this function to work. Install it via install.packages("tmap")
 choropleth(test, value = "amount_sum", id = "areaname", mode = "view")
+#> Error: tmap is needed for this function to work. Install it via install.packages("tmap")
 ```

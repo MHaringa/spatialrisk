@@ -1,24 +1,11 @@
 # Create interactive point map
 
-Deprecated.
-
 Creates an interactive map for a data.frame containing point
 coordinates, optionally colored by a selected variable.
 
 ## Usage
 
 ``` r
-plot_points(
-  df,
-  value = NULL,
-  lon = "lon",
-  lat = "lat",
-  crs = 4326,
-  at = NULL,
-  layer_name = NULL,
-  ...
-)
-
 map_points(
   data,
   value = NULL,
@@ -33,11 +20,9 @@ map_points(
 
 ## Arguments
 
-- df:
+- data:
 
-  Deprecated. Use `data` instead.
-
-  \`plot_points()\` was renamed to \[map_points()\].
+  A data.frame containing columns for longitude and latitude.
 
 - value:
 
@@ -71,10 +56,6 @@ map_points(
 
   Additional arguments passed to
   [`mapview::mapview()`](https://r-spatial.github.io/mapview/reference/mapView.html).
-
-- data:
-
-  A data.frame containing columns for longitude and latitude.
 
 ## Value
 

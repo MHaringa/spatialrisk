@@ -17,6 +17,7 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/concentration_per_candidate_cell.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/convert_crs_df.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/convert_df_to_sf.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/find_highest_concentration.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/haversine.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/highest_conc.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/highest_concentration.html</loc></url>
@@ -47,6 +48,7 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle_vec.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_to_polygon.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_within_radius.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/radius_sum.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/spatialrisk-deprecated.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.html</loc></url>

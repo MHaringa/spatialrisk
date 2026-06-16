@@ -6,19 +6,6 @@ fall within a given radius (in meters) of each target point.
 ## Usage
 
 ``` r
-concentration(
-  sub,
-  full,
-  value,
-  lon_sub = lon,
-  lat_sub = lat,
-  lon_full = lon,
-  lat_full = lat,
-  radius = 200,
-  display_progress = TRUE,
-  result_col = "radius_sum"
-)
-
 radius_sum(
   targets,
   reference,
@@ -35,48 +22,6 @@ radius_sum(
 
 ## Arguments
 
-- sub:
-
-  Deprecated. Use `targets` instead.
-
-- full:
-
-  Deprecated. Use `reference` instead.
-
-- value:
-
-  A string giving the name of the column in \`reference\` to be summed.
-
-- lon_sub:
-
-  Deprecated. Use `lon_targets` instead.
-
-- lat_sub:
-
-  Deprecated. Use `lat_targets` instead.
-
-- lon_full:
-
-  Deprecated. Use `lon_reference` instead.
-
-- lat_full:
-
-  Deprecated. Use `lat_reference` instead.
-
-- radius:
-
-  Numeric. Radius of the circle in meters. Must be positive (default:
-  200).
-
-- display_progress:
-
-  Deprecated. Use `progress` in `radius_sum()` instead.
-
-- result_col:
-
-  A string giving the name of the output column. Default is
-  \`"radius_sum"\`.
-
 - targets:
 
   A data.frame of target points for which sums are calculated. Must
@@ -87,6 +32,10 @@ radius_sum(
   A data.frame containing reference points. Must include at least
   columns for longitude, latitude, and the value of interest to
   summarize.
+
+- value:
+
+  A string giving the name of the column in \`reference\` to be summed.
 
 - lon_targets:
 
@@ -108,9 +57,19 @@ radius_sum(
   A string with the name of the latitude column in \`reference\`.
   Default is \`"lat"\`.
 
+- radius:
+
+  Numeric. Radius of the circle in meters. Must be positive (default:
+  200).
+
 - progress:
 
   Logical. Whether to display a progress bar. Default is \`TRUE\`.
+
+- result_col:
+
+  A string giving the name of the output column. Default is
+  \`"radius_sum"\`.
 
 ## Value
 

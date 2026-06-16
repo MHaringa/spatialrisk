@@ -87,6 +87,9 @@ An object of class \code{hotspot}. The main components are
 Identifies centre coordinates of fixed-radius circles with high
 local concentration. In insurance applications this can be used to find
 locations where the total insured value within a prescribed radius is largest.
+This function is a wrapper around the decomposed workflow
+\code{\link{prepare_spatialrisk}}, \code{\link{select_candidates}}, and
+\code{\link{optimize_hotspot}}.
 }
 \details{
 The default \code{method = "continuous"} first uses terra
@@ -104,7 +107,21 @@ The default \code{method = "continuous"} first uses terra
   a larger hotspot when the optimal centre lies between observed points. The
   \code{"grid"} method uses a grid-based search with local refinement;
   smaller \code{grid_precision} values generally increase precision and
-  computation time.
+  computation time. Use \code{\link{prepare_spatialrisk}},
+  \code{\link{select_candidates}}, and \code{\link{optimize_hotspot}} when
+  these steps need to be run or inspected separately.
+
+The pairwise-intersection method treats the hotspot problem as a fixed-radius
+weighted circle placement problem. Candidate centers are generated from
+observed point locations and from intersections of radius-`r` circles around
+pairs of observations. For point observations with non-negative values in a
+projected metric coordinate system, this candidate set is sufficient to find
+the exact optimum for the first hotspot.
+
+For `top_n > 1`, hotspots are selected greedily: after each hotspot is found,
+the covered observations are removed before the next hotspot is computed.
+Each step is exact conditional on the remaining observations, but the full
+sequence is not necessarily globally optimal as a joint multi-circle problem.
 }
 \examples{
 portfolio <- Groningen[1:200, c("lon", "lat", "amount")]
@@ -134,6 +151,10 @@ rbind(
   observed = observed_hotspot$hotspots
 )
 
+}
+\references{
+Chazelle, B. M. and Lee, D. T. (1986). On a circle placement problem.
+Computing, 36(1--2), 1--16. doi:10.1007/BF02238188.
 }
 \author{
 Martin Haringa

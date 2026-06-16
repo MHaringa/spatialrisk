@@ -161,21 +161,56 @@ are available as follows:
 ``` r
 
 head(hotspot$contributing_points[, c("id", "data_row", "lon", "lat", "amount", "amount_sum")])
-#> # A tibble: 6 × 6
-#>      id data_row   lon   lat amount amount_sum
-#>   <int>    <int> <dbl> <dbl>  <dbl>      <dbl>
-#> 1     1     1492  6.55  53.2    148      64308
-#> 2     1     4703  6.55  53.2    132      64308
-#> 3     1    18287  6.55  53.2    130      64308
-#> 4     1    19958  6.55  53.2    138      64308
-#> 5     1    22587  6.55  53.2    142      64308
-#> 6     1       19  6.54  53.2    411      64308
+#>   id data_row      lon      lat amount amount_sum
+#> 1  1     1492 6.545297 53.23569    148      64308
+#> 2  1     4703 6.545482 53.23547    132      64308
+#> 3  1    18287 6.545429 53.23546    130      64308
+#> 4  1    19958 6.545392 53.23543    138      64308
+#> 5  1    22587 6.545493 53.23545    142      64308
+#> 6  1       19 6.544724 53.23646    411      64308
 ```
 
 This separation between the hotspot centre and the contributing
 observations is important in applied insurance work. It allows the
 result to be inspected, mapped, and reconciled with the underlying
 portfolio.
+
+The same workflow can also be run step by step. This is useful when the
+intermediate candidate selection needs to be inspected before the final
+hotspot is optimised.
+
+``` r
+
+
+model <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
+                             cell_size = 100)
+model <- select_candidates(model, progress = FALSE)
+step_hotspot <- optimize_hotspot(model, top_n = 2, progress = FALSE)
+```
+
+Calling `plot(model)` before candidate selection shows the rasterised
+portfolio sum per cell. After
+[`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+`plot(model)` shows only the focal candidate cells above the
+automatically estimated lower bound. The lower bound can also be
+supplied explicitly, for example
+`select_candidates(model, threshold = 1000)`.
+
+The automatic lower bound is deliberately conservative. The function
+first takes the highest cells from the focal raster. For those cells it
+runs a small local refinement step and uses the best refined
+concentration as the lower bound. Candidate cells are then all focal
+cells whose moving-window sum is at least this lower bound. The
+candidate map is therefore an inspection view of where the next hotspot
+may be found, not a fixed list of final hotspots.
+
+When `top_n > 1`, the search is repeated. After the first hotspot has
+been found, its contributing observations are removed from the remaining
+portfolio and the screening, candidate selection, and refinement steps
+are run again for the next hotspot. This is why a candidate map that
+currently shows, for example, five focal cells can still lead to ten
+hotspots when `optimize_hotspot(model, top_n = 10)` is used: the five
+cells describe the first search iteration only.
 
 The default continuous method may place the hotspot centre between
 buildings. This is important: the circle with the largest total value
@@ -295,10 +330,38 @@ For large portfolios, it is useful to keep a reproducible record of:
 - the search parameters used for hotspot detection;
 - the observations contributing to the reported hotspot.
 
-## Relation to location-allocation problems
+## Relation to circle placement problems
 
-The fixed-radius hotspot problem is related to the maximum covering
-location problem. In the present package, the emphasis is applied:
-calculating and auditing concentration values for spatial portfolios.
-The implementation is intended to support this workflow rather than
-provide a general optimisation framework.
+The concentration hotspot problem in `spatialrisk` can be interpreted as
+a fixed-radius circle placement problem. Given a set of insured
+locations, such as buildings or other point-represented risks, each
+location has an associated value, for example insured amount, exposure,
+premium, or loss. The objective is to find the location of a circle with
+fixed radius that maximizes the total value of the points contained in
+that circle.
+
+This problem is closely related to the circle placement problem studied
+by Chazelle and Lee (1986). In their formulation, a set of weighted
+points in the plane is given and a disk of fixed radius must be placed
+such that the total covered weight is maximized. This provides the
+theoretical basis for the pairwise-intersection method implemented here.
+
+The pairwise-intersection method avoids evaluating all possible grid
+locations. Instead, it generates candidate centers from observed point
+locations and from the intersections of radius-r circles around pairs of
+observations. Under the assumptions that observations are points,
+weights are non-negative, distances are Euclidean in a projected
+coordinate reference system, and the radius is fixed, this candidate set
+is sufficient to find the exact optimum for the first hotspot.
+
+For insurance applications this is useful because the method directly
+targets accumulation risk: the maximum total value that can be found
+within a specified distance of any location. This may be used, for
+example, to identify local concentrations of insured building values,
+exposed sums insured, or other portfolio-level risk measures.
+
+For multiple hotspots, `spatialrisk` follows a greedy approach: after
+the first hotspot is selected, its covered points are removed and the
+next hotspot is computed on the remaining portfolio. Each step is exact
+under the assumptions above, but the sequence is not necessarily
+globally optimal as a joint multi-circle optimization problem.

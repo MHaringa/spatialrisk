@@ -122,6 +122,24 @@ hotspot
 The result contains the selected centre coordinates and the corresponding summed value, named from `value`; for example `amount_sum`.
 The contributing observations are stored in `hotspot$contributing_points`.
 
+The wrapper can also be decomposed when the candidate-selection step needs to
+be inspected.
+
+```{r}
+model <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
+                             cell_size = 100)
+model <- select_candidates(model, progress = FALSE)
+step_hotspot <- optimize_hotspot(model, top_n = 2, progress = FALSE)
+
+step_hotspot$hotspots
+```
+
+Calling `plot(model)` before candidate selection shows the rasterised portfolio
+sum per cell. After `select_candidates()`, `plot(model)` shows only the focal
+candidate cells above the automatically estimated lower bound. The lower bound
+can also be supplied explicitly, for example `select_candidates(model,
+threshold = 1000)`.
+
 The default continuous method can place the circle centre between buildings.
 For comparison, `method = "observed"` searches only observed point locations as
 possible centres and is therefore useful as a fast benchmark.
@@ -176,6 +194,8 @@ A second vignette shows how aggregated values can be displayed with choropleth m
 ## Reference
 
 The fixed-radius hotspot problem is related to the maximum covering location problem described by Church (1974) <doi:10.1007/BF01942293>.
+
+Chazelle, B. M. and Lee, D. T. (1986). On a circle placement problem. Computing, 36(1--2), 1--16. <doi:10.1007/BF02238188>.
 
 If you use this package in academic work, it can be cited as:
 

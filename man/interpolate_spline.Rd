@@ -45,3 +45,4 @@ removed in a future release.
 \code{\link[mgcv:smooth.construct.sos.smooth.spec]{Splines on
 the sphere}}
 }
+\keyword{internal}

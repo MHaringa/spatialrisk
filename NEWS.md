@@ -1,4 +1,20 @@
-# spatialrisk (development version)
+# spatialrisk 0.8.1
+
+* Added a decomposed hotspot workflow with `prepare_spatialrisk()`,
+  `select_candidates()`, and `optimize_hotspot()`. These functions expose the
+  preparation, candidate-selection, and optimisation steps used by
+  `concentration_hotspot()`, while keeping `concentration_hotspot()` available
+  as the main wrapper for the complete workflow.
+* Improved `concentration_hotspot(method = "continuous")` and
+  `optimize_hotspot()` so pair-intersection refinement is evaluated over all
+  focal candidate cells above the lower bound, rather than only around the top
+  focal cell. Candidate centres are now scored against the full remaining
+  portfolio before the best hotspot is selected. This avoids cases where a
+  later `top_n` hotspot could have a higher concentration than the first
+  reported hotspot.
+* Added a regression test to check that continuous `top_n` hotspot
+  concentrations are non-increasing after contributing points are removed
+  between iterations.
 
 # spatialrisk 0.8.0
 
