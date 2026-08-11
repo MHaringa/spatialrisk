@@ -1,3 +1,5 @@
+# spatialrisk (development version)
+
 # spatialrisk 0.8.1
 
 * Added a decomposed hotspot workflow with `prepare_spatialrisk()`,
@@ -12,6 +14,10 @@
   portfolio before the best hotspot is selected. This avoids cases where a
   later `top_n` hotspot could have a higher concentration than the first
   reported hotspot.
+* Improved `top_n > 1` performance for the continuous hotspot method by caching
+  pair-intersection refinements per focal candidate cell. After each greedy
+  step, only cache entries affected by removed contributing points or changed
+  focal cells are recomputed.
 * Added a regression test to check that continuous `top_n` hotspot
   concentrations are non-increasing after contributing points are removed
   between iterations.
