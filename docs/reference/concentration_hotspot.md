@@ -172,7 +172,8 @@ as a joint multi-circle problem.
 ## References
 
 Chazelle, B. M. and Lee, D. T. (1986). On a circle placement problem.
-Computing, 36(1–2), 1–16. doi:10.1007/BF02238188.
+Computing, 36(1–2), 1–16.
+[doi:10.1007/BF02238188](https://doi.org/10.1007/BF02238188).
 
 ## Author
 

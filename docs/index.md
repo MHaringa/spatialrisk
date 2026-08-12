@@ -267,10 +267,11 @@ evaluation on larger point datasets.
 
 The fixed-radius circle-placement problem is discussed by Chazelle and
 Lee (1986): Chazelle, B. M. and Lee, D. T. (1986). On a circle placement
-problem. Computing, 36(1–2), 1–16. <doi:10.1007/BF02238188>.
+problem. Computing, 36(1–2), 1–16.
+[doi:10.1007/BF02238188](https://doi.org/10.1007/BF02238188).
 
 Related maximum covering location problems are described by Church
-(1974) <doi:10.1007/BF01942293>.
+(1974) [doi:10.1007/BF01942293](https://doi.org/10.1007/BF01942293).
 
 If you use this package in academic work, it can be cited as:
 
