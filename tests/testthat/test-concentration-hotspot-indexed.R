@@ -46,7 +46,7 @@ test_that("observed hotspot output is compatible with concentration_hotspot", {
   expect_equal(attr(out, "threshold"), NA_real_)
 })
 
-test_that("top_n = 1 works on Groningen", {
+test_that("n_hotspots = 1 works on Groningen", {
   x <- Groningen[1:100, c("lon", "lat", "amount")]
 
   out <- concentration_hotspot(
@@ -63,13 +63,13 @@ test_that("top_n = 1 works on Groningen", {
                sum(out$contributing_points$amount))
 })
 
-test_that("top_n = 2 removes first hotspot points before second search", {
+test_that("n_hotspots = 2 removes first hotspot points before second search", {
   x <- Groningen[1:200, c("lon", "lat", "amount")]
 
   out <- concentration_hotspot(
     x,
     value = "amount",
-    top_n = 2,
+    n_hotspots = 2,
     radius = 200,
     progress = FALSE,
     method = "observed"
@@ -145,7 +145,7 @@ test_that("observed and grid hotspot concentrations are comparable", {
     value = "amount",
     radius = 200,
     cell_size = 100,
-    grid_precision = 5,
+    grid_spacing = 5,
     method = "grid",
     progress = FALSE
   )

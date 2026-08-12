@@ -50,7 +50,7 @@ grid_result <- run_benchmark(
     value = "amount",
     radius = radius,
     cell_size = 100,
-    grid_precision = 5,
+    grid_spacing = 5,
     method = "grid",
     progress = FALSE
   )

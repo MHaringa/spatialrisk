@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,39 +30,14 @@
     </div>
 
     <div class="section level2">
-      <h2 id="fixed-radius-aggregation">Fixed-radius aggregation<a class="anchor" aria-label="anchor" href="#fixed-radius-aggregation"></a></h2>
+      <h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a></h2>
 
-      <div class="section-desc"><p>Core functions for selecting points and computing aggregated values within a fixed radius.</p></div>
+      <div class="section-desc"><p><code>spatialrisk</code> is organised around fixed-radius aggregation, hotspot detection, polygon-based spatial reporting, and supporting spatial data. Most users can start with the core functions below, while lower-level workflow functions are available for more advanced use.</p></div>
 
       <dl></dl></div><div class="section level2">
+      <h2 id="core-functions">Core functions<a class="anchor" aria-label="anchor" href="#core-functions"></a></h2>
 
-
-
-
-      <dl><dt>
-
-          <code><a href="points_within_radius.html">points_within_radius()</a></code>
-
-        </dt>
-        <dd>Find points within radius around one or more center coordinates</dd>
-
-        <dt>
-
-          <code><a href="radius_sum.html">radius_sum()</a></code>
-
-        </dt>
-        <dd>Sum values within a radius around target coordinates</dd>
-
-        <dt>
-
-          <code><a href="haversine.html">haversine()</a></code>
-
-        </dt>
-        <dd>Haversine great-circle distance</dd>
-      </dl></div><div class="section level2">
-      <h2 id="concentration-and-hotspot-detection">Concentration and hotspot detection<a class="anchor" aria-label="anchor" href="#concentration-and-hotspot-detection"></a></h2>
-
-      <div class="section-desc"><p>Functions for identifying locations with high spatial concentration.</p></div>
+      <div class="section-desc"><p>Main entry points for common fixed-radius concentration and reporting workflows.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -74,9 +49,83 @@
           <code><a href="concentration_hotspot.html">concentration_hotspot()</a></code>
 
         </dt>
-        <dd>Identify fixed-radius concentration hotspots</dd>
+        <dd>Find fixed-radius concentration hotspots</dd>
 
         <dt>
+
+          <code><a href="radius_sum.html">radius_sum()</a></code>
+
+        </dt>
+        <dd>Sum values within a radius around target coordinates</dd>
+
+        <dt>
+
+          <code><a href="points_within_radius.html">points_within_radius()</a></code>
+
+        </dt>
+        <dd>Find points within radius around one or more centre coordinates</dd>
+
+        <dt>
+
+          <code><a href="summarise_points_by_polygon.html">summarise_points_by_polygon()</a></code>
+
+        </dt>
+        <dd>Summarise point exposures by reporting polygon</dd>
+      </dl></div><div class="section level2">
+      <h2 id="fixed-radius-aggregation">Fixed-radius aggregation<a class="anchor" aria-label="anchor" href="#fixed-radius-aggregation"></a></h2>
+
+      <div class="section-desc"><p>Evaluate point-level values and observations within a fixed radius.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="points_within_radius.html">points_within_radius()</a></code>
+
+        </dt>
+        <dd>Find points within radius around one or more centre coordinates</dd>
+
+        <dt>
+
+          <code><a href="radius_sum.html">radius_sum()</a></code>
+
+        </dt>
+        <dd>Sum values within a radius around target coordinates</dd>
+      </dl></div><div class="section level2">
+      <h2 id="concentration-and-hotspot-detection">Concentration and hotspot detection<a class="anchor" aria-label="anchor" href="#concentration-and-hotspot-detection"></a></h2>
+
+      <div class="section-desc"><p>Find maximum fixed-radius concentrations and inspect the search workflow.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+      <h3 id="main-api">Main API<a class="anchor" aria-label="anchor" href="#main-api"></a></h3>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="concentration_hotspot.html">concentration_hotspot()</a></code>
+
+        </dt>
+        <dd>Find fixed-radius concentration hotspots</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="advanced-hotspot-workflow">Advanced hotspot workflow<a class="anchor" aria-label="anchor" href="#advanced-hotspot-workflow"></a></h3>
+      <div class="section-desc"><p>Lower-level functions underlying <code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code> for inspecting or running the search steps separately.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="prepare_spatialrisk.html">prepare_spatialrisk()</a></code> <code><a href="prepare_spatialrisk.html">select_candidates()</a></code> <code><a href="prepare_spatialrisk.html">optimize_hotspot()</a></code> <code><a href="prepare_spatialrisk.html">plot(<i>&lt;spatialrisk_hotspot_workflow&gt;</i>)</a></code>
 
@@ -90,9 +139,9 @@
         </dt>
         <dd>Plot concentration hotspot results</dd>
       </dl></div><div class="section level2">
-      <h2 id="visualisation">Visualisation<a class="anchor" aria-label="anchor" href="#visualisation"></a></h2>
+      <h2 id="polygon-summaries-and-visualisation">Polygon summaries and visualisation<a class="anchor" aria-label="anchor" href="#polygon-summaries-and-visualisation"></a></h2>
 
-      <div class="section-desc"><p>Functions for visualising spatial point data and aggregated spatial values.</p></div>
+      <div class="section-desc"><p>Aggregate point exposures to reporting polygons and visualise spatial values.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -101,28 +150,56 @@
 
       <dl><dt>
 
-          <code><a href="map_points.html">map_points()</a></code>
+          <code><a href="summarise_points_by_polygon.html">summarise_points_by_polygon()</a></code>
 
         </dt>
-        <dd>Create interactive point map</dd>
+        <dd>Summarise point exposures by reporting polygon</dd>
 
         <dt>
 
           <code><a href="choropleth.html">choropleth()</a></code>
 
         </dt>
-        <dd>Create choropleth map</dd>
+        <dd>Create a choropleth map of polygon-level values</dd>
 
         <dt>
 
-          <code><a href="summarise_points_by_polygon.html">summarise_points_by_polygon()</a></code>
+          <code><a href="map_points.html">map_points()</a></code>
 
         </dt>
-        <dd>Summarise point values by polygon</dd>
+        <dd>Create interactive point map</dd>
       </dl></div><div class="section level2">
-      <h2 id="spatial-data-objects">Spatial data objects<a class="anchor" aria-label="anchor" href="#spatial-data-objects"></a></h2>
+      <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a></h2>
 
-      <div class="section-desc"><p>Simple feature objects included with the package.</p></div>
+      <div class="section-desc"><p>Example portfolios, administrative boundaries, and weather data used in package examples and workflows.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+      <h3 id="example-datasets">Example datasets<a class="anchor" aria-label="anchor" href="#example-datasets"></a></h3>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="Groningen.html">Groningen</a></code>
+
+        </dt>
+        <dd>Example addresses in Groningen</dd>
+
+        <dt>
+
+          <code><a href="insurance.html">insurance</a></code>
+
+        </dt>
+        <dd>Example insurance portfolio</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="administrative-and-spatial-boundaries">Administrative and spatial boundaries<a class="anchor" aria-label="anchor" href="#administrative-and-spatial-boundaries"></a></h3>
+
 
       <dl></dl></div><div class="section level2">
 
@@ -171,31 +248,8 @@
         </dt>
         <dd>Four-digit postcode regions in the Netherlands</dd>
       </dl></div><div class="section level2">
-      <h2 id="example-data">Example data<a class="anchor" aria-label="anchor" href="#example-data"></a></h2>
 
-      <div class="section-desc"><p>Example datasets used in documentation and examples.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="Groningen.html">Groningen</a></code>
-
-        </dt>
-        <dd>Example addresses in Groningen</dd>
-
-        <dt>
-
-          <code><a href="insurance.html">insurance</a></code>
-
-        </dt>
-        <dd>Example insurance portfolio</dd>
-      </dl></div><div class="section level2">
-      <h2 id="weather-data">Weather data<a class="anchor" aria-label="anchor" href="#weather-data"></a></h2>
-
+      <h3 id="weather-datasets">Weather datasets<a class="anchor" aria-label="anchor" href="#weather-datasets"></a></h3>
 
 
       <dl></dl></div><div class="section level2">
@@ -217,9 +271,9 @@
         </dt>
         <dd>KNMI weather stations</dd>
       </dl></div><div class="section level2">
-      <h2 id="utilities">Utilities<a class="anchor" aria-label="anchor" href="#utilities"></a></h2>
+      <h2 id="spatial-utilities">Spatial utilities<a class="anchor" aria-label="anchor" href="#spatial-utilities"></a></h2>
 
-
+      <div class="section-desc"><p>General coordinate conversion, distance, and simple spatial display helpers.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -228,6 +282,13 @@
 
       <dl><dt>
 
+          <code><a href="haversine.html">haversine()</a></code>
+
+        </dt>
+        <dd>Haversine great-circle distance</dd>
+
+        <dt>
+
           <code><a href="convert_crs_df.html">convert_crs_df()</a></code>
 
         </dt>
@@ -235,7 +296,7 @@
       </dl></div><div class="section level2">
       <h2 id="deprecated">Deprecated<a class="anchor" aria-label="anchor" href="#deprecated"></a></h2>
 
-
+      <div class="section-desc"><p>Deprecated functions retained for backward compatibility.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -268,14 +329,14 @@
           <code><a href="highest_concentration.html">highest_concentration()</a></code>
 
         </dt>
-        <dd>Highest concentration risk</dd>
+        <dd>Deprecated geohash hotspot search</dd>
 
         <dt>
 
           <code><a href="neighborhood_gh_search.html">neighborhood_gh_search()</a></code>
 
         </dt>
-        <dd>Search for coordinates with higher concentrations within geohash</dd>
+        <dd>Deprecated geohash neighbourhood refinement</dd>
 
         <dt>
 
@@ -310,14 +371,14 @@
           <code><a href="plot.conc.html">plot(<i>&lt;conc&gt;</i>)</a></code>
 
         </dt>
-        <dd>Automatically create a plot for objects obtained from highest_concentration()</dd>
+        <dd>Plot deprecated geohash hotspot results</dd>
 
         <dt>
 
-          <code><a href="plot.html">plot(<i>&lt;neighborhood&gt;</i>)</a></code>
+          <code><a href="plot.neighborhood.html">plot(<i>&lt;neighborhood&gt;</i>)</a></code>
 
         </dt>
-        <dd>Automatically create a plot for objects obtained from neighborhood_gh_search()</dd>
+        <dd>Plot deprecated geohash neighbourhood results</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -328,7 +389,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

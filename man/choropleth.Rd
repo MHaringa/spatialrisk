@@ -2,7 +2,7 @@
 % Please edit documentation in R/choropleth.R
 \name{choropleth}
 \alias{choropleth}
-\title{Create choropleth map}
+\title{Create a choropleth map of polygon-level values}
 \usage{
 choropleth(
   data,
@@ -46,10 +46,10 @@ A \code{tmap} object (static or interactive, depending on
 \code{mode}).
 }
 \description{
-Creates a choropleth map from an `sf` object, for example one
-produced by \code{summarise_points_by_polygon()}. Polygons are shaded
-according to values in a specified column, with clustering based on the
-Fisher–Jenks algorithm.
+Creates a choropleth map from an `sf` object containing
+polygon-level reporting values, for example one produced by
+\code{summarise_points_by_polygon()}. Polygons are shaded according to values
+in a specified column, with clustering based on the Fisher–Jenks algorithm.
 }
 \details{
 The function uses the Fisher–Jenks algorithm

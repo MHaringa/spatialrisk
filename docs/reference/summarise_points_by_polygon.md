@@ -1,7 +1,7 @@
-# Summarise point values by polygon
+# Summarise point exposures by reporting polygon
 
 Spatially joins point data to polygon geometries and summarises a
-numeric point attribute for each polygon.
+numeric point exposure or value for each reporting area.
 
 ## Usage
 

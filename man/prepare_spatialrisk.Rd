@@ -19,14 +19,20 @@ prepare_spatialrisk(
 
 select_candidates(
   x,
-  grid_precision = 1,
+  grid_spacing = 1,
   max_refinement_points = 1000,
-  method = c("continuous", "grid", "observed"),
+  method = c("continuous", "observed", "grid"),
   threshold = NULL,
-  progress = TRUE
+  progress = TRUE,
+  grid_precision = lifecycle::deprecated()
 )
 
-optimize_hotspot(x, top_n = 1, progress = TRUE)
+optimize_hotspot(
+  x,
+  n_hotspots = 1,
+  progress = TRUE,
+  top_n = lifecycle::deprecated()
+)
 
 \method{plot}{spatialrisk_hotspot_workflow}(x, type = c("auto", "raster", "candidates"), ...)
 }
@@ -52,8 +58,9 @@ The default `3035` is ETRS89 / LAEA Europe.}
 \item{x}{A prepared spatial-risk workflow object returned by
 `prepare_spatialrisk()` or `select_candidates()`.}
 
-\item{grid_precision}{Numeric. Approximate spacing in meters used for
-grid-based refinement.}
+\item{grid_spacing}{Numeric. Spacing between candidate grid centres in the
+units of `crs_metric`; for the default metric CRS these units are meters.
+Used for grid-based refinement.}
 
 \item{max_refinement_points}{Positive integer. Maximum number of local points
 used for pair-intersection refinement before falling back to grid
@@ -70,7 +77,12 @@ refinement step as `concentration_hotspot()`.}
 
 \item{progress}{Logical. Whether to print progress messages.}
 
-\item{top_n}{Positive integer. Number of non-overlapping hotspots to return.}
+\item{grid_precision}{Deprecated. Use `grid_spacing` instead.}
+
+\item{n_hotspots}{Positive integer. Number of non-overlapping hotspots to
+return.}
+
+\item{top_n}{Deprecated. Use `n_hotspots` instead.}
 
 \item{type}{Plot type. `"auto"` shows the prepared raster before candidate
 selection and selected focal candidate cells afterwards.}
@@ -99,11 +111,12 @@ taking the highest focal raster cells, refining those cells on a small local
 grid, and using the best refined value as the candidate-cell threshold. The
 selected candidates are focal cells whose moving-window sum is at least this
 lower bound. These candidates describe the current search state. When
-`optimize_hotspot(top_n > 1)` or `concentration_hotspot(top_n > 1)` is used,
+`optimize_hotspot(n_hotspots > 1)` or
+`concentration_hotspot(n_hotspots > 1)` is used,
 the points in the selected hotspot are removed and the candidate-selection
 logic is run again for the next hotspot. Therefore the number of candidate
 cells shown by `select_candidates()` for the first iteration does not limit
-the number of hotspots returned by `top_n`.
+the number of hotspots returned by `n_hotspots`.
 }
 \examples{
 portfolio <- Groningen[1:200, c("lon", "lat", "amount")]
@@ -111,7 +124,7 @@ portfolio <- Groningen[1:200, c("lon", "lat", "amount")]
 model <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
                              cell_size = 100)
 model <- select_candidates(model, progress = FALSE)
-hotspot <- optimize_hotspot(model, top_n = 1, progress = FALSE)
+hotspot <- optimize_hotspot(model, n_hotspots = 1, progress = FALSE)
 
 hotspot$hotspots
 

@@ -196,9 +196,9 @@ find_highest_concentration <- function(df, value, top_n = 1, radius = 200,
   value_expr <- substitute(value)
   value <- if (is.character(value_expr)) value_expr else deparse(value_expr)
 
-  concentration_hotspot(data = df, value = value, top_n = top_n,
+  concentration_hotspot(data = df, value = value, n_hotspots = top_n,
                         radius = radius, cell_size = cell_size,
-                        grid_precision = grid_precision,
+                        grid_spacing = grid_precision,
                         lon = lon, lat = lat,
                         crs_metric = crs_metric,
                         progress = print_progress)

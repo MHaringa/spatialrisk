@@ -19,32 +19,57 @@ articles:
       - visualisation
 
 reference:
+  - title: "Reference"
+    desc: >
+      `spatialrisk` is organised around fixed-radius aggregation, hotspot
+      detection, polygon-based spatial reporting, and supporting spatial data.
+      Most users can start with the core functions below, while lower-level
+      workflow functions are available for more advanced use.
+  - title: "Core functions"
+    desc: >
+      Main entry points for common fixed-radius concentration and reporting workflows.
+    contents:
+      - concentration_hotspot
+      - radius_sum
+      - points_within_radius
+      - summarise_points_by_polygon
   - title: "Fixed-radius aggregation"
     desc: >
-      Core functions for selecting points and computing aggregated values within a fixed radius.
+      Evaluate point-level values and observations within a fixed radius.
     contents:
       - points_within_radius
       - radius_sum
-      - haversine
   - title: "Concentration and hotspot detection"
     desc: >
-      Functions for identifying locations with high spatial concentration.
+      Find maximum fixed-radius concentrations and inspect the search workflow.
+  - subtitle: "Main API"
     contents:
       - concentration_hotspot
+  - subtitle: "Advanced hotspot workflow"
+    desc: >
+      Lower-level functions underlying `concentration_hotspot()` for inspecting
+      or running the search steps separately.
+    contents:
       - prepare_spatialrisk
       - select_candidates
       - optimize_hotspot
       - plot.hotspot
-  - title: "Visualisation"
+  - title: "Polygon summaries and visualisation"
     desc: >
-      Functions for visualising spatial point data and aggregated spatial values.
+      Aggregate point exposures to reporting polygons and visualise spatial values.
     contents:
-      - map_points
-      - choropleth
       - summarise_points_by_polygon
-  - title: "Spatial data objects"
+      - choropleth
+      - map_points
+  - title: "Data"
     desc: >
-      Simple feature objects included with the package.
+      Example portfolios, administrative boundaries, and weather data used in
+      package examples and workflows.
+  - subtitle: "Example datasets"
+    contents:
+      - Groningen
+      - insurance
+  - subtitle: "Administrative and spatial boundaries"
     contents:
       - nl_gemeente
       - nl_provincie
@@ -52,20 +77,19 @@ reference:
       - nl_postcode2
       - nl_postcode3
       - nl_postcode4
-  - title: "Example data"
-    desc: >
-      Example datasets used in documentation and examples.
-    contents:
-      - Groningen
-      - insurance
-  - title: "Weather data"
+  - subtitle: "Weather datasets"
     contents:
       - knmi_historic_data
       - knmi_stations
-  - title: "Utilities"
+  - title: "Spatial utilities"
+    desc: >
+      General coordinate conversion, distance, and simple spatial display helpers.
     contents:
+      - haversine
       - convert_crs_df
   - title: "Deprecated"
+    desc: >
+      Deprecated functions retained for backward compatibility.
     contents:
       - concentration
       - points_in_circle

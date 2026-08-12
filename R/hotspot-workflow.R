@@ -19,8 +19,9 @@
 #'   The default `3035` is ETRS89 / LAEA Europe.
 #' @param x A prepared spatial-risk workflow object returned by
 #'   `prepare_spatialrisk()` or `select_candidates()`.
-#' @param grid_precision Numeric. Approximate spacing in meters used for
-#'   grid-based refinement.
+#' @param grid_spacing Numeric. Spacing between candidate grid centres in the
+#'   units of `crs_metric`; for the default metric CRS these units are meters.
+#'   Used for grid-based refinement.
 #' @param max_refinement_points Positive integer. Maximum number of local points
 #'   used for pair-intersection refinement before falling back to grid
 #'   refinement.
@@ -31,7 +32,10 @@
 #' @param threshold Optional numeric lower bound for candidate focal cells.
 #'   If `NULL`, the lower bound is estimated using the same preliminary
 #'   refinement step as `concentration_hotspot()`.
-#' @param top_n Positive integer. Number of non-overlapping hotspots to return.
+#' @param n_hotspots Positive integer. Number of non-overlapping hotspots to
+#'   return.
+#' @param top_n Deprecated. Use `n_hotspots` instead.
+#' @param grid_precision Deprecated. Use `grid_spacing` instead.
 #' @param progress Logical. Whether to print progress messages.
 #' @param type Plot type. `"auto"` shows the prepared raster before candidate
 #'   selection and selected focal candidate cells afterwards.
@@ -53,11 +57,12 @@
 #' grid, and using the best refined value as the candidate-cell threshold. The
 #' selected candidates are focal cells whose moving-window sum is at least this
 #' lower bound. These candidates describe the current search state. When
-#' `optimize_hotspot(top_n > 1)` or `concentration_hotspot(top_n > 1)` is used,
+#' `optimize_hotspot(n_hotspots > 1)` or
+#' `concentration_hotspot(n_hotspots > 1)` is used,
 #' the points in the selected hotspot are removed and the candidate-selection
 #' logic is run again for the next hotspot. Therefore the number of candidate
 #' cells shown by `select_candidates()` for the first iteration does not limit
-#' the number of hotspots returned by `top_n`.
+#' the number of hotspots returned by `n_hotspots`.
 #'
 #' @examples
 #' portfolio <- Groningen[1:200, c("lon", "lat", "amount")]
@@ -65,7 +70,7 @@
 #' model <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
 #'                              cell_size = 100)
 #' model <- select_candidates(model, progress = FALSE)
-#' hotspot <- optimize_hotspot(model, top_n = 1, progress = FALSE)
+#' hotspot <- optimize_hotspot(model, n_hotspots = 1, progress = FALSE)
 #'
 #' hotspot$hotspots
 #'
@@ -112,23 +117,35 @@ prepare_spatialrisk <- function(data, value, radius = 200, cell_size = 100,
 
 #' @rdname prepare_spatialrisk
 #' @export
-select_candidates <- function(x, grid_precision = 1,
+select_candidates <- function(x, grid_spacing = 1,
                               max_refinement_points = 1000,
-                              method = c("continuous", "grid", "observed"),
-                              threshold = NULL, progress = TRUE) {
+                              method = c("continuous", "observed", "grid"),
+                              threshold = NULL, progress = TRUE,
+                              grid_precision = lifecycle::deprecated()) {
   UseMethod("select_candidates")
 }
 
 #' @export
 select_candidates.spatialrisk_hotspot_workflow <- function(
     x,
-    grid_precision = 1,
+    grid_spacing = 1,
     max_refinement_points = 1000,
-    method = c("continuous", "grid", "observed"),
+    method = c("continuous", "observed", "grid"),
     threshold = NULL,
-    progress = TRUE
+    progress = TRUE,
+    grid_precision = lifecycle::deprecated()
 ) {
   method <- match.arg(method)
+  args <- resolve_hotspot_deprecated_args(
+    n_hotspots = 1,
+    top_n = lifecycle::deprecated(),
+    top_n_supplied = FALSE,
+    grid_spacing = grid_spacing,
+    grid_precision = grid_precision,
+    grid_precision_supplied = lifecycle::is_present(grid_precision),
+    caller = "select_candidates"
+  )
+  grid_spacing <- args$grid_spacing
   p <- complete_hotspot_workflow_params(x$params)
   check_hotspot_threshold(threshold)
   validate_hotspot_search_settings(
@@ -137,7 +154,7 @@ select_candidates.spatialrisk_hotspot_workflow <- function(
     top_n = 1,
     radius = p$radius,
     cell_size = p$cell_size,
-    grid_precision = grid_precision,
+    grid_precision = grid_spacing,
     max_refinement_points = max_refinement_points,
     lon = p$lon,
     lat = p$lat,
@@ -145,7 +162,8 @@ select_candidates.spatialrisk_hotspot_workflow <- function(
     progress = progress
   )
 
-  x$params$grid_precision <- grid_precision
+  x$params$grid_spacing <- grid_spacing
+  x$params$grid_precision <- grid_spacing
   x$params$max_refinement_points <- max_refinement_points
   x$params$method <- method
   x$params$threshold <- threshold
@@ -207,21 +225,36 @@ select_candidates.spatialrisk_hotspot_workflow <- function(
 
 #' @rdname prepare_spatialrisk
 #' @export
-optimize_hotspot <- function(x, top_n = 1, progress = TRUE) {
+optimize_hotspot <- function(x, n_hotspots = 1, progress = TRUE,
+                             top_n = lifecycle::deprecated()) {
   UseMethod("optimize_hotspot")
 }
 
 #' @export
-optimize_hotspot.spatialrisk_hotspot_workflow <- function(x, top_n = 1,
-                                                          progress = TRUE) {
+optimize_hotspot.spatialrisk_hotspot_workflow <- function(
+    x,
+    n_hotspots = 1,
+    progress = TRUE,
+    top_n = lifecycle::deprecated()
+) {
+  args <- resolve_hotspot_deprecated_args(
+    n_hotspots = n_hotspots,
+    top_n = top_n,
+    top_n_supplied = lifecycle::is_present(top_n),
+    grid_spacing = 1,
+    grid_precision = lifecycle::deprecated(),
+    grid_precision_supplied = FALSE,
+    caller = "optimize_hotspot"
+  )
+  n_hotspots <- args$n_hotspots
   p <- complete_hotspot_workflow_params(x$params)
   validate_hotspot_search_settings(
     data = x$data,
     value = p$value,
-    top_n = top_n,
+    top_n = n_hotspots,
     radius = p$radius,
     cell_size = p$cell_size,
-    grid_precision = p$grid_precision,
+    grid_precision = p$grid_spacing,
     max_refinement_points = p$max_refinement_points,
     lon = p$lon,
     lat = p$lat,
@@ -234,7 +267,7 @@ optimize_hotspot.spatialrisk_hotspot_workflow <- function(x, top_n = 1,
     # with the same defaults as the wrapper before running the final search.
     x <- select_candidates(
       x,
-      grid_precision = p$grid_precision,
+      grid_spacing = p$grid_spacing,
       max_refinement_points = p$max_refinement_points,
       method = p$method,
       threshold = p$threshold,
@@ -250,7 +283,7 @@ optimize_hotspot.spatialrisk_hotspot_workflow <- function(x, top_n = 1,
     return(concentration_hotspot_indexed(
       data = data,
       value = p$value,
-      top_n = top_n,
+      top_n = n_hotspots,
       radius = p$radius,
       lon = p$lon,
       lat = p$lat,
@@ -265,10 +298,10 @@ optimize_hotspot.spatialrisk_hotspot_workflow <- function(x, top_n = 1,
     return(concentration_hotspot_terra(
       data = data,
       value = p$value,
-      top_n = top_n,
+      top_n = n_hotspots,
       radius = p$radius,
       cell_size = p$cell_size,
-      grid_precision = p$grid_precision,
+      grid_precision = p$grid_spacing,
       lon = p$lon,
       lat = p$lat,
       crs_metric = p$crs_metric,
@@ -279,10 +312,10 @@ optimize_hotspot.spatialrisk_hotspot_workflow <- function(x, top_n = 1,
   concentration_hotspot_pair_refine(
     data = data,
     value = p$value,
-    top_n = top_n,
+    top_n = n_hotspots,
     radius = p$radius,
     cell_size = p$cell_size,
-    grid_precision = p$grid_precision,
+    grid_precision = p$grid_spacing,
     max_refinement_points = p$max_refinement_points,
     threshold = p$threshold,
     lon = p$lon,
@@ -405,12 +438,17 @@ validate_hotspot_search_settings <- function(data, value, top_n, radius,
 complete_hotspot_workflow_params <- function(params) {
   defaults <- list(
     cell_size = 100,
-    grid_precision = 1,
+    grid_spacing = 1,
     max_refinement_points = 1000,
     method = "continuous",
     threshold = NULL
   )
-  utils::modifyList(defaults, params)
+  out <- utils::modifyList(defaults, params)
+  if (is.null(params$grid_spacing) && !is.null(params$grid_precision)) {
+    out$grid_spacing <- params$grid_precision
+  }
+  out$grid_precision <- out$grid_spacing
+  out
 }
 
 estimate_hotspot_candidate_threshold <- function(focal, data, params) {

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Choropleth visualisation • spatialrisk</title>
+<title>Visualising spatial exposure • spatialrisk</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -18,7 +18,7 @@
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Choropleth visualisation">
+<meta property="og:title" content="Visualising spatial exposure">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Choropleth visualisation</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Visualising spatial exposure</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/mharinga/spatialrisk/blob/HEAD/vignettes/visualisation.Rmd" class="external-link"><code>vignettes/visualisation.Rmd</code></a></small>
@@ -67,78 +67,185 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette shows how polygon data included in
-<code>spatialrisk</code> can be used to display aggregated values. The
-emphasis is on reporting and visualisation after a spatial aggregation
-step.</p>
-<p>Choropleth maps are useful for showing variation across
-administrative areas. They should not be interpreted as a substitute for
-fixed-radius concentration analysis on point-level data.</p>
+<p>This vignette shows how point-level exposure data can be aggregated
+to reporting areas and visualised as a choropleth map. Within
+<code>spatialrisk</code>, this is primarily a reporting and
+communication workflow.</p>
+<p>The fixed-radius concentration workflow answers a local risk
+question: where is the largest accumulation within a circle of a
+specified physical radius? Polygon-based visualisation answers a
+reporting question: how is exposure distributed across administrative or
+management areas?</p>
+<p>Both views are useful, but they should not be interpreted as the same
+measure.</p>
 </div>
 <div class="section level2">
-<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+<h2 id="from-point-exposures-to-reporting-areas">From point exposures to reporting areas<a class="anchor" aria-label="anchor" href="#from-point-exposures-to-reporting-areas"></a>
 </h2>
+<p>The example uses two data objects included in
+<code>spatialrisk</code>:</p>
+<ul>
+<li>
+<code>insurance</code>: point-level policy or risk locations with an
+<code>amount</code> column;</li>
+<li>
+<code>nl_gemeente</code>: municipal boundaries for the
+Netherlands.</li>
+</ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mharinga/spatialrisk" class="external-link">spatialrisk</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nl_gemeente</span><span class="op">)</span></span></code></pre></div>
-<p>The object <code>nl_gemeente</code> contains municipal geometries for
-the Netherlands as a simple feature object. For illustration, we create
-a small table with one value per municipality. In applied work, this
-table would typically contain observed or modelled values aggregated at
-municipality level.</p>
+<span><span class="va">point_exposures</span> <span class="op">&lt;-</span> <span class="va">insurance</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"amount"</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">point_exposures</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">#&gt;     lon   lat amount</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  4.48  52.2  <span style="text-decoration: underline;">20</span>000</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  5.29  51.6 <span style="text-decoration: underline;">154</span>965</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  4.50  52.0 <span style="text-decoration: underline;">146</span>078</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>  7.00  53.1 <span style="text-decoration: underline;">129</span>304</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>  4.34  52.1  <span style="text-decoration: underline;">67</span>636</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>  4.83  52.3  <span style="text-decoration: underline;">29</span>971</span></span></code></pre></div>
+<p>The <code>amount</code> column represents the exposure measure that
+will be aggregated. In an applied insurance setting this could be an
+insured amount, total exposure value, risk premium, or another portfolio
+quantity.</p>
+<p>The reporting polygons define the spatial units used for
+communication. Municipalities are used here as an example; the
+appropriate reporting areas depend on the analytical or communication
+objective.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">municipality_values</span> <span class="op">&lt;-</span> <span class="va">nl_gemeente</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">code</span>, <span class="va">areaname</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nl_gemeente</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"code"</span>, <span class="st">"areaname"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; Simple feature collection with 352 features and 3 fields</span></span>
+<span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 3.358378 ymin: 50.75136 xmax: 7.217623 ymax: 53.55362</span></span>
+<span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
+<span><span class="co">#&gt; First 10 features:</span></span>
+<span><span class="co">#&gt;    id   code      areaname                       geometry</span></span>
+<span><span class="co">#&gt; 1   1 GM0014     Groningen MULTIPOLYGON (((6.772527 53...</span></span>
+<span><span class="co">#&gt; 2   2 GM0034        Almere MULTIPOLYGON (((5.350772 52...</span></span>
+<span><span class="co">#&gt; 3   3 GM0037   Stadskanaal MULTIPOLYGON (((7.015446 53...</span></span>
+<span><span class="co">#&gt; 4   4 GM0047       Veendam MULTIPOLYGON (((6.961735 53...</span></span>
+<span><span class="co">#&gt; 5   5 GM0050      Zeewolde MULTIPOLYGON (((5.58907 52....</span></span>
+<span><span class="co">#&gt; 6   6 GM0059 Achtkarspelen MULTIPOLYGON (((6.232173 53...</span></span>
+<span><span class="co">#&gt; 7   7 GM0060       Ameland MULTIPOLYGON (((5.731096 53...</span></span>
+<span><span class="co">#&gt; 8   8 GM0072     Harlingen MULTIPOLYGON (((5.472192 53...</span></span>
+<span><span class="co">#&gt; 9   9 GM0074    Heerenveen MULTIPOLYGON (((5.92758 53....</span></span>
+<span><span class="co">#&gt; 10 10 GM0080    Leeuwarden MULTIPOLYGON (((5.838649 53...</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="join-values-to-geometries">Join values to geometries<a class="anchor" aria-label="anchor" href="#join-values-to-geometries"></a>
+<h2 id="aggregate-exposure-by-polygon">Aggregate exposure by polygon<a class="anchor" aria-label="anchor" href="#aggregate-exposure-by-polygon"></a>
 </h2>
-<p>The values are joined back to the municipal geometries before
-plotting.</p>
+<p>The function <code><a href="../reference/summarise_points_by_polygon.html">summarise_points_by_polygon()</a></code> spatially
+assigns point locations to polygon geometries and applies a summary
+function. Here, the total insured amount is calculated for each
+municipality.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">map_data</span> <span class="op">&lt;-</span> <span class="va">nl_gemeente</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">municipality_values</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"code"</span>, <span class="st">"areaname"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">municipality_exposure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_points_by_polygon.html">summarise_points_by_polygon</a></span><span class="op">(</span></span>
+<span>  polygons <span class="op">=</span> <span class="va">nl_gemeente</span>,</span>
+<span>  points <span class="op">=</span> <span class="va">point_exposures</span>,</span>
+<span>  value <span class="op">=</span> <span class="st">"amount"</span>,</span>
+<span>  fun <span class="op">=</span> <span class="va">sum</span>,</span>
+<span>  outside <span class="op">=</span> <span class="st">"ignore"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">municipality_exposure</span><span class="op">)</span><span class="op">[</span></span>
+<span>  <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"areaname"</span>, <span class="st">"amount_sum"</span><span class="op">)</span></span>
+<span><span class="op">]</span></span>
+<span><span class="co">#&gt;        areaname amount_sum</span></span>
+<span><span class="co">#&gt; 1     Groningen   30218869</span></span>
+<span><span class="co">#&gt; 2        Almere   30905436</span></span>
+<span><span class="co">#&gt; 3   Stadskanaal    3080895</span></span>
+<span><span class="co">#&gt; 4       Veendam    3721274</span></span>
+<span><span class="co">#&gt; 5      Zeewolde    1887282</span></span>
+<span><span class="co">#&gt; 6 Achtkarspelen    1313688</span></span></code></pre></div>
+<p>The result is still an <code>sf</code> object: it retains the
+municipal geometries and adds the aggregated exposure column. This
+object can be used directly for mapping.</p>
 </div>
 <div class="section level2">
-<h2 id="choropleth-map">Choropleth map<a class="anchor" aria-label="anchor" href="#choropleth-map"></a>
+<h2 id="create-a-choropleth">Create a choropleth<a class="anchor" aria-label="anchor" href="#create-a-choropleth"></a>
 </h2>
-<p>The <code><a href="../reference/choropleth.html">choropleth()</a></code> function uses <code>tmap</code>. The
-<code>id</code> argument identifies the column used for polygon labels
-in interactive maps.</p>
+<p>The <code><a href="../reference/choropleth.html">choropleth()</a></code> function shades polygons according to a
+numeric column. The <code>id</code> argument identifies the column used
+for polygon labels in interactive maps.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/choropleth.html">choropleth</a></span><span class="op">(</span></span>
-<span>  <span class="va">map_data</span>,</span>
-<span>  value <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  <span class="va">municipality_exposure</span>,</span>
+<span>  value <span class="op">=</span> <span class="st">"amount_sum"</span>,</span>
 <span>  id <span class="op">=</span> <span class="st">"areaname"</span>,</span>
-<span>  legend_title <span class="op">=</span> <span class="st">"Value"</span></span>
+<span>  legend_title <span class="op">=</span> <span class="st">"Total insured amount"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p><img src="figures/visualisation-unnamed-chunk-4-1.png" class="r-plt" alt="" width="700"></p>
+<p>This map shows how the total point-level exposure is distributed
+across municipalities. The function returns a <code>tmap</code> object,
+so the map can be further adjusted with <code>tmap</code> if a report
+requires additional formatting.</p>
 </div>
 <div class="section level2">
-<h2 id="relation-to-concentration-analysis">Relation to concentration analysis<a class="anchor" aria-label="anchor" href="#relation-to-concentration-analysis"></a>
+<h2 id="interpreting-the-map">Interpreting the map<a class="anchor" aria-label="anchor" href="#interpreting-the-map"></a>
 </h2>
 <p>A choropleth map represents values attached to predefined polygons.
-Fixed-radius concentration analysis answers a different question: what
-is the total value within a circle of a specified radius around a
-possible centre?</p>
-<p>In insurance applications, both views can be useful. The fixed-radius
-calculation identifies local accumulation of exposure, while the
-choropleth map can be used to communicate summaries by municipality,
-province, or another reporting unit.</p>
+In this example, each municipality is shaded according to the total
+insured amount of point exposures assigned to that municipality.</p>
+<p>This is useful for questions such as:</p>
+<ul>
+<li>which reporting areas contain the most exposure;</li>
+<li>how exposure is distributed across administrative areas;</li>
+<li>which municipalities or regions should be highlighted in a portfolio
+summary.</li>
+</ul>
+<p>It does not directly answer where the highest local accumulation
+occurs within a fixed physical radius. Polygon-level results depend on
+the chosen boundaries. Two nearby risks may fall into different
+municipalities, while exposures spread across a large municipality are
+aggregated into a single polygon value. Administrative boundaries are
+therefore reporting choices rather than part of the underlying
+fixed-radius concentration problem.</p>
+</div>
+<div class="section level2">
+<h2 id="relation-to-fixed-radius-concentration">Relation to fixed-radius concentration<a class="anchor" aria-label="anchor" href="#relation-to-fixed-radius-concentration"></a>
+</h2>
+<p>Polygon-based visualisation and fixed-radius concentration analysis
+are complementary.</p>
+<p>Polygon-based visualisation is useful for:</p>
+<ul>
+<li>reporting;</li>
+<li>portfolio summaries;</li>
+<li>communicating geographic patterns;</li>
+<li>administrative or management views.</li>
+</ul>
+<p>Fixed-radius concentration analysis is useful for:</p>
+<ul>
+<li>local accumulation;</li>
+<li>identifying spatial hotspots;</li>
+<li>analysing concentration independently of administrative
+boundaries.</li>
+</ul>
+<p>For physical accumulation questions, use
+<code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code> or the supporting fixed-radius
+functions described in
+<code><a href="../articles/fixed-radius-concentration.html">vignette("fixed-radius-concentration", package = "spatialrisk")</a></code>.
+For reporting and communication, aggregate point exposures to relevant
+polygons and visualise the resulting polygon-level values.</p>
 </div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
-<p>This vignette demonstrated how to:</p>
+<p>This vignette demonstrated a complete polygon-based visualisation
+workflow:</p>
 <ul>
-<li>use an included simple feature object;</li>
-<li>join aggregated values to polygon geometries;</li>
-<li>create a choropleth map for reporting.</li>
+<li>start from point-level exposure data;</li>
+<li>assign points to reporting polygons;</li>
+<li>aggregate an exposure measure by polygon;</li>
+<li>visualise the polygon-level result with
+<code><a href="../reference/choropleth.html">choropleth()</a></code>;</li>
+<li>interpret the map as a reporting view rather than a fixed-radius
+concentration measure.</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -152,7 +259,7 @@ province, or another reporting unit.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

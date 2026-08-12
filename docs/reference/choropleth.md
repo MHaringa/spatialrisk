@@ -1,7 +1,7 @@
-# Create choropleth map
+# Create a choropleth map of polygon-level values
 
-Creates a choropleth map from an \`sf\` object, for example one produced
-by
+Creates a choropleth map from an \`sf\` object containing polygon-level
+reporting values, for example one produced by
 [`summarise_points_by_polygon()`](https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.md).
 Polygons are shaded according to values in a specified column, with
 clustering based on the Fisher–Jenks algorithm.
@@ -62,7 +62,8 @@ choropleth(
 
 - ...:
 
-  Additional arguments passed to `tmap::tm_polygons()`.
+  Additional arguments passed to
+  [`tmap::tm_polygons()`](https://r-tmap.github.io/tmap/reference/tm_polygons.html).
 
 ## Value
 
@@ -83,7 +84,6 @@ Martin Haringa
 test <- summarise_points_by_polygon(nl_provincie, insurance, "amount")
 #> 109 points are outside any polygon.
 choropleth(test, value = "amount_sum")
-#> Error: tmap is needed for this function to work. Install it via install.packages("tmap")
+
 choropleth(test, value = "amount_sum", id = "areaname", mode = "view")
-#> Error: tmap is needed for this function to work. Install it via install.packages("tmap")
 ```

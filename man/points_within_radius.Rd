@@ -2,7 +2,7 @@
 % Please edit documentation in R/points_within_radius.R
 \name{points_within_radius}
 \alias{points_within_radius}
-\title{Find points within radius around one or more center coordinates}
+\title{Find points within radius around one or more centre coordinates}
 \usage{
 points_within_radius(
   data,
@@ -17,9 +17,9 @@ points_within_radius(
 \arguments{
 \item{data}{A data frame containing at least longitude and latitude columns.}
 
-\item{lon_center}{Numeric scalar or vector, longitude(s) of the circle center(s).}
+\item{lon_center}{Numeric scalar or vector, longitude(s) of the circle centre(s).}
 
-\item{lat_center}{Numeric scalar or vector, latitude(s) of the circle center(s).}
+\item{lat_center}{Numeric scalar or vector, latitude(s) of the circle centre(s).}
 
 \item{lon}{A string with the name of the longitude column in `data`.}
 
@@ -27,15 +27,15 @@ points_within_radius(
 
 \item{radius}{Numeric, circle radius in meters. Default is 200.}
 
-\item{sort}{Logical, if `TRUE` results are sorted by distance within each center.}
+\item{sort}{Logical, if `TRUE` results are sorted by distance within each centre.}
 }
 \value{
 A data frame subset of `data` with an extra column `distance_m` and
-  if multiple centers are provided, also a column `center_index`.
+  if multiple centres are provided, also a column `center_index`.
 }
 \description{
 This function selects rows from a data frame whose
 longitude/latitude coordinates fall within a given radius (in meters)
-from one or more specified center points. It also calculates the distance
-of each point to the center.
+from one or more specified centre points. It also calculates the distance
+of each point to the centre.
 }

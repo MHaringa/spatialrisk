@@ -1,78 +1,36 @@
-#' Highest concentration risk
+#' Deprecated geohash hotspot search
 #'
-#' @description Find the centre coordinates of a circle with a fixed radius that
-#' maximizes the coverage of total fire risk insured. `highest_concentration()`
-#' returns the coordinates (lon/lat) and the corresponding concentration. The
-#' concentration is defined as the sum of all observations within a circle of a
-#' certain radius. See \code{\link{concentration}} for determining concentration
-#' for pre-defined coordinates.
+#' @description
+#' `highest_concentration()` is deprecated. Use
+#' \code{\link{concentration_hotspot}} for fixed-radius hotspot detection in
+#' new analyses.
 #'
-#' @param df data.frame of locations, should at least include column for
-#' longitude, latitude and sum insured.
-#' @param value column name with value of interest to summarize (e.g. sum
-#' insured).
-#' @param lon column name with longitude (defaults to `lon`).
-#' @param lat column name with latitude (defaults to `lat`).
-#' @param radius radius (in meters) (default is 200m).
-#' @param grid_distance distance (in meters) for precision of concentration risk
-#' (default is 25m). `neighborhood_search()` can be used to search for
-#' coordinates with even higher concentrations in the neighborhood of the
-#' highest concentrations.
-#' @param display_progress show progress bar (TRUE/FALSE). Defaults to TRUE.
-#' @param lowerbound set lowerbound.
-#' @param gh_precision set precision for geohash.
+#' @param df Deprecated. Data frame of point locations.
+#' @param value Deprecated. Column with values to aggregate.
+#' @param lon Deprecated. Longitude column.
+#' @param lat Deprecated. Latitude column.
+#' @param radius Deprecated. Radius in meters.
+#' @param grid_distance Deprecated. Grid distance in meters.
+#' @param display_progress Deprecated. Whether to show a progress bar.
+#' @param lowerbound Deprecated. Lower bound used by the legacy geohash search.
+#' @param gh_precision Deprecated. Geohash precision used by the legacy search.
 #'
-#' @details A recently European Commission regulation requires insurance
-#' companies to determine the maximum value of insured fire risk policies of
-#' all buildings that are partly or fully located within circle of a radius of
-#' 200m (Commission Delegated Regulation (EU), 2015, Article 132). The problem
-#' can be stated as: "find the centre coordinates of a circle with a fixed
-#' radius that maximizes the coverage of total fire risk insured". This can be
-#' viewed as a particular instance of the Maximal Covering Location Problem
-#' (MCLP) with fixed radius. See Gomes (2018) for a solution to the maximum fire
-#' risk insured capital problem using a multi-start local search meta-heuristic.
-#' The computational performance of \code{highest_concentration()} is
-#' investigated to overcome the long times the MCLP algorithm is taking.
-#' \code{highest_concentration()} is written in C++, and for 500,000 buildings
-#' it needs about 5-10 seconds to determine the maximum value of insured fire
-#' risk policies that are partly or fully located within circle of a radius of
-#' 200m.
+#' @details
+#' This legacy function used a geohash-based screening workflow. It is retained
+#' only for backward compatibility. The current high-level interface is
+#' \code{\link{concentration_hotspot}}, which documents the supported hotspot
+#' search methods and returns the current \code{hotspot} object structure.
 #'
 #' @import data.table
 #' @importFrom lifecycle deprecate_warn
 #'
 #' @author Martin Haringa
 #'
-#' @return data.frame with coordinates (lon/lat) with the highest concentrations
-#'
-#' @references Commission Delegated Regulation (EU) (2015). Solvency II
-#' Delegated Act 2015/35. Official Journal of the European Union, 58:124.
-#' @references Gomes M.I., Afonso L.B., Chibeles-Martins N., Fradinho J.M.
-#' (2018). Multi-start Local Search Procedure for the Maximum Fire Risk Insured
-#' Capital Problem. In: Lee J., Rinaldi G., Mahjoub A. (eds) Combinatorial
-#' Optimization. ISCO 2018. Lecture Notes in Computer Science, vol 10856.
-#' Springer, Cham. <doi:10.1007/978-3-319-96151-4_19>
-#'
-#' @examples
-#'  \dontrun{
-#' # Find highest concentration with a precision of a grid of 25 meters
-#' hc1 <- highest_concentration(Groningen, amount, radius = 200,
-#'  grid_distance = 25)
-#'
-#' # Look for coordinates with even higher concentrations in the
-#' # neighborhood of the coordinates with the highest concentration
-#' hc1_nghb <- neighborhood_gh_search(hc1, max.call = 7000)
-#' print(hc1_nghb)
-#'
-#' # Create map with geohashes above the lowerbound
-#' # The highest concentration lies in one of the geohashes
-#' plot(hc1)
-#'
-#' # Create map with highest concentration
-#' plot(hc1_nghb)
-#' }
+#' @return A legacy data frame with candidate hotspot coordinates and
+#'   concentration values.
 #'
 #' @export
+#' @keywords internal
 highest_concentration <- function(df, value, lon = lon, lat = lat,
                                   lowerbound = NULL, radius = 200,
                                   grid_distance = 25, gh_precision = 6,
@@ -81,7 +39,7 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
   lifecycle::deprecate_warn(
     when = "0.8.0",
     what = "highest_concentration()",
-    details = "Please use `find_highest_concentration()` instead."
+    details = "Please use `concentration_hotspot()` instead."
   )
 
   if (!requireNamespace("geohashTools", quietly = TRUE)) {
@@ -222,52 +180,36 @@ highest_concentration <- function(df, value, lon = lon, lat = lat,
 }
 
 
-#' Search for coordinates with higher concentrations within geohash
+#' Deprecated geohash neighbourhood refinement
 #'
-#' \code{\link{highest_concentration}} returns the highest concentration within
-#' a portfolio based on grid points. However, higher concentrations can be
-#' found within two grid points. `neighborhood_gh_search()` looks for even
-#' higher concentrations in the neighborhood of the grid points with the highest
-#' concentrations. This optimization is done by means of Simulated Annealing.
+#' @description
+#' `neighborhood_gh_search()` is deprecated. Use
+#' \code{\link{concentration_hotspot}} for fixed-radius hotspot detection in
+#' new analyses.
 #'
-#' @param hc object of class `concentration` obtained from
-#' `highest_concentration()`
-#' @param highest_geohash the number of geohashes the searching algorithm is
-#' applied to. Defaults to 1 (i.e. algorithm is only applied to the geohash
-#' with the highest concentration).
-#' @param max.call maximum number of calls to the concentration function (i.e.
-#' the number of coordinates in the neighborhood of the highest concentration).
-#' Defaults to 1000.
-#' @param verbose show messages from the algorithm (TRUE/FALSE). Defaults to
-#' FALSE.
-#' @param seed set seed
+#' @param hc Deprecated. Object returned by \code{highest_concentration()}.
+#' @param highest_geohash Deprecated. Number of geohashes used by the legacy
+#'   refinement.
+#' @param max.call Deprecated. Maximum number of calls used by the legacy
+#'   simulated-annealing search.
+#' @param verbose Deprecated. Whether to show messages from the legacy search.
+#' @param seed Deprecated. Random seed for the legacy search.
 #'
 #' @importFrom lifecycle deprecate_warn
 #'
 #' @author Martin Haringa
 #'
-#' @return data.frame
+#' @return A legacy data frame with refined hotspot coordinates.
 #'
-#' @examples
-#' \dontrun{
-#' # Find highest concentration with a precision of a grid of 25 meters
-#' hc1 <- highest_concentration(Groningen, amount, radius = 200,
-#'  grid_distance = 25)
-#'
-#' # Increase the number of calls for more extensive search
-#' hc1_nghb <- neighborhood_gh_search(hc1, max.call = 7000, highest_geohash = 1)
-#' hc2_nghb <- neighborhood_gh_search(hc1, max.call = 7000, highest_geohash = 2)
-#' plot(hc1_nghb)
-#' plot(hc2_nghb)
-#' }
 #' @export
+#' @keywords internal
 neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
                                    verbose = TRUE, seed = 1) {
 
   lifecycle::deprecate_warn(
     when = "0.8.0",
     what = "neighborhood_gh_search()",
-    details = "Please use `find_highest_concentration()` instead."
+    details = "Please use `concentration_hotspot()` instead."
   )
 
   if (!requireNamespace("geohashTools", quietly = TRUE)) {
@@ -348,28 +290,30 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
 }
 
 
-#' Automatically create a plot for objects obtained from highest_concentration()
+#' Plot deprecated geohash hotspot results
 #'
-#' @description Takes an object produced by `highest_concentration()`,
-#' and creates an interactive map.
+#' @description
+#' Deprecated plotting method for objects produced by
+#' \code{highest_concentration()}. For current hotspot results, use
+#' \code{plot()} on the object returned by \code{\link{concentration_hotspot}}.
 #'
-#' @param x object of class `conc` obtained from
-#' `highest_concentration()`
-#' @param grid_points show grid points (TRUE), or objects (FALSE)
-#' @param legend_title title of legend
-#' @param palette palette for grid points (defaults to "viridis")
-#' @param legend_position legend position for grid points legend (defaults to
-#' "bottomleft")
-#' @param providers providers to show. See `leaflet::providers` for a list.
-#' @param ... additional arguments affecting the interactive map produced
+#' @param x Legacy object of class \code{conc}.
+#' @param grid_points Logical. Whether to show grid points.
+#' @param legend_title Optional legend title.
+#' @param palette Palette used for the point layer.
+#' @param legend_position Legend position for the point layer.
+#' @param providers Leaflet tile providers.
+#' @param ... Additional arguments passed to the interactive map.
 #'
-#' @return Interactive view of geohashes with highest concentrations
+#' @return An interactive map.
 #'
 #' @author Martin Haringa
 #'
 #' @importFrom sf st_as_sf
 #'
+#' @method plot conc
 #' @export
+#' @keywords internal
 plot.conc <- function(x,
                       grid_points = TRUE,
                       legend_title = NULL,
@@ -484,27 +428,25 @@ plot.conc <- function(x,
 
 
 
-#' Automatically create a plot for objects obtained from
-#' neighborhood_gh_search()
+#' Plot deprecated geohash neighbourhood results
 #'
-#' @description Takes an object produced by `neighborhood_gh_search()`, and
-#' creates an interactive map.
+#' @description
+#' Deprecated plotting method for objects produced by
+#' \code{neighborhood_gh_search()}. For current hotspot results, use
+#' \code{plot()} on the object returned by \code{\link{concentration_hotspot}}.
 #'
-#' @param x object neighborhood object produced by `neighborhood_gh_search()`
-#' @param buffer numeric value, show objects within buffer (in meters) from
-#' circle (defaults to 0)
-#' @param legend_title title of legend
-#' @param palette palette for points (defaults to "viridis")
-#' @param legend_position legend position for points legend (defaults to
-#' "bottomleft")
-#' @param palette_circle palette for circles (default to "YlOrRd")
-#' @param legend_position_circle legend position for circles legend (defaults
-#' to "bottomright")
-#' @param legend_title_circle title of legend for circles
-#' @param providers providers to show. See `leaflet::providers` for a list.
-#' @param ... additional arguments affecting the interactive map produced
+#' @param x Legacy object of class \code{neighborhood}.
+#' @param buffer Numeric. Buffer around the circle in meters.
+#' @param legend_title Optional legend title for the point layer.
+#' @param palette Palette used for the point layer.
+#' @param legend_position Legend position for the point layer.
+#' @param palette_circle Palette used for the circle layer.
+#' @param legend_position_circle Legend position for the circle layer.
+#' @param legend_title_circle Optional legend title for the circle layer.
+#' @param providers Leaflet tile providers.
+#' @param ... Additional arguments passed to the interactive map.
 #'
-#' @return Interactive view of highest concentration on map
+#' @return An interactive map.
 #'
 #' @author Martin Haringa
 #'
@@ -513,9 +455,9 @@ plot.conc <- function(x,
 #' @importFrom sf st_buffer
 #' @importFrom sf st_geometry
 #'
-#' @rdname plot
-#'
+#' @method plot neighborhood
 #' @export
+#' @keywords internal
 plot.neighborhood <- function(x,
                               buffer = 0,
                               legend_title = NULL,

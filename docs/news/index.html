@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,10 +31,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.1" id="spatialrisk-081">spatialrisk 0.8.1<a class="anchor" aria-label="anchor" href="#spatialrisk-081"></a></h2>
+<h2 class="pkg-version" data-toc-text="development version" id="spatialrisk-development-version">spatialrisk (development version)<a class="anchor" aria-label="anchor" href="#spatialrisk-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.1" id="spatialrisk-081">spatialrisk 0.8.1<a class="anchor" aria-label="anchor" href="#spatialrisk-081"></a></h2><p class="text-muted">CRAN release: 2026-06-16</p>
 <ul><li>Added a decomposed hotspot workflow with <code><a href="../reference/prepare_spatialrisk.html">prepare_spatialrisk()</a></code>, <code><a href="../reference/prepare_spatialrisk.html">select_candidates()</a></code>, and <code><a href="../reference/prepare_spatialrisk.html">optimize_hotspot()</a></code>. These functions expose the preparation, candidate-selection, and optimisation steps used by <code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code>, while keeping <code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code> available as the main wrapper for the complete workflow.</li>
-<li>Improved <code>concentration_hotspot(method = "continuous")</code> and <code><a href="../reference/prepare_spatialrisk.html">optimize_hotspot()</a></code> so pair-intersection refinement is evaluated over all focal candidate cells above the lower bound, rather than only around the top focal cell. Candidate centres are now scored against the full remaining portfolio before the best hotspot is selected. This avoids cases where a later <code>top_n</code> hotspot could have a higher concentration than the first reported hotspot.</li>
-<li>Added a regression test to check that continuous <code>top_n</code> hotspot concentrations are non-increasing after contributing points are removed between iterations.</li>
+<li>Improved <code>concentration_hotspot(method = "continuous")</code> and <code><a href="../reference/prepare_spatialrisk.html">optimize_hotspot()</a></code> so pair-intersection refinement is evaluated over all focal candidate cells above the lower bound, rather than only around the top focal cell. Candidate centres are now scored against the full remaining portfolio before the best hotspot is selected. This avoids cases where a later <code>n_hotspots</code> hotspot could have a higher concentration than the first reported hotspot.</li>
+<li>Improved <code>n_hotspots &gt; 1</code> performance for the continuous hotspot method by caching pair-intersection refinements per focal candidate cell. After each greedy step, only cache entries affected by removed contributing points or changed focal cells are recomputed.</li>
+<li>Added a regression test to check that continuous <code>n_hotspots</code> hotspot concentrations are non-increasing after contributing points are removed between iterations.</li>
+<li>
+<code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code> and <code><a href="../reference/prepare_spatialrisk.html">optimize_hotspot()</a></code> now prefer <code>n_hotspots</code> instead of <code>top_n</code>, and <code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code> and <code><a href="../reference/prepare_spatialrisk.html">select_candidates()</a></code> now prefer <code>grid_spacing</code> instead of <code>grid_precision</code>. The old argument names remain temporarily supported with lifecycle deprecation warnings.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="spatialrisk-080">spatialrisk 0.8.0<a class="anchor" aria-label="anchor" href="#spatialrisk-080"></a></h2><p class="text-muted">CRAN release: 2026-05-04</p>
@@ -55,7 +61,7 @@
 <ul><li>Improved <code><a href="../reference/haversine.html">haversine()</a></code> and the underlying C++ distance calculation by reducing unnecessary operations and adding stricter input checks.</li>
 <li>Improved <code><a href="../reference/points_within_radius.html">points_within_radius()</a></code> validation and handling of multiple centre coordinates.</li>
 <li>Improved <code><a href="../reference/radius_sum.html">radius_sum()</a></code> validation, output column handling, and C++ prefiltering of incomplete reference rows.</li>
-<li>Updated <code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code> documentation to clarify that the function uses a grid-based search with local refinement. The search precision is controlled by <code>cell_size</code> and <code>grid_precision</code>.</li>
+<li>Updated <code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code> documentation to clarify that the function uses a grid-based search with local refinement. The search resolution is controlled by <code>cell_size</code> and <code>grid_spacing</code>.</li>
 <li>
 <code><a href="../reference/concentration_hotspot.html">concentration_hotspot()</a></code> now uses <code>progress</code> instead of <code>print_progress</code>. Since this is a new public API, the old argument is not retained there; older deprecated functions still translate their legacy progress arguments.</li>
 <li>Deprecated <code><a href="../reference/interpolate_spline.html">interpolate_spline()</a></code> because spline interpolation is outside the main scope of the package. The function remains available for compatibility.</li>
@@ -178,7 +184,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

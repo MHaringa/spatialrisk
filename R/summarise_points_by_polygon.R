@@ -1,7 +1,7 @@
-#' Summarise point values by polygon
+#' Summarise point exposures by reporting polygon
 #'
 #' @description Spatially joins point data to polygon geometries and summarises
-#' a numeric point attribute for each polygon.
+#' a numeric point exposure or value for each reporting area.
 #'
 #' @param polygons An object of class \code{sf} containing polygon geometries.
 #' @param points A data.frame containing point coordinates and the value to

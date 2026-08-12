@@ -31,6 +31,7 @@ concentration_hotspot_pair_refine <- function(
   input_threshold <- threshold
   threshold_out <- NA_real_
   refinement_methods <- character(top_n)
+  pair_cache <- list()
 
   hotspot_progress(progress, "Using continuous hotspot search.")
 
@@ -65,11 +66,17 @@ concentration_hotspot_pair_refine <- function(
       value = value,
       radius = radius,
       cell_size = cell_size,
-      max_refinement_points = max_refinement_points
+      max_refinement_points = max_refinement_points,
+      cache = pair_cache
     )
+    pair_cache <- pair_candidate$cache
     hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
                      ": largest local refinement subset has ",
                      pair_candidate$local_points, " points.")
+    hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
+                     ": reused ", pair_candidate$cache_hits,
+                     " cached candidate refinements and computed ",
+                     pair_candidate$cache_misses, ".")
 
     if (!isTRUE(pair_candidate$use_grid)) {
       hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
@@ -147,11 +154,19 @@ concentration_hotspot_pair_refine <- function(
         rlang::abort("Need more rows", call = NULL)
       }
 
+      cells <- map_points_to_cells(selected_rows, state$focal, lon, lat, 4326,
+                                   crs_metric)
+      affected_cells <- map_points_to_cells(selected_rows, state$focal, lon,
+                                            lat, 4326, crs_metric,
+                                            r = radius)
+      pair_cache <- invalidate_pair_refine_cache(
+        pair_cache,
+        removed_ix = selected$ix,
+        affected_cells = affected_cells
+      )
       state$spatvctr <- state$spatvctr[
         !state$spatvctr$ix %in% selected$ix,
       ]
-      cells <- map_points_to_cells(selected_rows, state$focal, lon, lat, 4326,
-                                   crs_metric)
       extent <- terra::ext(state$raster, cells)
       state$rasterized <- update_rasterize(state$rasterized, extent,
                                            state$spatvctr, value)
@@ -178,55 +193,54 @@ concentration_hotspot_pair_refine <- function(
 }
 
 pair_refine_candidate_cells <- function(candidate_cells, metric, value, radius,
-                                        cell_size, max_refinement_points) {
+                                        cell_size, max_refinement_points,
+                                        cache = list()) {
   best_concentration <- -Inf
   best_x <- NA_real_
   best_y <- NA_real_
   best_selected <- NULL
   max_local_points <- 0L
+  cache_hits <- 0L
+  cache_misses <- 0L
 
   for (j in seq_len(nrow(candidate_cells))) {
-    local_ix <- local_pair_refine_subset(metric, candidate_cells$x[j],
-                                         candidate_cells$y[j], radius,
-                                         cell_size)
-    max_local_points <- max(max_local_points, length(local_ix))
-    if (length(local_ix) == 0L) {
-      next
+    cell <- candidate_cells$cell[j]
+    key <- as.character(cell)
+    cached <- cache[[key]]
+
+    if (!is.null(cached)) {
+      cache_hits <- cache_hits + 1L
+      max_local_points <- max(max_local_points, cached$local_points)
+      candidate <- cached
+    } else {
+      cache_misses <- cache_misses + 1L
+      candidate <- compute_pair_refine_candidate_cell(
+        cell = cell,
+        x = candidate_cells$x[j],
+        y = candidate_cells$y[j],
+        metric = metric,
+        value = value,
+        radius = radius,
+        cell_size = cell_size,
+        max_refinement_points = max_refinement_points
+      )
+      if (isTRUE(candidate$use_grid)) {
+        return(list(
+          use_grid = TRUE,
+          local_points = candidate$local_points,
+          cache = cache,
+          cache_hits = cache_hits,
+          cache_misses = cache_misses
+        ))
+      }
+      cache[[key]] <- candidate
     }
 
-    if (length(local_ix) > max_refinement_points) {
-      return(list(use_grid = TRUE, local_points = length(local_ix)))
-    }
-
-    local_metric <- metric[local_ix, , drop = FALSE]
-    # In the continuous fixed-radius problem, an optimum can occur at a point
-    # location or at one of the two circle centres induced by a pair of points.
-    best_local <- pair_intersection_best_cpp(
-      x_ref = local_metric$x,
-      y_ref = local_metric$y,
-      value_ref = local_metric[[value]],
-      ix_ref = local_metric$ix,
-      radius = radius,
-      cell_width = radius
-    )
-
-    selected <- indexed_points_in_radius_cpp(
-      x_center = best_local$x[1],
-      y_center = best_local$y[1],
-      x_ref = metric$x,
-      y_ref = metric$y,
-      value_ref = metric[[value]],
-      ix_ref = metric$ix,
-      radius = radius,
-      cell_width = radius
-    )
-
-    full_concentration <- sum(selected$value)
-    if (full_concentration > best_concentration) {
-      best_concentration <- full_concentration
-      best_x <- best_local$x[1]
-      best_y <- best_local$y[1]
-      best_selected <- selected
+    if (candidate$concentration > best_concentration) {
+      best_concentration <- candidate$concentration
+      best_x <- candidate$x
+      best_y <- candidate$y
+      best_selected <- candidate$selected
     }
   }
 
@@ -241,8 +255,84 @@ pair_refine_candidate_cells <- function(candidate_cells, metric, value, radius,
     y = best_y,
     concentration = best_concentration,
     local_points = max_local_points,
-    selected = best_selected
+    selected = best_selected,
+    cache = cache,
+    cache_hits = cache_hits,
+    cache_misses = cache_misses
   )
+}
+
+compute_pair_refine_candidate_cell <- function(cell, x, y, metric, value,
+                                               radius, cell_size,
+                                               max_refinement_points) {
+  local_ix <- local_pair_refine_subset(metric, x, y, radius, cell_size)
+  if (length(local_ix) == 0L) {
+    return(list(use_grid = FALSE,
+                cell = cell,
+                x = NA_real_,
+                y = NA_real_,
+                concentration = -Inf,
+                local_points = 0L,
+                local_ix = integer(),
+                selected_ix = integer(),
+                selected = data.frame(ix = integer(),
+                                      distance_m = numeric(),
+                                      value = numeric())))
+  }
+
+  if (length(local_ix) > max_refinement_points) {
+    return(list(use_grid = TRUE, local_points = length(local_ix)))
+  }
+
+  local_metric <- metric[local_ix, , drop = FALSE]
+  # In the continuous fixed-radius problem, an optimum can occur at a point
+  # location or at one of the two circle centres induced by a pair of points.
+  best_local <- pair_intersection_best_cpp(
+    x_ref = local_metric$x,
+    y_ref = local_metric$y,
+    value_ref = local_metric[[value]],
+    ix_ref = local_metric$ix,
+    radius = radius,
+    cell_width = radius
+  )
+
+  selected <- indexed_points_in_radius_cpp(
+    x_center = best_local$x[1],
+    y_center = best_local$y[1],
+    x_ref = metric$x,
+    y_ref = metric$y,
+    value_ref = metric[[value]],
+    ix_ref = metric$ix,
+    radius = radius,
+    cell_width = radius
+  )
+
+  full_concentration <- sum(selected$value)
+  list(
+    use_grid = FALSE,
+    cell = cell,
+    x = best_local$x[1],
+    y = best_local$y[1],
+    concentration = full_concentration,
+    local_points = length(local_ix),
+    local_ix = local_metric$ix,
+    selected_ix = selected$ix,
+    selected = selected
+  )
+}
+
+invalidate_pair_refine_cache <- function(cache, removed_ix, affected_cells) {
+  if (length(cache) == 0L) {
+    return(cache)
+  }
+
+  keep <- vapply(cache, function(entry) {
+    !entry$cell %in% affected_cells &&
+      length(intersect(entry$local_ix, removed_ix)) == 0L &&
+      length(intersect(entry$selected_ix, removed_ix)) == 0L
+  }, logical(1))
+
+  cache[keep]
 }
 
 #' @noRd

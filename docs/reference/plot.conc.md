@@ -1,7 +1,11 @@
-# Automatically create a plot for objects obtained from highest_concentration()
+# Plot deprecated geohash hotspot results
 
-Takes an object produced by \`highest_concentration()\`, and creates an
-interactive map.
+Deprecated plotting method for objects produced by
+[`highest_concentration()`](https://mharinga.github.io/spatialrisk/reference/highest_concentration.md).
+For current hotspot results, use
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the object
+returned by
+[`concentration_hotspot`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md).
 
 ## Usage
 
@@ -22,35 +26,35 @@ plot(
 
 - x:
 
-  object of class \`conc\` obtained from \`highest_concentration()\`
+  Legacy object of class `conc`.
 
 - grid_points:
 
-  show grid points (TRUE), or objects (FALSE)
+  Logical. Whether to show grid points.
 
 - legend_title:
 
-  title of legend
+  Optional legend title.
 
 - palette:
 
-  palette for grid points (defaults to "viridis")
+  Palette used for the point layer.
 
 - legend_position:
 
-  legend position for grid points legend (defaults to "bottomleft")
+  Legend position for the point layer.
 
 - providers:
 
-  providers to show. See \`leaflet::providers\` for a list.
+  Leaflet tile providers.
 
 - ...:
 
-  additional arguments affecting the interactive map produced
+  Additional arguments passed to the interactive map.
 
 ## Value
 
-Interactive view of geohashes with highest concentrations
+An interactive map.
 
 ## Author
 

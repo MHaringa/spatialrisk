@@ -2,33 +2,32 @@
 
 ## Motivation
 
-Insurance portfolios often contain many point-level exposures, such as
-buildings or policies with an insured amount. For concentration risk
-management, the relevant question is not only the total portfolio value,
-but also how much value can accumulate locally.
+Fixed-radius concentration can be formulated as a weighted
+circle-placement problem: given point locations with associated weights
+and a disk of fixed radius, find the centre of the disk that maximises
+the total weight enclosed. This is a classical spatial optimisation
+problem from computational geometry.
 
-A common applied task is therefore to determine the largest total value
-within a circle of fixed radius. This type of calculation is useful when
-internal risk limits or regulatory requirements define concentration in
-terms of exposure within a specified distance, for example a 200 metre
-radius.
+In its simplest form, the question is: where can I place a 200 metre
+circle so that the total insured value inside that circle is as large as
+possible?
 
-The purpose of `spatialrisk` is to make this workflow reproducible in R:
-
-- inspect which observations fall within a radius;
-- calculate fixed-radius sums around selected target locations;
-- identify concentration hotspots;
-- summarise point-level values to polygons for reporting.
+In an exposure portfolio, the point weights might represent insured
+value, population, asset value, infrastructure value, or another
+quantity observed at point locations. Insurance concentration analysis
+is one practical application: the same fixed-radius problem can be
+interpreted as finding the largest local accumulation of insured value.
 
 The package does not impose a probabilistic model. It computes
 deterministic spatial aggregates from observed point locations and
-values.
+values. The workflows and parameter choices shown in this vignette are
+illustrative examples of the computational building blocks, not a
+prescribed methodology or process for any particular organisation.
 
 ## Example portfolio
 
-The examples below use the included `Groningen` data. For speed in this
-vignette, we use a small subset. The same functions can be applied to
-larger portfolios.
+The examples below use the included `Groningen` data. The same functions
+can be applied to larger portfolios.
 
 ``` r
 
@@ -51,24 +50,116 @@ head(portfolio)
 
 The `amount` column is the value to be accumulated within each radius.
 In an insurance application this could represent an insured amount,
-exposure measure, or another portfolio value.
+exposure measure, or another portfolio value. The 200 metre radius used
+below is illustrative; the relevant radius depends on the analytical or
+reporting context.
 
-## Inspect observations within a radius
+## Quick example: find the largest concentration
 
-Before searching for a maximum, it is useful to inspect the local
-aggregation rule. The following call identifies all points within 200
-metres of a chosen centre.
+The main applied workflow is
+[`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md).
+It takes point-level exposure data, a value column, and a radius, and
+returns the circle centre with the largest fixed-radius sum.
 
 ``` r
 
-local_points <- points_within_radius(
+hotspot <- concentration_hotspot(
+  portfolio,
+  value = "amount",
+  radius = 200,
+  cell_size = 100,
+  progress = FALSE
+)
+
+hotspot
+#> <hotspot>
+#> Number of hotspots: 1 
+#> Radius: 200 meters
+#> Value: amount 
+#> 
+#>   id      lon      lat amount_sum
+#> 1  1 6.547323 53.23663      64308
+```
+
+The reported `amount_sum` is the sum of `amount` within 200 metres of
+the selected centre. The default `method = "continuous"` searches for a
+centre that may lie anywhere in space, not only on an observed building
+location.
+
+``` r
+
+plot(hotspot)
+```
+
+## Understanding the result
+
+A hotspot result contains two main components:
+
+- `hotspots`: the selected centre coordinates and the fixed-radius sum;
+- `contributing_points`: the observations inside the selected hotspot
+  radius.
+
+``` r
+
+hotspot$hotspots
+#>   id      lon      lat amount_sum
+#> 1  1 6.547323 53.23663      64308
+
+head(hotspot$contributing_points[, c("id", "data_row", "lon", "lat",
+                                     "amount", "amount_sum")])
+#>   id data_row      lon      lat amount amount_sum
+#> 1  1     1492 6.545297 53.23569    148      64308
+#> 2  1     4703 6.545482 53.23547    132      64308
+#> 3  1    18287 6.545429 53.23546    130      64308
+#> 4  1    19958 6.545392 53.23543    138      64308
+#> 5  1    22587 6.545493 53.23545    142      64308
+#> 6  1       19 6.544724 53.23646    411      64308
+```
+
+This separation between the hotspot centre and the contributing
+observations is important in applied insurance work. It allows the
+result to be inspected, mapped, and reconciled with the underlying
+portfolio. The `data_row` column identifies the row in the original
+input data.
+
+## Inspecting contributing locations
+
+The observations assigned to the selected hotspot are stored directly in
+the hotspot object. This is the safest way to audit the reported
+hotspot, because it uses the exact contributing observations returned by
+the search.
+
+``` r
+
+head(hotspot$contributing_points)
+#>   id data_row      lon      lat amount distance_m amount_sum
+#> 1  1     1492 6.545297 53.23569    148   171.0609      64308
+#> 2  1     4703 6.545482 53.23547    132   178.2999      64308
+#> 3  1    18287 6.545429 53.23546    130   181.3932      64308
+#> 4  1    19958 6.545392 53.23543    138   185.6613      64308
+#> 5  1    22587 6.545493 53.23545    142   179.4206      64308
+#> 6  1       19 6.544724 53.23646    411   174.5054      64308
+nrow(hotspot$contributing_points)
+#> [1] 207
+sum(hotspot$contributing_points$amount)
+#> [1] 64308
+```
+
+The lower-level function
+[`points_within_radius()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
+applies the same local inclusion rule around a specified centre. It is
+useful for checking a known or externally specified location.
+
+``` r
+
+known_centre_points <- points_within_radius(
   portfolio,
   lon_center = 6.5549,
   lat_center = 53.1942,
   radius = 200
 )
 
-head(local_points)
+head(known_centre_points)
 #> # A tibble: 6 × 4
 #>     lon   lat amount distance_m
 #>   <dbl> <dbl>  <dbl>      <dbl>
@@ -78,17 +169,17 @@ head(local_points)
 #> 4  6.55  53.2    246       70.6
 #> 5  6.56  53.2    768       76.6
 #> 6  6.55  53.2    238       79.2
-nrow(local_points)
+nrow(known_centre_points)
 #> [1] 110
-sum(local_points$amount)
+sum(known_centre_points$amount)
 #> [1] 25668
 ```
 
 The returned data contains the observations that contribute to this
-local fixed-radius sum. This is helpful for auditability: the aggregate
-can be traced back to the underlying policies or locations.
+specified local fixed-radius sum. This makes the aggregate traceable
+back to the underlying policies or locations.
 
-## Calculate fixed-radius sums around target locations
+## Calculating sums at specified locations
 
 The same operation can be repeated for several target locations with
 [`radius_sum()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md).
@@ -96,7 +187,6 @@ Here, the target locations are the first five observations in the
 portfolio.
 
 ``` r
-
 
 targets <- portfolio[1:5, c("lon", "lat")]
 
@@ -122,108 +212,30 @@ target_sums
 
 The `targets` and `reference` arguments are separated deliberately. This
 makes it possible to evaluate concentration at existing policy
-locations, at grid points, or at any other candidate centres.
+locations, at externally specified coordinates, or at candidate centres
+created in a custom workflow. In this sense,
+[`points_within_radius()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
+and
+[`radius_sum()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
+are supporting functions: they provide transparency and flexibility
+around the main hotspot search.
 
-## Identify a concentration hotspot
+## Continuous vs observed centres
 
-The main applied task is to find the location where the fixed-radius sum
-is largest.
-[`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
-searches for such a centre and returns both the hotspot and the
-contributing observations. The default `method = "continuous"` searches
-for a centre that may lie between buildings. Internally, it uses a
-coarse spatial screening step followed by local pair-intersection
-refinement. If the local refinement subset is larger than
-`max_refinement_points`, the function falls back to grid refinement.
+The maximum fixed-radius circle does not generally need to be centred on
+one of the insured locations. This distinction matters because a circle
+placed between several buildings may cover a larger total value than any
+circle centred exactly on a building.
 
-``` r
+`spatialrisk` therefore distinguishes two useful search strategies:
 
+- `method = "continuous"`: the centre may lie anywhere in space;
+- `method = "observed"`: candidate centres are limited to observed point
+  locations.
 
-hotspot <- concentration_hotspot(
-  portfolio,
-  value = "amount",
-  radius = 200,
-  cell_size = 100,
-  progress = FALSE, 
-  top_n = 2
-)
-
-plot(hotspot)
-```
-
-The reported `amount_sum` is the sum of `amount` within the 200 metre
-circle around the selected centre. The argument `top_n` gives the number
-of hotspots to return. When `top_n > 1`, the points contributing to the
-first hotspot are removed before the next hotspot is searched for. This
-gives non-overlapping hotspot assignments. The contributing observations
-are available as follows:
-
-``` r
-
-head(hotspot$contributing_points[, c("id", "data_row", "lon", "lat", "amount", "amount_sum")])
-#>   id data_row      lon      lat amount amount_sum
-#> 1  1     1492 6.545297 53.23569    148      64308
-#> 2  1     4703 6.545482 53.23547    132      64308
-#> 3  1    18287 6.545429 53.23546    130      64308
-#> 4  1    19958 6.545392 53.23543    138      64308
-#> 5  1    22587 6.545493 53.23545    142      64308
-#> 6  1       19 6.544724 53.23646    411      64308
-```
-
-This separation between the hotspot centre and the contributing
-observations is important in applied insurance work. It allows the
-result to be inspected, mapped, and reconciled with the underlying
-portfolio.
-
-The same workflow can also be run step by step. This is useful when the
-intermediate candidate selection needs to be inspected before the final
-hotspot is optimised.
-
-``` r
-
-
-model <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
-                             cell_size = 100)
-model <- select_candidates(model, progress = FALSE)
-step_hotspot <- optimize_hotspot(model, top_n = 2, progress = FALSE)
-```
-
-Calling `plot(model)` before candidate selection shows the rasterised
-portfolio sum per cell. After
-[`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
-`plot(model)` shows only the focal candidate cells above the
-automatically estimated lower bound. The lower bound can also be
-supplied explicitly, for example
-`select_candidates(model, threshold = 1000)`.
-
-The automatic lower bound is deliberately conservative. The function
-first takes the highest cells from the focal raster. For those cells it
-runs a small local refinement step and uses the best refined
-concentration as the lower bound. Candidate cells are then all focal
-cells whose moving-window sum is at least this lower bound. The
-candidate map is therefore an inspection view of where the next hotspot
-may be found, not a fixed list of final hotspots.
-
-When `top_n > 1`, the search is repeated. After the first hotspot has
-been found, its contributing observations are removed from the remaining
-portfolio and the screening, candidate selection, and refinement steps
-are run again for the next hotspot. This is why a candidate map that
-currently shows, for example, five focal cells can still lead to ten
-hotspots when `optimize_hotspot(model, top_n = 10)` is used: the five
-cells describe the first search iteration only.
-
-The default continuous method may place the hotspot centre between
-buildings. This is important: the circle with the largest total value
-often does not have its centre exactly on one observed building, but
-somewhere between several buildings.
-
-The package also includes an observed-points method, available by
-setting `method = "observed"` in
-[`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md).
-This method searches only observed point locations as possible circle
-centres. It is useful as a fast and deterministic benchmark, but it can
-miss a higher concentration when the best circle centre lies between
-buildings.
+The observed-points method is fast and deterministic, and is useful as a
+benchmark. It can, however, miss a higher concentration when the best
+circle centre lies between buildings.
 
 ``` r
 
@@ -253,11 +265,11 @@ rbind(
 ```
 
 In this example the continuous hotspot has a higher `amount_sum` than
-the observed-points hotspot, because the observed method only evaluates
-existing building locations as candidate centres.
+the observed-points hotspot. The example should be read as a
+demonstration of the methodological distinction: restricting centres to
+observed locations changes the optimisation problem.
 
 ``` r
-
 
 plot(hotspot_continuous)
 ```
@@ -268,12 +280,127 @@ plot(hotspot_observed)
 ```
 
 The original grid-refinement workflow remains available with
-`method = "grid"`. In that method, `grid_precision` controls the local
-grid refinement. For the default `method = "continuous"`,
-`grid_precision` is only used if the local pair-refinement subset is too
-large and the function falls back to grid refinement.
+`method = "grid"`. In that method, `grid_spacing` controls the local
+grid refinement. For the default `method = "continuous"`, `grid_spacing`
+is only used if the local pair-refinement subset is too large and the
+function falls back to grid refinement.
 
-## Reporting by polygon
+## Multiple hotspots
+
+The argument `n_hotspots` gives the number of hotspots to return. When
+`n_hotspots > 1`, hotspots are selected sequentially: after the first
+hotspot has been found, its contributing observations are removed before
+the next hotspot is searched for. This gives non-overlapping hotspot
+assignments.
+
+``` r
+
+hotspot_top2 <- concentration_hotspot(
+  portfolio,
+  value = "amount",
+  radius = 200,
+  cell_size = 100,
+  progress = FALSE,
+  n_hotspots = 2
+)
+
+hotspot_top2$hotspots
+#>   id      lon      lat amount_sum
+#> 1  1 6.547323 53.23663      64308
+#> 2  2 6.523418 53.23093      57977
+```
+
+The first hotspot addresses the single-circle maximum concentration
+problem. The second hotspot is the largest hotspot in the remaining
+portfolio after removing the observations assigned to the first hotspot.
+This greedy procedure is useful for reporting several distinct local
+accumulations, but it should not be interpreted as a globally optimal
+joint placement of several circles.
+
+``` r
+
+plot(hotspot_top2)
+```
+
+## How the search works
+
+The high-level hotspot workflow can also be run step by step. This is
+useful when the intermediate candidate selection needs to be inspected
+before the final hotspot is optimised.
+
+Conceptually, the search has four stages:
+
+- coarse spatial screening identifies promising regions;
+- candidate regions are retained using an automatically estimated lower
+  bound;
+- candidate centres are generated or refined within those regions;
+- exact radius sums are evaluated for candidate centres and the best
+  result is returned.
+
+``` r
+
+model <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
+                             cell_size = 100)
+model <- select_candidates(model, progress = FALSE)
+step_hotspot <- optimize_hotspot(model, n_hotspots = 2, progress = FALSE)
+
+step_hotspot$hotspots
+#>   id      lon      lat amount_sum
+#> 1  1 6.547323 53.23663      64308
+#> 2  2 6.523418 53.23093      57977
+```
+
+Calling `plot(model)` after
+[`prepare_spatialrisk()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+but before candidate selection shows the rasterised portfolio sum per
+cell. After
+[`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
+`plot(model)` shows only the focal candidate cells above the selected
+lower bound.
+
+``` r
+
+prepared <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
+                                cell_size = 100)
+plot(prepared)
+```
+
+``` r
+
+
+selected <- select_candidates(prepared, progress = FALSE)
+plot(selected)
+```
+
+The lower bound can also be supplied explicitly, for example
+`select_candidates(model, threshold = 1000)`. When `threshold = NULL`,
+the automatic lower bound is deliberately conservative. The function
+first takes the highest cells from the focal raster. For those cells it
+runs a small local refinement step and uses the best refined
+concentration as the lower bound. Candidate cells are then all focal
+cells whose moving-window sum is at least this lower bound. The
+candidate map is therefore an inspection view of where the next hotspot
+may be found, not a fixed list of final hotspots.
+
+When `n_hotspots > 1`, the search is repeated. After the first hotspot
+has been found, its contributing observations are removed from the
+remaining portfolio and the screening, candidate selection, and
+refinement steps are run again for the next hotspot. This is why a
+candidate map that currently shows, for example, five focal cells can
+still lead to ten hotspots when
+`optimize_hotspot(model, n_hotspots = 10)` is used: the five cells
+describe the first search iteration only.
+
+The default continuous method uses terra rasterisation and focal sums
+for the screening step. It then refines all candidate areas above the
+lower bound by evaluating observed local points and the circle centres
+implied by local point pairs. If the local refinement subset is larger
+than `max_refinement_points`, the function falls back to grid refinement
+for that iteration. The final selected centre is evaluated against the
+full remaining portfolio, not only against the local subset used for
+refinement.
+
+## Polygon reporting
 
 Fixed-radius concentration is a point-level calculation. For
 communication and reporting, it is often useful to summarise values by
@@ -314,13 +441,26 @@ can be useful, but they should not be interpreted as the same measure.
 
 ## Practical considerations
 
-The radius should be chosen from the application context. In insurance
-concentration analysis, it may follow from regulation, internal risk
-appetite, or a scenario definition.
+The radius should be chosen from the application context. In applied
+concentration analysis, it may follow from a scenario definition,
+reporting objective, risk appetite definition, hazard radius, service
+radius, or another domain-specific choice. The package computes the
+requested spatial aggregates; the analyst determines which exposure
+measure, radius, portfolio scope, and assumptions are appropriate for
+the application.
 
 The coordinate columns supplied to the functions are assumed to be
 longitude and latitude in EPSG:4326 unless specified otherwise. Distance
-calculations for point-level radius operations are performed in metres.
+calculations for hotspot optimisation are performed in a projected
+coordinate reference system with metre units. The default
+`crs_metric = 3035` is suitable for Europe-wide applications; for other
+regions, use a metric CRS appropriate to the study area.
+
+For the `continuous` and `grid` methods, `cell_size` controls the
+initial screening resolution. Smaller cells give a finer screening
+surface but increase computation time. The value should be positive and
+no larger than the radius. For `radius = 200`, a `cell_size` such as 100
+metres is a practical starting point.
 
 For large portfolios, it is useful to keep a reproducible record of:
 
@@ -330,10 +470,10 @@ For large portfolios, it is useful to keep a reproducible record of:
 - the search parameters used for hotspot detection;
 - the observations contributing to the reported hotspot.
 
-## Relation to circle placement problems
+## Mathematical background
 
 The concentration hotspot problem in `spatialrisk` can be interpreted as
-a fixed-radius circle placement problem. Given a set of insured
+a fixed-radius circle-placement problem. Given a set of insured
 locations, such as buildings or other point-represented risks, each
 location has an associated value, for example insured amount, exposure,
 premium, or loss. The objective is to find the location of a circle with
@@ -344,15 +484,25 @@ This problem is closely related to the circle placement problem studied
 by Chazelle and Lee (1986). In their formulation, a set of weighted
 points in the plane is given and a disk of fixed radius must be placed
 such that the total covered weight is maximized. This provides the
-theoretical basis for the pairwise-intersection method implemented here.
+theoretical basis for using boundary and pair-intersection geometry.
 
-The pairwise-intersection method avoids evaluating all possible grid
-locations. Instead, it generates candidate centers from observed point
-locations and from the intersections of radius-r circles around pairs of
-observations. Under the assumptions that observations are points,
-weights are non-negative, distances are Euclidean in a projected
-coordinate reference system, and the radius is fixed, this candidate set
-is sufficient to find the exact optimum for the first hotspot.
+For the underlying continuous fixed-radius problem, an optimum can be
+represented by a centre associated with the relevant point and
+circle-boundary intersection geometry under the usual assumptions:
+observations are points, weights are non-negative, distances are
+Euclidean in a projected coordinate reference system, and the radius is
+fixed. The candidate set consisting of observed point locations and the
+intersections of radius-`r` circles around pairs of observations is
+sufficient for the first single-circle optimum under those assumptions.
+
+The practical `continuous` implementation uses spatial screening and
+local refinement to avoid evaluating the full candidate set
+indiscriminately. Computational settings such as `cell_size`, the
+candidate lower bound, and `max_refinement_points` determine how
+extensively the candidate space is explored. The pair-intersection
+refinement is exact within the screened local candidate areas; it is not
+the same as evaluating every possible pair-intersection candidate
+globally in every call.
 
 For insurance applications this is useful because the method directly
 targets accumulation risk: the maximum total value that can be found
@@ -362,6 +512,12 @@ exposed sums insured, or other portfolio-level risk measures.
 
 For multiple hotspots, `spatialrisk` follows a greedy approach: after
 the first hotspot is selected, its covered points are removed and the
-next hotspot is computed on the remaining portfolio. Each step is exact
-under the assumptions above, but the sequence is not necessarily
-globally optimal as a joint multi-circle optimization problem.
+next hotspot is computed on the remaining portfolio. Each step solves
+the corresponding single-hotspot search on the remaining data according
+to the selected method and settings, but the sequence is not necessarily
+globally optimal as a joint multi-circle optimisation problem.
+
+## Reference
+
+Chazelle, B. M. and Lee, D. T. (1986). On a circle placement problem.
+Computing, 36(1–2), 1–16. <doi:10.1007/BF02238188>.

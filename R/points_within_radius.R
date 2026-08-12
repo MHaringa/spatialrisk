@@ -1,20 +1,20 @@
-#' Find points within radius around one or more center coordinates
+#' Find points within radius around one or more centre coordinates
 #'
 #' @description This function selects rows from a data frame whose
 #' longitude/latitude coordinates fall within a given radius (in meters)
-#' from one or more specified center points. It also calculates the distance
-#' of each point to the center.
+#' from one or more specified centre points. It also calculates the distance
+#' of each point to the centre.
 #'
 #' @param data A data frame containing at least longitude and latitude columns.
-#' @param lon_center Numeric scalar or vector, longitude(s) of the circle center(s).
-#' @param lat_center Numeric scalar or vector, latitude(s) of the circle center(s).
+#' @param lon_center Numeric scalar or vector, longitude(s) of the circle centre(s).
+#' @param lat_center Numeric scalar or vector, latitude(s) of the circle centre(s).
 #' @param lon A string with the name of the longitude column in `data`.
 #' @param lat A string with the name of the latitude column in `data`.
 #' @param radius Numeric, circle radius in meters. Default is 200.
-#' @param sort Logical, if `TRUE` results are sorted by distance within each center.
+#' @param sort Logical, if `TRUE` results are sorted by distance within each centre.
 #'
 #' @return A data frame subset of `data` with an extra column `distance_m` and
-#'   if multiple centers are provided, also a column `center_index`.
+#'   if multiple centres are provided, also a column `center_index`.
 #'
 #' @export
 points_within_radius <- function(data, lon_center, lat_center,

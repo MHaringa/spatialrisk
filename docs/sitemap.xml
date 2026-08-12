@@ -13,7 +13,6 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/conc_per_cell_new.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/concentration.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/concentration_hotspot_indexed.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/concentration_per_candidate_cell.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/convert_crs_df.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/convert_df_to_sf.html</loc></url>
@@ -30,7 +29,6 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/map_points.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/map_points_to_cells.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/max_cover_circle.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/max_cover_circle_indexed.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/mw_create.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/neighborhood_gh_search.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_corop.html</loc></url>
@@ -40,9 +38,8 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_postcode4.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_provincie.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/plot.conc.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/plot.concentration.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/plot.hotspot.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/plot.html</loc></url>
+<url><loc>https://mharinga.github.io/spatialrisk/reference/plot.neighborhood.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/plot_points.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle_vec.html</loc></url>

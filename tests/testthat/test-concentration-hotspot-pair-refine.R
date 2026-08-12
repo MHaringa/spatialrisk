@@ -36,7 +36,7 @@ test_that("continuous output structure matches grid method", {
     value = "amount",
     radius = 200,
     cell_size = 100,
-    grid_precision = 5,
+    grid_spacing = 5,
     method = "grid",
     progress = FALSE
   )
@@ -87,7 +87,7 @@ test_that("explicit grid method remains available", {
     value = "amount",
     radius = 200,
     cell_size = 100,
-    grid_precision = 5,
+    grid_spacing = 5,
     method = "grid",
     progress = FALSE
   )
@@ -103,13 +103,13 @@ test_that("explicit grid method remains available", {
   expect_equal(attr(pair_out, "method"), "continuous")
 })
 
-test_that("continuous top_n removes selected points", {
+test_that("continuous n_hotspots removes selected points", {
   x <- Groningen[1:200, c("lon", "lat", "amount")]
 
   out <- concentration_hotspot(
     x,
     value = "amount",
-    top_n = 2,
+    n_hotspots = 2,
     radius = 200,
     cell_size = 100,
     progress = FALSE
@@ -121,19 +121,99 @@ test_that("continuous top_n removes selected points", {
   expect_length(intersect(first_row, second_row), 0)
 })
 
-test_that("continuous top_n concentrations are non-increasing", {
+test_that("continuous n_hotspots concentrations are non-increasing", {
   x <- Groningen[1:300, c("lon", "lat", "amount")]
 
   out <- concentration_hotspot(
     x,
     value = "amount",
-    top_n = 4,
+    n_hotspots = 4,
     radius = 200,
     cell_size = 100,
     progress = FALSE
   )
 
   expect_true(all(diff(out$hotspots$amount_sum) <= 0))
+})
+
+test_that("continuous hotspot result is stable across cell sizes", {
+  x <- Groningen[1:300, c("lon", "lat", "amount")]
+  cell_sizes <- c(25, 50, 100, 150, 200)
+
+  out <- lapply(cell_sizes, function(cell_size) {
+    concentration_hotspot(
+      x,
+      value = "amount",
+      radius = 200,
+      cell_size = cell_size,
+      progress = FALSE
+    )
+  })
+
+  amount_sum <- vapply(out, function(result) result$hotspots$amount_sum,
+                       numeric(1))
+  contributing_rows <- lapply(out, function(result) {
+    sort(result$contributing_points$data_row)
+  })
+
+  expect_equal(amount_sum, rep(amount_sum[[1]], length(amount_sum)))
+  expect_equal(contributing_rows, rep(contributing_rows[1], length(cell_sizes)))
+})
+
+test_that("continuous pair refinement cache reuses unaffected cells", {
+  x <- Groningen[1:120, c("lon", "lat", "amount")]
+  x$ix <- seq_len(nrow(x))
+  state <- spatialrisk:::initialise_terra_hotspot_state(
+    x,
+    value = "amount",
+    radius = 200,
+    cell_size = 100,
+    lon = "lon",
+    lat = "lat",
+    crs_metric = 3035
+  )
+  metric <- convert_crs_df(x, 4326, 3035, "lon", "lat", "x", "y")
+  threshold <- spatialrisk:::estimate_hotspot_candidate_threshold(
+    state$focal,
+    x,
+    list(value = "amount", cell_size = 100, radius = 200,
+         crs_metric = 3035, lon = "lon", lat = "lat")
+  )
+  candidate_cells <- spatialrisk:::cells_above_threshold_with_values(
+    state$focal,
+    threshold
+  )
+
+  first <- spatialrisk:::pair_refine_candidate_cells(
+    candidate_cells = candidate_cells,
+    metric = metric,
+    value = "amount",
+    radius = 200,
+    cell_size = 100,
+    max_refinement_points = 1000,
+    cache = list()
+  )
+  second <- spatialrisk:::pair_refine_candidate_cells(
+    candidate_cells = candidate_cells,
+    metric = metric,
+    value = "amount",
+    radius = 200,
+    cell_size = 100,
+    max_refinement_points = 1000,
+    cache = first$cache
+  )
+
+  expect_gt(first$cache_misses, 0)
+  expect_equal(second$cache_hits, nrow(candidate_cells))
+  expect_equal(second$cache_misses, 0)
+  expect_equal(second$concentration, first$concentration)
+
+  invalidated <- spatialrisk:::invalidate_pair_refine_cache(
+    first$cache,
+    removed_ix = first$selected$ix[1],
+    affected_cells = integer()
+  )
+  expect_lt(length(invalidated), length(first$cache))
 })
 
 test_that("continuous falls back to grid refinement above point limit", {
@@ -144,7 +224,7 @@ test_that("continuous falls back to grid refinement above point limit", {
     value = "amount",
     radius = 200,
     cell_size = 100,
-    grid_precision = 5,
+    grid_spacing = 5,
     max_refinement_points = 1,
     progress = FALSE
   )

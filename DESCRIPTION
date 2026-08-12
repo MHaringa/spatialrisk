@@ -7,14 +7,16 @@ Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"),
 Author: Martin Haringa [aut, cre]
 Maintainer: Martin Haringa <mtharinga@gmail.com>
 BugReports: https://github.com/mharinga/spatialrisk/issues
-Description: Provides methods for spatial concentration and radius-based risk 
-    calculations. The package focuses on efficient determination of the sum of 
-    observations within a given radius, identifying areas of high local 
-    concentration, and aggregating point data to polygon geometries. These 
-    methods are useful for applications such as insurance, urban analytics, 
-    environmental exposure analysis, and other spatial point pattern workflows. 
-    The underlying maximum covering problem is described by Church (1974) 
-    <doi:10.1007/BF01942293>.
+Description: Provides computational building blocks for fixed-radius spatial 
+    aggregation, weighted circle-placement problems, hotspot detection, and 
+    polygon-based spatial summaries. The package focuses on efficient 
+    determination of the sum of observations within a given radius, identifying 
+    areas of high local concentration, and aggregating point data to polygon 
+    geometries. These methods are useful for applications such as insurance, 
+    urban analytics, environmental exposure analysis, and other spatial point 
+    pattern workflows. The fixed-radius circle placement problem is discussed 
+    by Chazelle and Lee (1986) <doi:10.1007/BF02238188>, and related maximum 
+    covering problems are described by Church (1974) <doi:10.1007/BF01942293>.
 License: GPL (>= 2)
 URL: https://github.com/mharinga/spatialrisk, https://mharinga.github.io/spatialrisk/
 LazyData: true

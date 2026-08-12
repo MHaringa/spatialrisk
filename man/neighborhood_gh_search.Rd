@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_highest_concentration.R
 \name{neighborhood_gh_search}
 \alias{neighborhood_gh_search}
-\title{Search for coordinates with higher concentrations within geohash}
+\title{Deprecated geohash neighbourhood refinement}
 \usage{
 neighborhood_gh_search(
   hc,
@@ -13,45 +13,27 @@ neighborhood_gh_search(
 )
 }
 \arguments{
-\item{hc}{object of class `concentration` obtained from
-`highest_concentration()`}
+\item{hc}{Deprecated. Object returned by \code{highest_concentration()}.}
 
-\item{highest_geohash}{the number of geohashes the searching algorithm is
-applied to. Defaults to 1 (i.e. algorithm is only applied to the geohash
-with the highest concentration).}
+\item{highest_geohash}{Deprecated. Number of geohashes used by the legacy
+refinement.}
 
-\item{max.call}{maximum number of calls to the concentration function (i.e.
-the number of coordinates in the neighborhood of the highest concentration).
-Defaults to 1000.}
+\item{max.call}{Deprecated. Maximum number of calls used by the legacy
+simulated-annealing search.}
 
-\item{verbose}{show messages from the algorithm (TRUE/FALSE). Defaults to
-FALSE.}
+\item{verbose}{Deprecated. Whether to show messages from the legacy search.}
 
-\item{seed}{set seed}
+\item{seed}{Deprecated. Random seed for the legacy search.}
 }
 \value{
-data.frame
+A legacy data frame with refined hotspot coordinates.
 }
 \description{
-\code{\link{highest_concentration}} returns the highest concentration within
-a portfolio based on grid points. However, higher concentrations can be
-found within two grid points. `neighborhood_gh_search()` looks for even
-higher concentrations in the neighborhood of the grid points with the highest
-concentrations. This optimization is done by means of Simulated Annealing.
-}
-\examples{
-\dontrun{
-# Find highest concentration with a precision of a grid of 25 meters
-hc1 <- highest_concentration(Groningen, amount, radius = 200,
- grid_distance = 25)
-
-# Increase the number of calls for more extensive search
-hc1_nghb <- neighborhood_gh_search(hc1, max.call = 7000, highest_geohash = 1)
-hc2_nghb <- neighborhood_gh_search(hc1, max.call = 7000, highest_geohash = 2)
-plot(hc1_nghb)
-plot(hc2_nghb)
-}
+`neighborhood_gh_search()` is deprecated. Use
+\code{\link{concentration_hotspot}} for fixed-radius hotspot detection in
+new analyses.
 }
 \author{
 Martin Haringa
 }
+\keyword{internal}

@@ -12,15 +12,19 @@
   focal candidate cells above the lower bound, rather than only around the top
   focal cell. Candidate centres are now scored against the full remaining
   portfolio before the best hotspot is selected. This avoids cases where a
-  later `top_n` hotspot could have a higher concentration than the first
+  later `n_hotspots` hotspot could have a higher concentration than the first
   reported hotspot.
-* Improved `top_n > 1` performance for the continuous hotspot method by caching
-  pair-intersection refinements per focal candidate cell. After each greedy
-  step, only cache entries affected by removed contributing points or changed
-  focal cells are recomputed.
-* Added a regression test to check that continuous `top_n` hotspot
+* Improved `n_hotspots > 1` performance for the continuous hotspot method by
+  caching pair-intersection refinements per focal candidate cell. After each
+  greedy step, only cache entries affected by removed contributing points or
+  changed focal cells are recomputed.
+* Added a regression test to check that continuous `n_hotspots` hotspot
   concentrations are non-increasing after contributing points are removed
   between iterations.
+* `concentration_hotspot()` and `optimize_hotspot()` now prefer `n_hotspots`
+  instead of `top_n`, and `concentration_hotspot()` and `select_candidates()`
+  now prefer `grid_spacing` instead of `grid_precision`. The old argument names
+  remain temporarily supported with lifecycle deprecation warnings.
 
 # spatialrisk 0.8.0
 
@@ -63,8 +67,8 @@
 * Improved `radius_sum()` validation, output column handling, and C++ prefiltering
   of incomplete reference rows.
 * Updated `concentration_hotspot()` documentation to clarify that the function
-  uses a grid-based search with local refinement. The search precision is
-  controlled by `cell_size` and `grid_precision`.
+  uses a grid-based search with local refinement. The search resolution is
+  controlled by `cell_size` and `grid_spacing`.
 * `concentration_hotspot()` now uses `progress` instead of `print_progress`.
   Since this is a new public API, the old argument is not retained there; older
   deprecated functions still translate their legacy progress arguments.

@@ -1,9 +1,12 @@
-# Identify fixed-radius concentration hotspots
+# Find fixed-radius concentration hotspots
 
-Identifies centre coordinates of fixed-radius circles with high local
-concentration. In insurance applications this can be used to find
-locations where the total insured value within a prescribed radius is
-largest. This function is a wrapper around the decomposed workflow
+Finds fixed-radius concentration hotspots in weighted point-level data.
+This is a computational building block for weighted circle-placement
+problems: given point locations and a fixed radius, find a centre whose
+surrounding circle contains a large aggregated value. In insurance
+applications, the weights may represent insured values or another
+exposure measure. This function is a wrapper around the decomposed
+workflow
 [`prepare_spatialrisk`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
 [`select_candidates`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
 and
@@ -15,16 +18,18 @@ and
 concentration_hotspot(
   data,
   value,
-  top_n = 1,
+  n_hotspots = 1,
   radius = 200,
   cell_size = 100,
-  grid_precision = 1,
+  grid_spacing = 1,
   max_refinement_points = 1000,
   lon = "lon",
   lat = "lat",
   crs_metric = 3035,
   progress = TRUE,
-  method = c("continuous", "grid", "observed")
+  method = c("continuous", "observed", "grid"),
+  top_n = lifecycle::deprecated(),
+  grid_precision = lifecycle::deprecated()
 )
 ```
 
@@ -40,15 +45,15 @@ concentration_hotspot(
   A string giving the name of the numeric column in `data` to aggregate
   within each radius.
 
-- top_n:
+- n_hotspots:
 
-  Positive integer greater or equal to 1. Specifies how many
-  non-overlapping hotspots are returned. Default is `1`.
+  Positive integer greater or equal to 1. Number of sequential
+  non-overlapping hotspots to return. Default is `1`.
 
 - radius:
 
   Numeric. Radius of the circle in meters. This is typically the
-  regulatory or scenario radius. Default is `200`.
+  application-specific radius of interest. Default is `200`.
 
 - cell_size:
 
@@ -58,14 +63,15 @@ concentration_hotspot(
   `method = "observed"` searches observed point locations and does not
   use this value as a search-grid resolution. Default is `100`.
 
-- grid_precision:
+- grid_spacing:
 
-  Numeric. Approximate spacing in meters used for grid-based refinement.
-  This is used by `method = "grid"` and by `method = "continuous"` only
-  when the local subset is larger than `max_refinement_points` and the
-  method falls back to grid refinement. It is not used by
+  Numeric. Spacing between candidate grid centres in the units of
+  `crs_metric`; for the default metric CRS these units are meters. This
+  is used by `method = "grid"` and by `method = "continuous"` only when
+  the local subset is larger than `max_refinement_points` and the method
+  falls back to grid refinement. It is not used by
   `method = "observed"`. Smaller values evaluate more candidate centres
-  and increase search precision. Default is `1`.
+  and increase computation time. Default is `1`.
 
 - max_refinement_points:
 
@@ -97,7 +103,7 @@ concentration_hotspot(
 
   Logical. Whether to print progress messages for the main hotspot
   search steps. This is useful for larger portfolios and for
-  `top_n > 1`. Default is `TRUE`.
+  `n_hotspots > 1`. Default is `TRUE`.
 
 - method:
 
@@ -105,6 +111,14 @@ concentration_hotspot(
   for a centre that may lie between observed points. `"observed"`
   searches only observed point locations as candidate centres. `"grid"`
   uses the original grid-refinement workflow.
+
+- top_n:
+
+  Deprecated. Use `n_hotspots` instead.
+
+- grid_precision:
+
+  Deprecated. Use `grid_spacing` instead.
 
 ## Value
 
@@ -126,32 +140,33 @@ automatically around the terra-selected approximate centre, using a
 conservative margin based on `radius` and `cell_size`. If more than
 `max_refinement_points` local points are involved, it falls back to the
 grid refinement used by `method = "grid"`. In that fallback case,
-`grid_precision` controls the local refinement grid; otherwise the
-pair-intersection step does not use `grid_precision`. The pair-refined
+`grid_spacing` controls the local refinement grid; otherwise the
+pair-intersection step does not use `grid_spacing`. The pair-refined
 result is exact only within the terra-selected local search area. The
 `"observed"` method is fast and deterministic, but can miss a larger
 hotspot when the optimal centre lies between observed points. The
 `"grid"` method uses a grid-based search with local refinement; smaller
-`grid_precision` values generally increase precision and computation
-time. Use
+`grid_spacing` values generally increase search resolution and
+computation time. Use
 [`prepare_spatialrisk`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
 [`select_candidates`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
 and
 [`optimize_hotspot`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
 when these steps need to be run or inspected separately.
 
-The pairwise-intersection method treats the hotspot problem as a
-fixed-radius weighted circle placement problem. Candidate centers are
-generated from observed point locations and from intersections of
-radius-\`r\` circles around pairs of observations. For point
-observations with non-negative values in a projected metric coordinate
-system, this candidate set is sufficient to find the exact optimum for
-the first hotspot.
+The underlying continuous hotspot problem can be viewed as a
+fixed-radius weighted circle placement problem. For point observations
+with non-negative values in a projected metric coordinate system,
+candidate centres formed by observed point locations and by
+intersections of radius-\`r\` circles around pairs of observations are
+sufficient to characterise the first single-circle optimum. The
+practical `method = "continuous"` implementation uses spatial screening
+and local refinement, so its result should be interpreted according to
+the selected search settings described above.
 
-For \`top_n \> 1\`, hotspots are selected greedily: after each hotspot
+For `n_hotspots > 1`, hotspots are selected greedily: after each hotspot
 is found, the covered observations are removed before the next hotspot
-is computed. Each step is exact conditional on the remaining
-observations, but the full sequence is not necessarily globally optimal
+is computed. The resulting sequence is not necessarily globally optimal
 as a joint multi-circle problem.
 
 ## References
@@ -172,9 +187,9 @@ hotspot <- concentration_hotspot(
   portfolio,
   value = "amount",
   radius = 200,
+  n_hotspots = 2,
   cell_size = 100,
-  progress = FALSE,
-  top_n = 2
+  progress = FALSE
 )
 
 hotspot$hotspots

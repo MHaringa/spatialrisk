@@ -1,17 +1,34 @@
 # spatialrisk
 
-`spatialrisk` provides tools for fixed-radius spatial concentration
-analysis in R. The package is aimed at applied workflows in which
-point-level values must be aggregated locally, for example to identify
-insurance concentration hotspots under a prescribed radius.
+`spatialrisk` provides tools for fixed-radius spatial aggregation and
+concentration analysis in R. The package is aimed at applied workflows
+in which point-level values must be aggregated locally, for example to
+identify exposure concentration hotspots under a chosen radius.
 
 The central question is practical: given a portfolio of point locations
 with associated values, which locations have the largest total value
-within a circle of fixed radius? This type of problem occurs in
-insurance risk management, but the same operations are useful in other
-spatial point pattern applications.
+within a circle of fixed radius? Mathematically, this is a weighted
+fixed-radius circle-placement problem from computational geometry,
+applied here to spatial exposure data. Insurance concentration analysis
+is one natural application, but the same building blocks can be used for
+other weighted point data analysed within fixed-distance neighbourhoods.
 
-## Installation
+## Main operations
+
+The package is intentionally focused on a small set of operations.
+
+1.  fixed-radius calculations: identify points and compute sums within a
+    radius;
+2.  hotspot detection: find locations with maximum local concentration;
+3.  polygon-based summaries and reporting: aggregate point exposures to
+    reporting areas;
+4.  supporting spatial data and utilities for reproducible workflows.
+
+These operations are composable building blocks for applied
+concentration analyses rather than a prescribed business process or a
+general spatial modelling framework.
+
+## Quick start
 
 ``` r
 
@@ -21,22 +38,11 @@ install.packages("spatialrisk")
 remotes::install_github("MHaringa/spatialrisk")
 ```
 
-## Main operations
-
-The package is intentionally focused on a small set of operations.
-
-1.  identify points within a fixed radius;
-2.  compute fixed-radius sums around target locations;
-3.  search for locations with maximum local concentration;
-4.  aggregate point values to polygons for reporting or visualisation.
-
-These operations are building blocks for applied concentration analyses
-rather than a general spatial modelling framework.
-
-## Applied example
-
 The package includes example address-level data for Groningen. The
 column `amount` represents an example value attached to each location.
+The parameter choices in the examples are illustrative; in practice, the
+relevant radius, value column, and reporting boundaries depend on the
+analytical question.
 
 ``` r
 
@@ -55,34 +61,82 @@ head(portfolio[, c("lon", "lat", "amount")])
 #> 6  6.56  53.2     28
 ```
 
-### Points contributing to a local concentration
+## Find the largest concentration
 
-[`points_within_radius()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
-returns the observations within a given distance from a specified
-centre. This is useful for inspecting which policies, buildings, or
-other exposure points contribute to a local aggregate.
+[`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
+searches for the centre of a fixed-radius circle with the largest
+aggregated value. In an insurance setting this can be used to identify
+local portfolio concentrations under a chosen analytical radius.
 
 ``` r
 
-local_points <- points_within_radius(
+hotspot <- concentration_hotspot(
+  portfolio,
+  value = "amount",
+  radius = 200,
+  cell_size = 100,
+  progress = FALSE
+)
+
+hotspot
+#> <hotspot>
+#> Number of hotspots: 1 
+#> Radius: 200 meters
+#> Value: amount 
+#> 
+#>   id      lon      lat amount_sum
+#> 1  1 6.547323 53.23663      64308
+```
+
+The result contains the selected centre coordinates and the
+corresponding summed value, named from `value`; for example
+`amount_sum`. The contributing observations are stored in
+`hotspot$contributing_points`.
+
+## Inspect and evaluate local concentrations
+
+The lower-level radius functions support inspection and custom
+workflows. The hotspot object already stores the observations that
+contribute to the selected concentration.
+
+``` r
+
+head(hotspot$contributing_points[, c("id", "data_row", "lon", "lat",
+                                     "amount", "amount_sum")])
+#>   id data_row      lon      lat amount amount_sum
+#> 1  1     1492 6.545297 53.23569    148      64308
+#> 2  1     4703 6.545482 53.23547    132      64308
+#> 3  1    18287 6.545429 53.23546    130      64308
+#> 4  1    19958 6.545392 53.23543    138      64308
+#> 5  1    22587 6.545493 53.23545    142      64308
+#> 6  1       19 6.544724 53.23646    411      64308
+sum(hotspot$contributing_points$amount)
+#> [1] 64308
+```
+
+For a known or externally specified centre,
+[`points_within_radius()`](https://mharinga.github.io/spatialrisk/reference/points_within_radius.md)
+returns the observations that fall within the selected radius.
+
+``` r
+
+known_centre_points <- points_within_radius(
   portfolio,
   lon_center = 6.5549,
   lat_center = 53.1942,
   radius = 200
 )
 
-nrow(local_points)
+nrow(known_centre_points)
 #> [1] 110
-sum(local_points$amount)
+sum(known_centre_points$amount)
 #> [1] 25668
 ```
 
-### Fixed-radius sums
-
 [`radius_sum()`](https://mharinga.github.io/spatialrisk/reference/radius_sum.md)
-evaluates the same idea for one or more target locations. The output is
-the target data with an additional column containing the total value
-from the reference data within the specified radius.
+evaluates the same fixed-radius sum for one or more target locations.
+This is useful for evaluating known centres, externally specified
+locations, or candidate points created in a custom analysis.
 
 ``` r
 
@@ -106,66 +160,11 @@ radius_sum(
 #> 5  6.57  53.2        8633
 ```
 
-### Concentration hotspot
+The hotspot search can also be run as a decomposed workflow using
+lower-level preparation, candidate-selection, and optimisation
+functions. See the fixed-radius concentration vignette for details.
 
-[`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
-searches for the centre of a fixed-radius circle with the largest
-aggregated value. In an insurance setting this can be used to identify
-the local portfolio concentration that is relevant for a regulatory or
-internal risk limit. By default, `method = "continuous"` searches for a
-centre that may lie between buildings. Internally, it uses a coarse
-spatial screening step followed by local pair-intersection refinement.
-
-``` r
-
-hotspot <- concentration_hotspot(
-  portfolio,
-  value = "amount",
-  radius = 200,
-  cell_size = 100,
-  progress = FALSE, 
-  top_n = 2
-)
-
-hotspot
-#> <hotspot>
-#> Number of hotspots: 2 
-#> Radius: 200 meters
-#> Value: amount 
-#> 
-#>   id      lon      lat amount_sum
-#> 1  1 6.547323 53.23663      64308
-#> 2  2 6.528279 53.22564      42499
-```
-
-The result contains the selected centre coordinates and the
-corresponding summed value, named from `value`; for example
-`amount_sum`. The contributing observations are stored in
-`hotspot$contributing_points`.
-
-The wrapper can also be decomposed when the candidate-selection step
-needs to be inspected.
-
-``` r
-
-model <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
-                             cell_size = 100)
-model <- select_candidates(model, progress = FALSE)
-step_hotspot <- optimize_hotspot(model, top_n = 2, progress = FALSE)
-
-step_hotspot$hotspots
-#>   id      lon      lat amount_sum
-#> 1  1 6.547323 53.23663      64308
-#> 2  2 6.528279 53.22564      42499
-```
-
-Calling `plot(model)` before candidate selection shows the rasterised
-portfolio sum per cell. After
-[`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
-`plot(model)` shows only the focal candidate cells above the
-automatically estimated lower bound. The lower bound can also be
-supplied explicitly, for example
-`select_candidates(model, threshold = 1000)`.
+## Continuous versus observed centres
 
 The default continuous method can place the circle centre between
 buildings. For comparison, `method = "observed"` searches only observed
@@ -183,7 +182,7 @@ observed_hotspot <- concentration_hotspot(
 )
 
 rbind(
-  continuous = hotspot$hotspots[1, ],
+  continuous = hotspot$hotspots,
   observed = observed_hotspot$hotspots
 )
 #>            id      lon      lat amount_sum
@@ -191,10 +190,11 @@ rbind(
 #> observed    1 6.547288 53.23664      64172
 ```
 
-The original grid-refinement workflow remains available with
-`method = "grid"`.
+This compact comparison illustrates that the maximum fixed-radius
+concentration does not necessarily need to be centred on an observed
+risk location.
 
-## Polygon summaries
+## Polygon-based reporting
 
 Point-level concentration analysis is often followed by reporting at an
 administrative or portfolio-management level. For that purpose,
@@ -211,43 +211,66 @@ province_summary <- summarise_points_by_polygon(
   outside = "ignore"
 )
 
-sf::st_drop_geometry(province_summary)[, c("areaname", "amount_sum")]
-#>         areaname amount_sum
-#> 1        Drenthe   56766689
-#> 2      Flevoland   55795037
-#> 3      Friesland   78581984
-#> 4     Gelderland  269468412
-#> 5      Groningen  106580080
-#> 6        Limburg  140680821
-#> 7  Noord-Brabant  377776132
-#> 8  Noord-Holland  593255924
-#> 9     Overijssel  148939513
-#> 10       Utrecht  226377123
-#> 11       Zeeland   82251913
-#> 12  Zuid-Holland  697040028
+head(sf::st_drop_geometry(province_summary)[, c("areaname", "amount_sum")])
+#>     areaname amount_sum
+#> 1    Drenthe   56766689
+#> 2  Flevoland   55795037
+#> 3  Friesland   78581984
+#> 4 Gelderland  269468412
+#> 5  Groningen  106580080
+#> 6    Limburg  140680821
 ```
+
+For polygon maps, use
+[`choropleth()`](https://mharinga.github.io/spatialrisk/reference/choropleth.md)
+on the aggregated `sf` object. The visualisation vignette shows the full
+point-to-polygon reporting workflow.
+
+``` r
+
+choropleth(
+  province_summary,
+  value = "amount_sum",
+  id = "areaname",
+  legend_title = "Total insured amount"
+)
+```
+
+![Choropleth map of total insured amount by Dutch
+province.](reference/figures/README-unnamed-chunk-10-1.png)
+
+## Where to go next
+
+- Fixed-radius concentration analysis:
+  [`vignette("fixed-radius-concentration", package = "spatialrisk")`](https://mharinga.github.io/spatialrisk/articles/fixed-radius-concentration.md)
+- Polygon aggregation and maps:
+  [`vignette("visualisation", package = "spatialrisk")`](https://mharinga.github.io/spatialrisk/articles/visualisation.md)
+- Function reference:
+  <https://mharinga.github.io/spatialrisk/reference/>
 
 ## Scope
 
 `spatialrisk` does not estimate a statistical model and does not assign
 a probability distribution to the observed values. It provides
 deterministic spatial aggregation tools for fixed-radius concentration
-problems. Interpretation of the resulting concentration measures remains
-application-specific.
+and polygon-based reporting workflows. Interpretation of the resulting
+concentration measures remains application-specific. The examples in
+this documentation illustrate generic spatial-analysis techniques and
+example-specific parameter choices. They are not intended to represent
+the methodology, processes, assumptions, thresholds, or practices of any
+particular organisation.
 
 Core computations are implemented in C++ via Rcpp for efficient
 evaluation on larger point datasets.
 
-## Vignettes
-
-The main vignette introduces fixed-radius concentration analysis in an
-applied insurance setting. A second vignette shows how aggregated values
-can be displayed with choropleth maps.
-
 ## Reference
 
-The fixed-radius hotspot problem is related to the maximum covering
-location problem described by Church (1974) <doi:10.1007/BF01942293>.
+The fixed-radius circle-placement problem is discussed by Chazelle and
+Lee (1986): Chazelle, B. M. and Lee, D. T. (1986). On a circle placement
+problem. Computing, 36(1–2), 1–16. <doi:10.1007/BF02238188>.
+
+Related maximum covering location problems are described by Church
+(1974) <doi:10.1007/BF01942293>.
 
 If you use this package in academic work, it can be cited as:
 

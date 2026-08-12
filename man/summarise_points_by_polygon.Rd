@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarise_points_by_polygon.R
 \name{summarise_points_by_polygon}
 \alias{summarise_points_by_polygon}
-\title{Summarise point values by polygon}
+\title{Summarise point exposures by reporting polygon}
 \usage{
 summarise_points_by_polygon(
   polygons,
@@ -58,7 +58,7 @@ An \code{sf} object equal to \code{polygons} with an additional
 }
 \description{
 Spatially joins point data to polygon geometries and summarises
-a numeric point attribute for each polygon.
+a numeric point exposure or value for each reporting area.
 }
 \examples{
 summarise_points_by_polygon(

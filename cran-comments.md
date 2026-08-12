@@ -17,6 +17,9 @@ In this version I have:
   against the full remaining portfolio before the best hotspot is selected.
   This avoids cases where a later `top_n` hotspot could have a higher
   concentration than the first reported hotspot.
+* Improved `top_n > 1` performance for the continuous hotspot method by caching
+  pair-intersection refinements per focal candidate cell and recomputing only
+  cache entries affected by removed contributing points or changed focal cells.
 * Added tests for the decomposed hotspot workflow and a regression test checking
   that continuous `top_n` hotspot concentrations are non-increasing after
   contributing points are removed between iterations.

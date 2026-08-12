@@ -1,6 +1,10 @@
 # Changelog
 
+## spatialrisk (development version)
+
 ## spatialrisk 0.8.1
+
+CRAN release: 2026-06-16
 
 - Added a decomposed hotspot workflow with
   [`prepare_spatialrisk()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
@@ -19,11 +23,25 @@
   cells above the lower bound, rather than only around the top focal
   cell. Candidate centres are now scored against the full remaining
   portfolio before the best hotspot is selected. This avoids cases where
-  a later `top_n` hotspot could have a higher concentration than the
-  first reported hotspot.
-- Added a regression test to check that continuous `top_n` hotspot
+  a later `n_hotspots` hotspot could have a higher concentration than
+  the first reported hotspot.
+- Improved `n_hotspots > 1` performance for the continuous hotspot
+  method by caching pair-intersection refinements per focal candidate
+  cell. After each greedy step, only cache entries affected by removed
+  contributing points or changed focal cells are recomputed.
+- Added a regression test to check that continuous `n_hotspots` hotspot
   concentrations are non-increasing after contributing points are
   removed between iterations.
+- [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
+  and
+  [`optimize_hotspot()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+  now prefer `n_hotspots` instead of `top_n`, and
+  [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
+  and
+  [`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+  now prefer `grid_spacing` instead of `grid_precision`. The old
+  argument names remain temporarily supported with lifecycle deprecation
+  warnings.
 
 ## spatialrisk 0.8.0
 
@@ -97,8 +115,8 @@ CRAN release: 2026-05-04
 - Updated
   [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
   documentation to clarify that the function uses a grid-based search
-  with local refinement. The search precision is controlled by
-  `cell_size` and `grid_precision`.
+  with local refinement. The search resolution is controlled by
+  `cell_size` and `grid_spacing`.
 - [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md)
   now uses `progress` instead of `print_progress`. Since this is a new
   public API, the old argument is not retained there; older deprecated

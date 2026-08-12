@@ -4,7 +4,7 @@ test_that("concentration_hotspot returns descriptive output components", {
   x <- Groningen[1:200, c("lon", "lat", "amount")]
 
   out <- concentration_hotspot(x, value = "amount", radius = 200,
-                               cell_size = 100, grid_precision = 5,
+                               cell_size = 100, grid_spacing = 5,
                                progress = FALSE)
 
   expect_s3_class(out, "hotspot")
@@ -23,7 +23,7 @@ test_that("concentration_hotspot accepts named data argument", {
   x <- Groningen[1:50, c("lon", "lat", "amount")]
 
   out <- concentration_hotspot(data = x, value = "amount", radius = 200,
-                               cell_size = 100, grid_precision = 5,
+                               cell_size = 100, grid_spacing = 5,
                                progress = FALSE)
 
   expect_s3_class(out, "hotspot")
@@ -42,7 +42,7 @@ test_that("decomposed hotspot workflow returns same output structure", {
 
   expect_false(is.null(model$state$rasterized))
 
-  model <- select_candidates(model, grid_precision = 5,
+  model <- select_candidates(model, grid_spacing = 5,
                              progress = FALSE)
   expect_s3_class(model, "spatialrisk_hotspot_workflow")
   expect_named(model$candidates,
@@ -53,7 +53,7 @@ test_that("decomposed hotspot workflow returns same output structure", {
                     names(model$candidates$cells)))
   expect_gt(nrow(model$candidates$cells), 0)
 
-  out <- optimize_hotspot(model, top_n = 1, progress = FALSE)
+  out <- optimize_hotspot(model, n_hotspots = 1, progress = FALSE)
   expect_s3_class(out, "hotspot")
   expect_equal(names(out), c("hotspots", "contributing_points"))
   expect_equal(names(out$hotspots), c("id", "lon", "lat", "amount_sum"))
@@ -66,16 +66,68 @@ test_that("concentration_hotspot wrapper matches decomposed workflow", {
   x <- Groningen[1:120, c("lon", "lat", "amount")]
 
   wrapped <- concentration_hotspot(x, value = "amount", radius = 200,
-                                   cell_size = 100, grid_precision = 5,
+                                   cell_size = 100, grid_spacing = 5,
                                    progress = FALSE)
   model <- prepare_spatialrisk(x, value = "amount", radius = 200,
                                cell_size = 100)
-  model <- select_candidates(model, grid_precision = 5,
+  model <- select_candidates(model, grid_spacing = 5,
                              progress = FALSE)
   decomposed <- optimize_hotspot(model, progress = FALSE)
 
   expect_equal(wrapped$hotspots, decomposed$hotspots)
   expect_equal(wrapped$contributing_points, decomposed$contributing_points)
+})
+
+test_that("deprecated concentration_hotspot arguments remain compatible", {
+  x <- Groningen[1:80, c("lon", "lat", "amount")]
+
+  new <- concentration_hotspot(x, value = "amount", radius = 200,
+                               cell_size = 100, grid_spacing = 5,
+                               n_hotspots = 1, progress = FALSE)
+  old <- expect_warning(
+    concentration_hotspot(x, value = "amount", radius = 200,
+                          cell_size = 100, grid_precision = 5,
+                          top_n = 1, progress = FALSE),
+    "deprecated"
+  )
+
+  expect_equal(old$hotspots, new$hotspots)
+  expect_equal(old$contributing_points, new$contributing_points)
+})
+
+test_that("deprecated hotspot arguments reject conflicting values", {
+  x <- Groningen[1:80, c("lon", "lat", "amount")]
+
+  expect_error(
+    concentration_hotspot(x, value = "amount", radius = 200,
+                          n_hotspots = 2, top_n = 3,
+                          cell_size = 100, progress = FALSE),
+    "Conflicting hotspot-count"
+  )
+  expect_error(
+    concentration_hotspot(x, value = "amount", radius = 200,
+                          cell_size = 100, grid_spacing = 5,
+                          grid_precision = 10, progress = FALSE),
+    "Conflicting grid-spacing"
+  )
+})
+
+test_that("decomposed workflow supports deprecated argument names", {
+  x <- Groningen[1:80, c("lon", "lat", "amount")]
+  model <- prepare_spatialrisk(x, value = "amount", radius = 200,
+                               cell_size = 100)
+
+  selected <- expect_warning(
+    select_candidates(model, grid_precision = 5, progress = FALSE),
+    "deprecated"
+  )
+  out <- expect_warning(
+    optimize_hotspot(selected, top_n = 1, progress = FALSE),
+    "deprecated"
+  )
+
+  expect_s3_class(selected, "spatialrisk_hotspot_workflow")
+  expect_s3_class(out, "hotspot")
 })
 
 test_that("select_candidates supports explicit threshold", {
@@ -162,7 +214,7 @@ test_that("concentration_hotspot validates coordinate and value columns", {
   x_missing_lon$lon[1] <- NA_real_
   expect_error(
     concentration_hotspot(x_missing_lon, value = "amount", radius = 200,
-                          cell_size = 100, grid_precision = 5,
+                          cell_size = 100, grid_spacing = 5,
                           progress = FALSE),
     "must not contain missing"
   )
@@ -171,7 +223,7 @@ test_that("concentration_hotspot validates coordinate and value columns", {
   x_missing_value$amount[1] <- NA_real_
   expect_error(
     concentration_hotspot(x_missing_value, value = "amount", radius = 200,
-                          cell_size = 100, grid_precision = 5,
+                          cell_size = 100, grid_spacing = 5,
                           progress = FALSE),
     "`value` column"
   )
@@ -180,7 +232,7 @@ test_that("concentration_hotspot validates coordinate and value columns", {
   x_bad_type$amount <- as.character(x_bad_type$amount)
   expect_error(
     concentration_hotspot(x_bad_type, value = "amount", radius = 200,
-                          cell_size = 100, grid_precision = 5,
+                          cell_size = 100, grid_spacing = 5,
                           progress = FALSE),
     "must be numeric"
   )
@@ -189,7 +241,7 @@ test_that("concentration_hotspot validates coordinate and value columns", {
   x_conflict$amount_sum <- 1
   expect_error(
     concentration_hotspot(x_conflict, value = "amount", radius = 200,
-                          cell_size = 100, grid_precision = 5,
+                          cell_size = 100, grid_spacing = 5,
                           progress = FALSE),
     "reserved output column 'amount_sum'"
   )
@@ -201,7 +253,7 @@ test_that("concentration_hotspot accepts custom coordinate columns", {
                   insured = Groningen$amount[1:100])
 
   out <- concentration_hotspot(x, value = "insured", radius = 200,
-                               cell_size = 100, grid_precision = 5,
+                               cell_size = 100, grid_spacing = 5,
                                lon = "x", lat = "y", progress = FALSE)
 
   expect_s3_class(out, "hotspot")
@@ -217,9 +269,9 @@ test_that("concentration_hotspot validates search precision", {
 
   expect_error(
     concentration_hotspot(x, value = "amount", radius = 200,
-                          cell_size = 100, grid_precision = 200,
+                          cell_size = 100, grid_spacing = 200,
                           progress = FALSE),
-    "`grid_precision` > `cell_size`"
+    "`grid_spacing` > `cell_size`"
   )
 })
 
@@ -228,7 +280,7 @@ test_that("concentration_hotspot requires a metric projected CRS", {
 
   expect_error(
     concentration_hotspot(x, value = "amount", radius = 200,
-                          cell_size = 100, grid_precision = 5,
+                          cell_size = 100, grid_spacing = 5,
                           crs_metric = 4326, progress = FALSE),
     "meter units"
   )
@@ -237,7 +289,7 @@ test_that("concentration_hotspot requires a metric projected CRS", {
 test_that("plot.hotspot validates plotting arguments", {
   x <- Groningen[1:50, c("lon", "lat", "amount")]
   out <- concentration_hotspot(x, value = "amount", radius = 200,
-                               cell_size = 100, grid_precision = 5,
+                               cell_size = 100, grid_spacing = 5,
                                progress = FALSE)
 
   expect_error(

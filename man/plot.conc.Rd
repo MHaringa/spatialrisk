@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_highest_concentration.R
 \name{plot.conc}
 \alias{plot.conc}
-\title{Automatically create a plot for objects obtained from highest_concentration()}
+\title{Plot deprecated geohash hotspot results}
 \usage{
 \method{plot}{conc}(
   x,
@@ -15,29 +15,29 @@
 )
 }
 \arguments{
-\item{x}{object of class `conc` obtained from
-`highest_concentration()`}
+\item{x}{Legacy object of class \code{conc}.}
 
-\item{grid_points}{show grid points (TRUE), or objects (FALSE)}
+\item{grid_points}{Logical. Whether to show grid points.}
 
-\item{legend_title}{title of legend}
+\item{legend_title}{Optional legend title.}
 
-\item{palette}{palette for grid points (defaults to "viridis")}
+\item{palette}{Palette used for the point layer.}
 
-\item{legend_position}{legend position for grid points legend (defaults to
-"bottomleft")}
+\item{legend_position}{Legend position for the point layer.}
 
-\item{providers}{providers to show. See `leaflet::providers` for a list.}
+\item{providers}{Leaflet tile providers.}
 
-\item{...}{additional arguments affecting the interactive map produced}
+\item{...}{Additional arguments passed to the interactive map.}
 }
 \value{
-Interactive view of geohashes with highest concentrations
+An interactive map.
 }
 \description{
-Takes an object produced by `highest_concentration()`,
-and creates an interactive map.
+Deprecated plotting method for objects produced by
+\code{highest_concentration()}. For current hotspot results, use
+\code{plot()} on the object returned by \code{\link{concentration_hotspot}}.
 }
 \author{
 Martin Haringa
 }
+\keyword{internal}

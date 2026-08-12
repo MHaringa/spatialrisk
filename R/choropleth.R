@@ -1,9 +1,9 @@
-#' Create choropleth map
+#' Create a choropleth map of polygon-level values
 #'
-#' @description Creates a choropleth map from an `sf` object, for example one
-#' produced by \code{summarise_points_by_polygon()}. Polygons are shaded
-#' according to values in a specified column, with clustering based on the
-#' Fisher–Jenks algorithm.
+#' @description Creates a choropleth map from an `sf` object containing
+#' polygon-level reporting values, for example one produced by
+#' \code{summarise_points_by_polygon()}. Polygons are shaded according to values
+#' in a specified column, with clustering based on the Fisher–Jenks algorithm.
 #'
 #' @param data An object of class \code{sf}.
 #' @param value A string giving the name of the column used to shade the

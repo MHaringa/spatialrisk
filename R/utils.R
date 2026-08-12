@@ -365,7 +365,7 @@ update_db <- function(hf_conc_new, db, cells) {
 check_input <- function(df, value, top_n, radius, cell_size, grid_precision) {
 
   if (!is.data.frame(df)) {
-    rlang::abort("`df` must be a data.frame.", call = NULL)
+    rlang::abort("`data` must be a data.frame.", call = NULL)
   }
 
   if (!is.character(value) || length(value) != 1L || is.na(value)) {
@@ -380,8 +380,10 @@ check_input <- function(df, value, top_n, radius, cell_size, grid_precision) {
 
   if (!is.numeric(top_n) || length(top_n) != 1L || is.na(top_n) ||
       !is.finite(top_n) || round(top_n) != top_n || top_n <= 0) {
-    msg <- paste0("Can't find the `top_n = ", top_n, "` highest concentrations")
-    error_msg <- paste0("`top_n = ", top_n, "` is not a positive integer.")
+    msg <- paste0("Can't find the `n_hotspots = ", top_n,
+                  "` highest concentrations")
+    error_msg <- paste0("`n_hotspots = ", top_n,
+                        "` is not a positive integer.")
     rlang::abort(c(msg, "x" = error_msg), call = NULL)
   }
 
@@ -403,9 +405,9 @@ check_input <- function(df, value, top_n, radius, cell_size, grid_precision) {
   if (!is.numeric(grid_precision) || length(grid_precision) != 1L ||
       is.na(grid_precision) || !is.finite(grid_precision) ||
       grid_precision <= 0) {
-    msg <- paste0("Can't find concentrations with `grid_precision = ",
+    msg <- paste0("Can't find concentrations with `grid_spacing = ",
                   grid_precision, "`.")
-    error_msg <- paste0("`grid_precision` is not a positive number.")
+    error_msg <- paste0("`grid_spacing` is not a positive number.")
     rlang::abort(c(msg, "x" = error_msg), call = NULL)
   }
 
@@ -417,12 +419,58 @@ check_input <- function(df, value, top_n, radius, cell_size, grid_precision) {
   }
 
   if (grid_precision > cell_size) {
-    msg <- paste0("Can't find concentrations with `grid_precision` > ",
+    msg <- paste0("Can't find concentrations with `grid_spacing` > ",
                   "`cell_size`.")
-    error_msg <- paste0("`grid_precision` = ", grid_precision,
+    error_msg <- paste0("`grid_spacing` = ", grid_precision,
                         " > `cell_size` = ", cell_size, ".")
     rlang::abort(c(msg, "x" = error_msg), call = NULL)
   }
+}
+
+resolve_hotspot_deprecated_args <- function(n_hotspots, top_n,
+                                            top_n_supplied,
+                                            grid_spacing, grid_precision,
+                                            grid_precision_supplied,
+                                            caller) {
+  if (isTRUE(top_n_supplied)) {
+    if (!same_argument_value(n_hotspots, 1) &&
+        !same_argument_value(n_hotspots, top_n)) {
+      rlang::abort(c(
+        "Conflicting hotspot-count arguments.",
+        "x" = "`n_hotspots` and deprecated `top_n` were supplied with different values.",
+        "i" = "Use `n_hotspots` only."
+      ), call = NULL)
+    }
+    lifecycle::deprecate_warn(
+      "0.8.1",
+      paste0(caller, "(top_n)"),
+      paste0(caller, "(n_hotspots)")
+    )
+    n_hotspots <- top_n
+  }
+
+  if (isTRUE(grid_precision_supplied)) {
+    if (!same_argument_value(grid_spacing, 1) &&
+        !same_argument_value(grid_spacing, grid_precision)) {
+      rlang::abort(c(
+        "Conflicting grid-spacing arguments.",
+        "x" = "`grid_spacing` and deprecated `grid_precision` were supplied with different values.",
+        "i" = "Use `grid_spacing` only."
+      ), call = NULL)
+    }
+    lifecycle::deprecate_warn(
+      "0.8.1",
+      paste0(caller, "(grid_precision)"),
+      paste0(caller, "(grid_spacing)")
+    )
+    grid_spacing <- grid_precision
+  }
+
+  list(n_hotspots = n_hotspots, grid_spacing = grid_spacing)
+}
+
+same_argument_value <- function(x, y) {
+  isTRUE(all.equal(x, y, check.attributes = FALSE))
 }
 
 
