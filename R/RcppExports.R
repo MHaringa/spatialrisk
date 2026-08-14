@@ -25,8 +25,12 @@ indexed_points_in_radius_cpp <- function(x_center, y_center, x_ref, y_ref, value
     .Call('_spatialrisk_indexed_points_in_radius_cpp', PACKAGE = 'spatialrisk', x_center, y_center, x_ref, y_ref, value_ref, ix_ref, radius, cell_width)
 }
 
-pair_intersection_best_cpp <- function(x_ref, y_ref, value_ref, ix_ref, radius, cell_width) {
-    .Call('_spatialrisk_pair_intersection_best_cpp', PACKAGE = 'spatialrisk', x_ref, y_ref, value_ref, ix_ref, radius, cell_width)
+pair_intersection_best_cpp <- function(x_candidates, y_candidates, x_ref, y_ref, value_ref, radius, cell_width) {
+    .Call('_spatialrisk_pair_intersection_best_cpp', PACKAGE = 'spatialrisk', x_candidates, y_candidates, x_ref, y_ref, value_ref, radius, cell_width)
+}
+
+pair_intersection_best_groups_cpp <- function(candidate_rows, x_ref, y_ref, value_ref, ix_ref, radius, cell_width, selected_cell_ids, raster_geometry, filter_centres) {
+    .Call('_spatialrisk_pair_intersection_best_groups_cpp', PACKAGE = 'spatialrisk', candidate_rows, x_ref, y_ref, value_ref, ix_ref, radius, cell_width, selected_cell_ids, raster_geometry, filter_centres)
 }
 
 haversine_cpp_vec <- function(lat_from, lon_from, lat_to, lon_to, r) {

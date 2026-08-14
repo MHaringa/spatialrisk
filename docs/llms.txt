@@ -85,7 +85,7 @@ hotspot
 #> Value: amount 
 #> 
 #>   id      lon      lat amount_sum
-#> 1  1 6.547323 53.23663      64308
+#> 1  1 6.547332 53.23657      64438
 ```
 
 The result contains the selected centre coordinates and the
@@ -104,14 +104,14 @@ contribute to the selected concentration.
 head(hotspot$contributing_points[, c("id", "data_row", "lon", "lat",
                                      "amount", "amount_sum")])
 #>   id data_row      lon      lat amount amount_sum
-#> 1  1     1492 6.545297 53.23569    148      64308
-#> 2  1     4703 6.545482 53.23547    132      64308
-#> 3  1    18287 6.545429 53.23546    130      64308
-#> 4  1    19958 6.545392 53.23543    138      64308
-#> 5  1    22587 6.545493 53.23545    142      64308
-#> 6  1       19 6.544724 53.23646    411      64308
+#> 1  1     1492 6.545297 53.23569    148      64438
+#> 2  1     4703 6.545482 53.23547    132      64438
+#> 3  1    18287 6.545429 53.23546    130      64438
+#> 4  1    19958 6.545392 53.23543    138      64438
+#> 5  1    22587 6.545493 53.23545    142      64438
+#> 6  1       19 6.544724 53.23646    411      64438
 sum(hotspot$contributing_points$amount)
-#> [1] 64308
+#> [1] 64438
 ```
 
 For a known or externally specified centre,
@@ -162,7 +162,12 @@ radius_sum(
 
 The hotspot search can also be run as a decomposed workflow using
 lower-level preparation, candidate-selection, and optimisation
-functions. See the fixed-radius concentration vignette for details.
+functions. Direct optimisation of a prepared object provides a full
+geometric reference search for small validation problems; optimisation
+after candidate selection uses the screened production state. Candidate
+selection restricts candidate generation, not which active portfolio
+records contribute to a candidate’s value. See the fixed-radius
+concentration vignette for details and computational limitations.
 
 ## Continuous versus observed centres
 
@@ -186,7 +191,7 @@ rbind(
   observed = observed_hotspot$hotspots
 )
 #>            id      lon      lat amount_sum
-#> continuous  1 6.547323 53.23663      64308
+#> continuous  1 6.547332 53.23657      64438
 #> observed    1 6.547288 53.23664      64172
 ```
 

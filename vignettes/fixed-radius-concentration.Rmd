@@ -223,6 +223,11 @@ plot(hotspot_top2)
 The high-level hotspot workflow can also be run step by step.
 This is useful when the intermediate candidate selection needs to be inspected before the final hotspot is optimised.
 
+The state supplied to `optimize_hotspot()` determines where geometric candidate centres are generated.
+A prepared state has not been screened and therefore represents the full active portfolio as the candidate-generation universe.
+A state returned by `select_candidates()` represents the screened candidate regions.
+In either case, retained candidate centres are evaluated against the complete active portfolio: candidate selection does not create a subportfolio for scoring.
+
 Conceptually, the search has four stages:
 
 - coarse spatial screening identifies promising regions;
@@ -238,6 +243,34 @@ step_hotspot <- optimize_hotspot(model, n_hotspots = 2, progress = FALSE)
 
 step_hotspot$hotspots
 ```
+
+For small validation problems, candidate screening can be omitted deliberately.
+The direct route evaluates observed centres and the valid pairwise circle-intersection centres generated from the complete active portfolio.
+The screened route is the normal production workflow used by `concentration_hotspot()`.
+
+```{r}
+validation_portfolio <- portfolio[1:200, ]
+validation_model <- prepare_spatialrisk(
+  validation_portfolio,
+  value = "amount",
+  radius = 200,
+  cell_size = 100
+)
+
+# Full geometric reference search
+full <- optimize_hotspot(validation_model, progress = FALSE)
+
+# Screened production search
+screened <- validation_model |>
+  select_candidates(progress = FALSE) |>
+  optimize_hotspot(progress = FALSE)
+
+full$hotspots
+screened$hotspots
+```
+
+The full route has pairwise computational cost and is intended for small portfolios, diagnostics, and methodological validation.
+It does not silently switch to grid refinement when the number of points exceeds `max_refinement_points`; instead, it warns that the requested complete search may be expensive.
 
 Calling `plot(model)` after `prepare_spatialrisk()` but before candidate selection shows the rasterised portfolio sum per cell.
 After `select_candidates()`, `plot(model)` shows only the focal candidate cells above the selected lower bound.
@@ -264,8 +297,25 @@ This is why a candidate map that currently shows, for example, five focal cells 
 
 The default continuous method uses terra rasterisation and focal sums for the screening step.
 It then refines all candidate areas above the lower bound by evaluating observed local points and the circle centres implied by local point pairs.
+The point-to-cell assignment created during preparation is reused to retrieve points from nearby raster cells, rather than scanning the complete portfolio separately for every focal candidate cell.
+Within each hotspot iteration, exact candidate evaluations share one spatial lookup over the active portfolio; exact distances are calculated only for points from potentially intersecting cells.
 If the local refinement subset is larger than `max_refinement_points`, the function falls back to grid refinement for that iteration.
-The final selected centre is evaluated against the full remaining portfolio, not only against the local subset used for refinement.
+
+The focal moving window is deliberately wider than the requested radius by one raster-cell diagonal.
+Consequently, with non-negative values, the focal sum is an upper bound for the exact radius sum of every centre located in that cell: all source cells that could contribute to such a centre are included.
+The automatically estimated threshold is a lower bound obtained from a feasible preliminary centre.
+A raster cell whose focal upper bound is below that threshold cannot contain a better centre and need not be refined.
+
+For the remaining local point pairs, both radius-circle intersection centres are constructed geometrically.
+Each of those two centres is assigned to a raster cell using terra, and the centres are screened separately.
+Only a centre whose own cell passed focal screening receives the more expensive exact radius evaluation.
+This is more selective than retaining both centres merely because one of them lies in a candidate cell.
+Every retained centre is then evaluated against the full remaining active portfolio, not only against the local points used to generate it.
+Points outside the candidate-generation subset therefore still contribute whenever they lie within the radius.
+
+This additional centre-level pruning is used only with non-negative values and the default automatically estimated lower bound.
+For a user-supplied threshold or negative values, the implementation does not rely on this upper-bound argument and uses the broader refinement route.
+The direct validation route `optimize_hotspot(prepare_spatialrisk(...))` also remains unfiltered and evaluates the complete geometric candidate set.
 
 ## Polygon reporting
 
@@ -328,6 +378,10 @@ The candidate set consisting of observed point locations and the intersections o
 The practical `continuous` implementation uses spatial screening and local refinement to avoid evaluating the full candidate set indiscriminately.
 Computational settings such as `cell_size`, the candidate lower bound, and `max_refinement_points` determine how extensively the candidate space is explored.
 The pair-intersection refinement is exact within the screened local candidate areas; it is not the same as evaluating every possible pair-intersection candidate globally in every call.
+
+The lower-level call `optimize_hotspot(prepare_spatialrisk(...))` provides that complete geometric candidate search for the active portfolio.
+For the first hotspot, under the point, non-negative-weight, fixed-radius, and projected-Euclidean assumptions stated above, this is the full finite candidate characterisation of the one-disk problem.
+This statement does not apply to the screened workflow, grid fallback, or the joint placement of multiple circles.
 
 For insurance applications this is useful because the method directly targets accumulation risk: the maximum total value that can be found within a specified distance of any location.
 This may be used, for example, to identify local concentrations of insured building values, exposed sums insured, or other portfolio-level risk measures.

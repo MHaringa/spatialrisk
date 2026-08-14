@@ -119,7 +119,7 @@
 <span><span class="co">#&gt; Value: amount </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   id      lon      lat amount_sum</span></span>
-<span><span class="co">#&gt; 1  1 6.547323 53.23663      64308</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  1 6.547332 53.23657      64438</span></span></code></pre></div>
 <p>The result contains the selected centre coordinates and the corresponding summed value, named from <code>value</code>; for example <code>amount_sum</code>. The contributing observations are stored in <code>hotspot$contributing_points</code>.</p>
 </div>
 <div class="section level2">
@@ -130,14 +130,14 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hotspot</span><span class="op">$</span><span class="va">contributing_points</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"data_row"</span>, <span class="st">"lon"</span>, <span class="st">"lat"</span>,</span>
 <span>                                     <span class="st">"amount"</span>, <span class="st">"amount_sum"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   id data_row      lon      lat amount amount_sum</span></span>
-<span><span class="co">#&gt; 1  1     1492 6.545297 53.23569    148      64308</span></span>
-<span><span class="co">#&gt; 2  1     4703 6.545482 53.23547    132      64308</span></span>
-<span><span class="co">#&gt; 3  1    18287 6.545429 53.23546    130      64308</span></span>
-<span><span class="co">#&gt; 4  1    19958 6.545392 53.23543    138      64308</span></span>
-<span><span class="co">#&gt; 5  1    22587 6.545493 53.23545    142      64308</span></span>
-<span><span class="co">#&gt; 6  1       19 6.544724 53.23646    411      64308</span></span>
+<span><span class="co">#&gt; 1  1     1492 6.545297 53.23569    148      64438</span></span>
+<span><span class="co">#&gt; 2  1     4703 6.545482 53.23547    132      64438</span></span>
+<span><span class="co">#&gt; 3  1    18287 6.545429 53.23546    130      64438</span></span>
+<span><span class="co">#&gt; 4  1    19958 6.545392 53.23543    138      64438</span></span>
+<span><span class="co">#&gt; 5  1    22587 6.545493 53.23545    142      64438</span></span>
+<span><span class="co">#&gt; 6  1       19 6.544724 53.23646    411      64438</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">hotspot</span><span class="op">$</span><span class="va">contributing_points</span><span class="op">$</span><span class="va">amount</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 64308</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 64438</span></span></code></pre></div>
 <p>For a known or externally specified centre, <code><a href="reference/points_within_radius.html">points_within_radius()</a></code> returns the observations that fall within the selected radius.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">known_centre_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/points_within_radius.html">points_within_radius</a></span><span class="op">(</span></span>
@@ -171,7 +171,7 @@
 <span><span class="co">#&gt; 3  6.57  53.2        9120</span></span>
 <span><span class="co">#&gt; 4  6.56  53.2        7970</span></span>
 <span><span class="co">#&gt; 5  6.57  53.2        8633</span></span></code></pre></div>
-<p>The hotspot search can also be run as a decomposed workflow using lower-level preparation, candidate-selection, and optimisation functions. See the fixed-radius concentration vignette for details.</p>
+<p>The hotspot search can also be run as a decomposed workflow using lower-level preparation, candidate-selection, and optimisation functions. Direct optimisation of a prepared object provides a full geometric reference search for small validation problems; optimisation after candidate selection uses the screened production state. Candidate selection restricts candidate generation, not which active portfolio records contribute to a candidate’s value. See the fixed-radius concentration vignette for details and computational limitations.</p>
 </div>
 <div class="section level2">
 <h2 id="continuous-versus-observed-centres">Continuous versus observed centres<a class="anchor" aria-label="anchor" href="#continuous-versus-observed-centres"></a>
@@ -191,7 +191,7 @@
 <span>  observed <span class="op">=</span> <span class="va">observed_hotspot</span><span class="op">$</span><span class="va">hotspots</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;            id      lon      lat amount_sum</span></span>
-<span><span class="co">#&gt; continuous  1 6.547323 53.23663      64308</span></span>
+<span><span class="co">#&gt; continuous  1 6.547332 53.23657      64438</span></span>
 <span><span class="co">#&gt; observed    1 6.547288 53.23664      64172</span></span></code></pre></div>
 <p>This compact comparison illustrates that the maximum fixed-radius concentration does not necessarily need to be centred on an observed risk location.</p>
 </div>

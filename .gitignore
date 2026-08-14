@@ -3,3 +3,6 @@ packrat/lib*/
 
 inst/doc
 .positai
+src/*.o
+src/*.so
+src/*.dll

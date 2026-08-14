@@ -1,5 +1,24 @@
 # spatialrisk (development version)
 
+* Extended the decomposed hotspot workflow so
+  `optimize_hotspot(prepare_spatialrisk(...))` performs a full geometric
+  candidate search over the active portfolio, while optimisation after
+  `select_candidates()` uses the screened candidate search state. Candidate
+  generation and scoring are now explicitly separated: every candidate centre
+  is scored against the complete active portfolio. The high-level
+  `concentration_hotspot()` workflow remains screened for production use.
+* Reused the prepared terra raster-cell membership during continuous
+  refinement. Local candidate points are now retrieved from nearby raster
+  cells, and all candidate regions in one greedy step share a single Rcpp
+  evaluation index instead of rebuilding it for every focal candidate cell.
+  Point pairs shared by overlapping focal candidate regions are deduplicated,
+  so their two geometric circle centres are evaluated only once per hotspot
+  iteration. With non-negative values and the default automatic lower bound,
+  exact radius sums are now calculated only for observed or pair-intersection
+  centres whose own terra raster cell passed focal screening. Both centres from
+  a point pair are screened separately. This preserves full-portfolio scoring
+  while substantially reducing the number of exact candidate evaluations.
+
 # spatialrisk 0.8.1
 
 * Added a decomposed hotspot workflow with `prepare_spatialrisk()`,

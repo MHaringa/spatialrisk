@@ -101,18 +101,39 @@ BEGIN_RCPP
 END_RCPP
 }
 // pair_intersection_best_cpp
-Rcpp::DataFrame pair_intersection_best_cpp(Rcpp::NumericVector x_ref, Rcpp::NumericVector y_ref, Rcpp::NumericVector value_ref, Rcpp::IntegerVector ix_ref, double radius, double cell_width);
-RcppExport SEXP _spatialrisk_pair_intersection_best_cpp(SEXP x_refSEXP, SEXP y_refSEXP, SEXP value_refSEXP, SEXP ix_refSEXP, SEXP radiusSEXP, SEXP cell_widthSEXP) {
+Rcpp::DataFrame pair_intersection_best_cpp(Rcpp::NumericVector x_candidates, Rcpp::NumericVector y_candidates, Rcpp::NumericVector x_ref, Rcpp::NumericVector y_ref, Rcpp::NumericVector value_ref, double radius, double cell_width);
+RcppExport SEXP _spatialrisk_pair_intersection_best_cpp(SEXP x_candidatesSEXP, SEXP y_candidatesSEXP, SEXP x_refSEXP, SEXP y_refSEXP, SEXP value_refSEXP, SEXP radiusSEXP, SEXP cell_widthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_candidates(x_candidatesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_candidates(y_candidatesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_ref(x_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_ref(y_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value_ref(value_refSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type cell_width(cell_widthSEXP);
+    rcpp_result_gen = Rcpp::wrap(pair_intersection_best_cpp(x_candidates, y_candidates, x_ref, y_ref, value_ref, radius, cell_width));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pair_intersection_best_groups_cpp
+Rcpp::List pair_intersection_best_groups_cpp(Rcpp::List candidate_rows, Rcpp::NumericVector x_ref, Rcpp::NumericVector y_ref, Rcpp::NumericVector value_ref, Rcpp::IntegerVector ix_ref, double radius, double cell_width, Rcpp::IntegerVector selected_cell_ids, Rcpp::NumericVector raster_geometry, bool filter_centres);
+RcppExport SEXP _spatialrisk_pair_intersection_best_groups_cpp(SEXP candidate_rowsSEXP, SEXP x_refSEXP, SEXP y_refSEXP, SEXP value_refSEXP, SEXP ix_refSEXP, SEXP radiusSEXP, SEXP cell_widthSEXP, SEXP selected_cell_idsSEXP, SEXP raster_geometrySEXP, SEXP filter_centresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type candidate_rows(candidate_rowsSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_ref(x_refSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_ref(y_refSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value_ref(value_refSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ix_ref(ix_refSEXP);
     Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
     Rcpp::traits::input_parameter< double >::type cell_width(cell_widthSEXP);
-    rcpp_result_gen = Rcpp::wrap(pair_intersection_best_cpp(x_ref, y_ref, value_ref, ix_ref, radius, cell_width));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type selected_cell_ids(selected_cell_idsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type raster_geometry(raster_geometrySEXP);
+    Rcpp::traits::input_parameter< bool >::type filter_centres(filter_centresSEXP);
+    rcpp_result_gen = Rcpp::wrap(pair_intersection_best_groups_cpp(candidate_rows, x_ref, y_ref, value_ref, ix_ref, radius, cell_width, selected_cell_ids, raster_geometry, filter_centres));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -288,7 +309,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_spatialrisk_concentration_loop_cpp2", (DL_FUNC) &_spatialrisk_concentration_loop_cpp2, 3},
     {"_spatialrisk_indexed_concentration_best_cpp", (DL_FUNC) &_spatialrisk_indexed_concentration_best_cpp, 8},
     {"_spatialrisk_indexed_points_in_radius_cpp", (DL_FUNC) &_spatialrisk_indexed_points_in_radius_cpp, 8},
-    {"_spatialrisk_pair_intersection_best_cpp", (DL_FUNC) &_spatialrisk_pair_intersection_best_cpp, 6},
+    {"_spatialrisk_pair_intersection_best_cpp", (DL_FUNC) &_spatialrisk_pair_intersection_best_cpp, 7},
+    {"_spatialrisk_pair_intersection_best_groups_cpp", (DL_FUNC) &_spatialrisk_pair_intersection_best_groups_cpp, 10},
     {"_spatialrisk_haversine_cpp_vec", (DL_FUNC) &_spatialrisk_haversine_cpp_vec, 5},
     {"_spatialrisk_haversine_cpp", (DL_FUNC) &_spatialrisk_haversine_cpp, 5},
     {"_spatialrisk_add_cell_bounds_cpp", (DL_FUNC) &_spatialrisk_add_cell_bounds_cpp, 3},

@@ -78,7 +78,7 @@ hotspot
 #> Value: amount 
 #> 
 #>   id      lon      lat amount_sum
-#> 1  1 6.547323 53.23663      64308
+#> 1  1 6.547331 53.23659      64438
 ```
 
 The reported `amount_sum` is the sum of `amount` within 200 metres of
@@ -103,17 +103,17 @@ A hotspot result contains two main components:
 
 hotspot$hotspots
 #>   id      lon      lat amount_sum
-#> 1  1 6.547323 53.23663      64308
+#> 1  1 6.547331 53.23659      64438
 
 head(hotspot$contributing_points[, c("id", "data_row", "lon", "lat",
                                      "amount", "amount_sum")])
 #>   id data_row      lon      lat amount amount_sum
-#> 1  1     1492 6.545297 53.23569    148      64308
-#> 2  1     4703 6.545482 53.23547    132      64308
-#> 3  1    18287 6.545429 53.23546    130      64308
-#> 4  1    19958 6.545392 53.23543    138      64308
-#> 5  1    22587 6.545493 53.23545    142      64308
-#> 6  1       19 6.544724 53.23646    411      64308
+#> 1  1     1492 6.545297 53.23569    148      64438
+#> 2  1     4703 6.545482 53.23547    132      64438
+#> 3  1    18287 6.545429 53.23546    130      64438
+#> 4  1    19958 6.545392 53.23543    138      64438
+#> 5  1    22587 6.545493 53.23545    142      64438
+#> 6  1       19 6.544724 53.23646    411      64438
 ```
 
 This separation between the hotspot centre and the contributing
@@ -133,16 +133,16 @@ the search.
 
 head(hotspot$contributing_points)
 #>   id data_row      lon      lat amount distance_m amount_sum
-#> 1  1     1492 6.545297 53.23569    148   171.0609      64308
-#> 2  1     4703 6.545482 53.23547    132   178.2999      64308
-#> 3  1    18287 6.545429 53.23546    130   181.3932      64308
-#> 4  1    19958 6.545392 53.23543    138   185.6613      64308
-#> 5  1    22587 6.545493 53.23545    142   179.4206      64308
-#> 6  1       19 6.544724 53.23646    411   174.5054      64308
+#> 1  1     1492 6.545297 53.23569    148   168.9837      64438
+#> 2  1     4703 6.545482 53.23547    132   175.7036      64438
+#> 3  1    18287 6.545429 53.23546    130   178.8321      64438
+#> 4  1    19958 6.545392 53.23543    138   183.0865      64438
+#> 5  1    22587 6.545493 53.23545    142   176.7874      64438
+#> 6  1       19 6.544724 53.23646    411   174.6183      64438
 nrow(hotspot$contributing_points)
-#> [1] 207
+#> [1] 208
 sum(hotspot$contributing_points$amount)
-#> [1] 64308
+#> [1] 64438
 ```
 
 The lower-level function
@@ -260,7 +260,7 @@ rbind(
   observed = hotspot_observed$hotspots
 )
 #>            id      lon      lat amount_sum
-#> continuous  1 6.547323 53.23663      64308
+#> continuous  1 6.547331 53.23659      64438
 #> observed    1 6.547288 53.23664      64172
 ```
 
@@ -306,8 +306,8 @@ hotspot_top2 <- concentration_hotspot(
 
 hotspot_top2$hotspots
 #>   id      lon      lat amount_sum
-#> 1  1 6.547323 53.23663      64308
-#> 2  2 6.523418 53.23093      57977
+#> 1  1 6.547331 53.23659      64438
+#> 2  2 6.523411 53.23094      57977
 ```
 
 The first hotspot addresses the single-circle maximum concentration
@@ -328,6 +328,16 @@ The high-level hotspot workflow can also be run step by step. This is
 useful when the intermediate candidate selection needs to be inspected
 before the final hotspot is optimised.
 
+The state supplied to
+[`optimize_hotspot()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+determines where geometric candidate centres are generated. A prepared
+state has not been screened and therefore represents the full active
+portfolio as the candidate-generation universe. A state returned by
+[`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
+represents the screened candidate regions. In either case, retained
+candidate centres are evaluated against the complete active portfolio:
+candidate selection does not create a subportfolio for scoring.
+
 Conceptually, the search has four stages:
 
 - coarse spatial screening identifies promising regions;
@@ -346,9 +356,47 @@ step_hotspot <- optimize_hotspot(model, n_hotspots = 2, progress = FALSE)
 
 step_hotspot$hotspots
 #>   id      lon      lat amount_sum
-#> 1  1 6.547323 53.23663      64308
-#> 2  2 6.523418 53.23093      57977
+#> 1  1 6.547331 53.23659      64438
+#> 2  2 6.523411 53.23094      57977
 ```
+
+For small validation problems, candidate screening can be omitted
+deliberately. The direct route evaluates observed centres and the valid
+pairwise circle-intersection centres generated from the complete active
+portfolio. The screened route is the normal production workflow used by
+[`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md).
+
+``` r
+
+validation_portfolio <- portfolio[1:200, ]
+validation_model <- prepare_spatialrisk(
+  validation_portfolio,
+  value = "amount",
+  radius = 200,
+  cell_size = 100
+)
+
+# Full geometric reference search
+full <- optimize_hotspot(validation_model, progress = FALSE)
+
+# Screened production search
+screened <- validation_model |>
+  select_candidates(progress = FALSE) |>
+  optimize_hotspot(progress = FALSE)
+
+full$hotspots
+#>   id      lon      lat amount_sum
+#> 1  1 6.554816 53.19424       1315
+screened$hotspots
+#>   id      lon      lat amount_sum
+#> 1  1 6.558472 53.19492       1315
+```
+
+The full route has pairwise computational cost and is intended for small
+portfolios, diagnostics, and methodological validation. It does not
+silently switch to grid refinement when the number of points exceeds
+`max_refinement_points`; instead, it warns that the requested complete
+search may be expensive.
 
 Calling `plot(model)` after
 [`prepare_spatialrisk()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md)
@@ -394,11 +442,43 @@ describe the first search iteration only.
 The default continuous method uses terra rasterisation and focal sums
 for the screening step. It then refines all candidate areas above the
 lower bound by evaluating observed local points and the circle centres
-implied by local point pairs. If the local refinement subset is larger
-than `max_refinement_points`, the function falls back to grid refinement
-for that iteration. The final selected centre is evaluated against the
-full remaining portfolio, not only against the local subset used for
-refinement.
+implied by local point pairs. The point-to-cell assignment created
+during preparation is reused to retrieve points from nearby raster
+cells, rather than scanning the complete portfolio separately for every
+focal candidate cell. Within each hotspot iteration, exact candidate
+evaluations share one spatial lookup over the active portfolio; exact
+distances are calculated only for points from potentially intersecting
+cells. If the local refinement subset is larger than
+`max_refinement_points`, the function falls back to grid refinement for
+that iteration.
+
+The focal moving window is deliberately wider than the requested radius
+by one raster-cell diagonal. Consequently, with non-negative values, the
+focal sum is an upper bound for the exact radius sum of every centre
+located in that cell: all source cells that could contribute to such a
+centre are included. The automatically estimated threshold is a lower
+bound obtained from a feasible preliminary centre. A raster cell whose
+focal upper bound is below that threshold cannot contain a better centre
+and need not be refined.
+
+For the remaining local point pairs, both radius-circle intersection
+centres are constructed geometrically. Each of those two centres is
+assigned to a raster cell using terra, and the centres are screened
+separately. Only a centre whose own cell passed focal screening receives
+the more expensive exact radius evaluation. This is more selective than
+retaining both centres merely because one of them lies in a candidate
+cell. Every retained centre is then evaluated against the full remaining
+active portfolio, not only against the local points used to generate it.
+Points outside the candidate-generation subset therefore still
+contribute whenever they lie within the radius.
+
+This additional centre-level pruning is used only with non-negative
+values and the default automatically estimated lower bound. For a
+user-supplied threshold or negative values, the implementation does not
+rely on this upper-bound argument and uses the broader refinement route.
+The direct validation route `optimize_hotspot(prepare_spatialrisk(...))`
+also remains unfiltered and evaluates the complete geometric candidate
+set.
 
 ## Polygon reporting
 
@@ -503,6 +583,14 @@ extensively the candidate space is explored. The pair-intersection
 refinement is exact within the screened local candidate areas; it is not
 the same as evaluating every possible pair-intersection candidate
 globally in every call.
+
+The lower-level call `optimize_hotspot(prepare_spatialrisk(...))`
+provides that complete geometric candidate search for the active
+portfolio. For the first hotspot, under the point, non-negative-weight,
+fixed-radius, and projected-Euclidean assumptions stated above, this is
+the full finite candidate characterisation of the one-disk problem. This
+statement does not apply to the screened workflow, grid fallback, or the
+joint placement of multiple circles.
 
 For insurance applications this is useful because the method directly
 targets accumulation risk: the maximum total value that can be found

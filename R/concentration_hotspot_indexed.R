@@ -8,7 +8,8 @@ concentration_hotspot_indexed <- function(
     lat = "lat",
     crs_metric = 3035,
     print_progress = TRUE,
-    cell_size = radius
+    cell_size = radius,
+    candidate_rows = NULL
 ) {
   value <- validate_hotspot_value(value)
   validate_indexed_hotspot_input(data, value, top_n, radius, lon, lat,
@@ -22,14 +23,23 @@ concentration_hotspot_indexed <- function(
                            lon_to = "x", lat_to = "y")
 
   remaining_metric <- metric
+  candidate_metric <- if (is.null(candidate_rows)) {
+    metric
+  } else {
+    metric[metric$ix %in% candidate_rows, , drop = FALSE]
+  }
+  if (nrow(candidate_metric) == 0L) {
+    rlang::abort("The selected candidate search state contains no active points.",
+                 call = NULL)
+  }
   pts_lst <- vector("list", top_n)
   conc_lst <- vector("list", top_n)
   output_col <- hotspot_sum_column(value)
 
   for (i in seq_len(top_n)) {
     best <- indexed_concentration_best_cpp(
-      x_candidates = remaining_metric$x,
-      y_candidates = remaining_metric$y,
+      x_candidates = candidate_metric$x,
+      y_candidates = candidate_metric$y,
       x_ref = remaining_metric$x,
       y_ref = remaining_metric$y,
       value_ref = remaining_metric[[value]],
@@ -91,9 +101,17 @@ concentration_hotspot_indexed <- function(
         ,
         drop = FALSE
       ]
+      candidate_metric <- candidate_metric[
+        !candidate_metric$ix %in% selected$ix,
+        ,
+        drop = FALSE
+      ]
 
       if (nrow(remaining_metric) == 0) {
         rlang::abort("Need more rows", call = NULL)
+      }
+      if (nrow(candidate_metric) == 0L) {
+        rlang::abort("Need more active candidate centres", call = NULL)
       }
     }
   }
