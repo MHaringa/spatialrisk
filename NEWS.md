@@ -1,3 +1,5 @@
+# spatialrisk (development version)
+
 # spatialrisk 0.8.2
 
 * Tightened automatic continuous screening with a point-to-cell distance bound.
