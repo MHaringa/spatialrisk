@@ -70,32 +70,32 @@ convert_crs_df <- function(df, crs_from = 3035, crs_to = 4326,
 #' @param r SpatRaster.
 #' @param radius radius of the circle (in units of the crs).
 #'
-#' @importFrom terra distance
-#' @importFrom terra ext
-#' @importFrom terra rast
-#' @importFrom terra res
-#'
-#' @details \code{mw_create()} is a modified version of
-#' \code{terra::focalMat()}. While \code{terra::focalMat()} creates a matrix
-#' where the border is the distance from the center of the focal cell,
-#' \code{mw_create()} creates a matrix where the border of the moving window
-#' is the distance from the edge of the focal cell.
+#' @details The returned mask includes raster-cell centres whose Euclidean
+#'   distance from the focal-cell centre is no greater than `radius` plus the
+#'   full raster-cell diagonal. This conservative expansion accounts for the
+#'   possible displacement of both a disk centre and a contributing point from
+#'   their respective cell centres.
 #'
 #' @author Martin Haringa
 #'
 #' @keywords internal
 mw_create <- function(r, radius) {
-  d <- radius
   rs <- terra::res(r)
-  nx <- 1 + 2 * ceiling(d / rs[1])
-  ny <- 1 + 2 * ceiling(d / rs[2])
-  m <- matrix(ncol = nx, nrow = ny)
-  m[ceiling(ny / 2), ceiling(nx / 2)] <- 1
-  x <- terra::rast(m, crs = "+proj=utm +zone=1 +datum=WGS84")
-  terra::ext(x) <- c(xmin = 0, xmax = nx * rs[1], ymin = 0, ymax = ny * rs[2])
-  dist_diag_cell <- sqrt(2 * (rs[1] ^ 2))
-  d <- as.matrix(terra::distance(x), wide = TRUE) <= d + dist_diag_cell
-  d / d
+  # A centre and a contributing point can each lie half a cell diagonal away
+  # from their raster-cell centre. The full diagonal therefore has to be added
+  # both to the distance cut-off and to the physical window extent.
+  cell_diagonal <- sqrt(sum(rs ^ 2))
+  upper_bound_radius <- radius + cell_diagonal
+  nx <- 1 + 2 * ceiling(upper_bound_radius / rs[1])
+  ny <- 1 + 2 * ceiling(upper_bound_radius / rs[2])
+  row_offset <- seq_len(ny) - ceiling(ny / 2)
+  col_offset <- seq_len(nx) - ceiling(nx / 2)
+  included <- outer(
+    row_offset * rs[2],
+    col_offset * rs[1],
+    function(dy, dx) dx ^ 2 + dy ^ 2 <= upper_bound_radius ^ 2
+  )
+  ifelse(included, 1, NA_real_)
 }
 
 #' Identify the focal indices with the highest values

@@ -78,7 +78,7 @@ hotspot
 #> Value: amount 
 #> 
 #>   id      lon      lat amount_sum
-#> 1  1 6.547331 53.23659      64438
+#> 1  1 6.547318 53.23659      64438
 ```
 
 The reported `amount_sum` is the sum of `amount` within 200 metres of
@@ -103,7 +103,7 @@ A hotspot result contains two main components:
 
 hotspot$hotspots
 #>   id      lon      lat amount_sum
-#> 1  1 6.547331 53.23659      64438
+#> 1  1 6.547318 53.23659      64438
 
 head(hotspot$contributing_points[, c("id", "data_row", "lon", "lat",
                                      "amount", "amount_sum")])
@@ -133,12 +133,12 @@ the search.
 
 head(hotspot$contributing_points)
 #>   id data_row      lon      lat amount distance_m amount_sum
-#> 1  1     1492 6.545297 53.23569    148   168.9837      64438
-#> 2  1     4703 6.545482 53.23547    132   175.7036      64438
-#> 3  1    18287 6.545429 53.23546    130   178.8321      64438
-#> 4  1    19958 6.545392 53.23543    138   183.0865      64438
-#> 5  1    22587 6.545493 53.23545    142   176.7874      64438
-#> 6  1       19 6.544724 53.23646    411   174.6183      64438
+#> 1  1     1492 6.545297 53.23569    148   168.0422      64438
+#> 2  1     4703 6.545482 53.23547    132   174.7968      64438
+#> 3  1    18287 6.545429 53.23546    130   177.9221      64438
+#> 4  1    19958 6.545392 53.23543    138   182.1778      64438
+#> 5  1    22587 6.545493 53.23545    142   175.8840      64438
+#> 6  1       19 6.544724 53.23646    411   173.7389      64438
 nrow(hotspot$contributing_points)
 #> [1] 208
 sum(hotspot$contributing_points$amount)
@@ -260,7 +260,7 @@ rbind(
   observed = hotspot_observed$hotspots
 )
 #>            id      lon      lat amount_sum
-#> continuous  1 6.547331 53.23659      64438
+#> continuous  1 6.547318 53.23659      64438
 #> observed    1 6.547288 53.23664      64172
 ```
 
@@ -307,7 +307,7 @@ hotspot_top2 <- concentration_hotspot(
 hotspot_top2$hotspots
 #>   id      lon      lat amount_sum
 #> 1  1 6.547331 53.23659      64438
-#> 2  2 6.523411 53.23094      57977
+#> 2  2 6.523439 53.23094      57977
 ```
 
 The first hotspot addresses the single-circle maximum concentration
@@ -344,8 +344,8 @@ Conceptually, the search has four stages:
 - candidate regions are retained using an automatically estimated lower
   bound;
 - candidate centres are generated or refined within those regions;
-- exact radius sums are evaluated for candidate centres and the best
-  result is returned.
+- exact fixed-radius totals are maintained for candidate centres and the
+  best result is returned.
 
 ``` r
 
@@ -357,13 +357,13 @@ step_hotspot <- optimize_hotspot(model, n_hotspots = 2, progress = FALSE)
 step_hotspot$hotspots
 #>   id      lon      lat amount_sum
 #> 1  1 6.547331 53.23659      64438
-#> 2  2 6.523411 53.23094      57977
+#> 2  2 6.523439 53.23094      57977
 ```
 
 For small validation problems, candidate screening can be omitted
 deliberately. The direct route evaluates observed centres and the valid
 pairwise circle-intersection centres generated from the complete active
-portfolio. The screened route is the normal production workflow used by
+portfolio. The screened route is the normal continuous search used by
 [`concentration_hotspot()`](https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.md).
 
 ``` r
@@ -379,7 +379,7 @@ validation_model <- prepare_spatialrisk(
 # Full geometric reference search
 full <- optimize_hotspot(validation_model, progress = FALSE)
 
-# Screened production search
+# Screened continuous search
 screened <- validation_model |>
   select_candidates(progress = FALSE) |>
   optimize_hotspot(progress = FALSE)
@@ -403,8 +403,10 @@ Calling `plot(model)` after
 but before candidate selection shows the rasterised portfolio sum per
 cell. After
 [`select_candidates()`](https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.md),
-`plot(model)` shows only the focal candidate cells above the selected
-lower bound.
+`plot(model)` shows the centre cells retained by screening. The cell
+colours still show the original focal sums;
+`model$candidates$cells$point_upper_bound` contains the tighter
+point-based bounds for the default continuous search.
 
 ``` r
 
@@ -423,12 +425,19 @@ plot(selected)
 The lower bound can also be supplied explicitly, for example
 `select_candidates(model, threshold = 1000)`. When `threshold = NULL`,
 the automatic lower bound is deliberately conservative. The function
-first takes the highest cells from the focal raster. For those cells it
-runs a small local refinement step and uses the best refined
-concentration as the lower bound. Candidate cells are then all focal
-cells whose moving-window sum is at least this lower bound. The
-candidate map is therefore an inspection view of where the next hotspot
-may be found, not a fixed list of final hotspots.
+takes the five highest cells from the focal raster and evaluates a 10 by
+10 regular trial grid across each cell. These 500 evaluations use the
+same projected Euclidean geometry and complete active portfolio as the
+final search; trial coordinates on shared cell edges need not be unique.
+The best feasible concentration becomes the lower bound. For continuous
+search with non-negative values, focal cells above this lower bound
+undergo a second, point-based bound calculation described below. The
+five highest surviving point bounds seed another trial grid; the best
+actually attained portfolio sum can raise, but never lower, the
+threshold. Only cells whose point bound is at least the resulting
+threshold remain candidates. The candidate map is therefore an
+inspection view of where the next hotspot may be found, not a fixed list
+of final hotspots.
 
 When `n_hotspots > 1`, the search is repeated. After the first hotspot
 has been found, its contributing observations are removed from the
@@ -445,10 +454,15 @@ lower bound by evaluating observed local points and the circle centres
 implied by local point pairs. The point-to-cell assignment created
 during preparation is reused to retrieve points from nearby raster
 cells, rather than scanning the complete portfolio separately for every
-focal candidate cell. Within each hotspot iteration, exact candidate
-evaluations share one spatial lookup over the active portfolio; exact
-distances are calculated only for points from potentially intersecting
-cells. If the local refinement subset is larger than
+focal candidate cell. For the common single-hotspot search, the retained
+local point sets are combined and Rcpp traverses the pair geometry once
+as a streaming angular sweep. The sweep maintains the exact
+active-portfolio total at pair-intersection events, without
+materialising all centres or running a separate full radius query for
+each one. Only centres that can match or improve the current best
+receive a confirming indexed radius evaluation. Runtime therefore
+depends strongly on local pair density, not only on the total portfolio
+size. If the local refinement subset is larger than
 `max_refinement_points`, the function falls back to grid refinement for
 that iteration.
 
@@ -461,16 +475,37 @@ bound obtained from a feasible preliminary centre. A raster cell whose
 focal upper bound is below that threshold cannot contain a better centre
 and need not be refined.
 
+For each surviving centre cell $`C`$, a tighter bound is
+
+``` math
+V(C) = \sum_i w_i\,\mathbf{1}\{d(p_i,C)\leq r\},
+```
+
+where $`d(p_i,C)`$ is the minimum distance from the point to the closed
+cell rectangle. If a point can lie within a radius-$`r`$ disk centred
+anywhere in $`C`$, it must contribute to this bound. The reverse need
+not hold for all points simultaneously, so $`V(C)`$ remains an upper
+bound, not an attainable hotspot value. Unlike the focal sum, it does
+not include the full weight of a neighbouring cell merely because its
+boundary can be reached. The implementation uses the stored terra cell
+assignments to retrieve nearby active points in one batch and allows for
+radius-scoring and floating-point tolerances at cell edges. Cells with
+$`V(C)<L`$ are removed; equality is retained. The feasible lower bound
+$`L`$ is strengthened using actual disk evaluations, never by
+substituting an upper bound. This additional screening changes only the
+possible centre domain, not the active portfolio used to evaluate
+retained centres.
+
 For the remaining local point pairs, both radius-circle intersection
 centres are constructed geometrically. Each of those two centres is
 assigned to a raster cell using terra, and the centres are screened
-separately. Only a centre whose own cell passed focal screening receives
-the more expensive exact radius evaluation. This is more selective than
+separately. Only a centre whose own cell passed focal screening is
+considered by the exact angular evaluation. This is more selective than
 retaining both centres merely because one of them lies in a candidate
-cell. Every retained centre is then evaluated against the full remaining
-active portfolio, not only against the local points used to generate it.
-Points outside the candidate-generation subset therefore still
-contribute whenever they lie within the radius.
+cell. Every retained centre is evaluated using the full remaining active
+portfolio, not only the local points used to generate it. Points outside
+the candidate-generation subset therefore still contribute whenever they
+lie within the radius.
 
 This additional centre-level pruning is used only with non-negative
 values and the default automatically estimated lower bound. For a
@@ -573,24 +608,31 @@ observations are points, weights are non-negative, distances are
 Euclidean in a projected coordinate reference system, and the radius is
 fixed. The candidate set consisting of observed point locations and the
 intersections of radius-`r` circles around pairs of observations is
-sufficient for the first single-circle optimum under those assumptions.
+sufficient for the single-disk optimum under those assumptions.
 
 The practical `continuous` implementation uses spatial screening and
 local refinement to avoid evaluating the full candidate set
-indiscriminately. Computational settings such as `cell_size`, the
-candidate lower bound, and `max_refinement_points` determine how
-extensively the candidate space is explored. The pair-intersection
-refinement is exact within the screened local candidate areas; it is not
-the same as evaluating every possible pair-intersection candidate
-globally in every call.
+indiscriminately. With non-negative weights, the default automatically
+calculated lower bound, complete pair-intersection refinement, and exact
+scoring without grid fallback, the screening step is
+optimality-preserving for the single-disk problem. The expanded focal
+value upper-bounds every centre in its cell, while the automatic
+threshold is the value of an actually feasible centre; a cell below that
+threshold therefore cannot contain a strictly better solution. All
+observed and pair-intersection candidates whose own cells survive are
+represented in the exact sweep and evaluated against the complete active
+portfolio. Under these conditions, `cell_size` affects screening
+resolution and computational cost, but not the global-optimum guarantee.
 
 The lower-level call `optimize_hotspot(prepare_spatialrisk(...))`
 provides that complete geometric candidate search for the active
 portfolio. For the first hotspot, under the point, non-negative-weight,
 fixed-radius, and projected-Euclidean assumptions stated above, this is
-the full finite candidate characterisation of the one-disk problem. This
-statement does not apply to the screened workflow, grid fallback, or the
-joint placement of multiple circles.
+the full finite candidate characterisation of the one-disk problem. The
+same global guarantee applies to the screened workflow only under the
+conditions stated above. It does not apply to a user-supplied threshold,
+negative weights, grid fallback, grid search, or the joint placement of
+multiple circles.
 
 For insurance applications this is useful because the method directly
 targets accumulation risk: the maximum total value that can be found

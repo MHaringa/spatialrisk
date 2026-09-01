@@ -13,7 +13,7 @@ prepared portfolio is used in more than one hotspot search strategy."><meta prop
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,7 @@ prepared portfolio is used in more than one hotspot search strategy.</p>
 <span><span class="fu">select_candidates</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  grid_spacing <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  max_refinement_points <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  max_refinement_points <span class="op">=</span> <span class="fl">1500</span>,</span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"continuous"</span>, <span class="st">"observed"</span>, <span class="st">"grid"</span><span class="op">)</span>,</span>
 <span>  threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -83,7 +83,8 @@ prepared portfolio is used in more than one hotspot search strategy.</p>
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A data.frame containing point-level exposures. Must include
-longitude, latitude, and the value of interest.</p></dd>
+longitude and latitude in EPSG:4326 and the value of interest. Coordinates
+are projected internally to `crs_metric`.</p></dd>
 
 
 <dt id="arg-value">value<a class="anchor" aria-label="anchor" href="#arg-value"></a></dt>
@@ -193,23 +194,36 @@ diagnostics, validation, and methodological benchmarks. Pair generation can
 be computationally expensive.</p>
 <p>In `select_candidates()`, `threshold = NULL` estimates a lower bound by
 taking the highest focal raster cells, refining those cells on a small local
-grid, and using the best refined value as the candidate-cell threshold. The
-selected candidates are focal cells whose moving-window sum is at least this
-lower bound. The focal window includes the requested radius plus a raster-cell
+grid, evaluating those centres in the projected metric coordinates, and using
+the best feasible value as the candidate-cell threshold. The
+focal cells first survive when their moving-window sum is at least this
+lower bound. For continuous search with non-negative values and an automatic
+threshold, a second bound sums only active points whose minimum distance to
+the closed centre-cell rectangle is within the radius, allowing for the
+scoring tolerance. It does not count the entire value of an extra raster
+cell. The five highest surviving point bounds also seed feasible trial
+centres; only their actual portfolio sums can raise the lower bound.
+Cells with a point bound strictly below that lower bound are removed.
+The focal window includes the requested radius plus a raster-cell
 diagonal. With non-negative values, its sum is therefore an upper bound for
 every exact centre located in that focal cell. Under the default automatic
 threshold, observed and pair-intersection centres are mapped back to the
-raster and an exact radius sum is calculated only when the centre itself lies
-in a selected cell. For a point pair, its two possible circle centres are
-screened separately. This reduces exact evaluations without changing the
-screened search result under these assumptions. The pruning rule is not used
-for a user-supplied threshold or negative values.</p>
+raster and exact evaluation is restricted to centres that lie in a selected
+cell. For a point pair, its two possible circle centres are screened
+separately. For a single hotspot, a streaming Rcpp angular sweep maintains
+the complete active-portfolio total at the retained pair-intersection events;
+this avoids materialising and separately querying every centre. With
+complete pair-intersection refinement and exact
+scoring, and provided no grid fallback occurs, this removes no cell that can
+contain a strictly improving centre and therefore preserves a global optimum
+of the single-disk problem. The guarantee does not apply to a
+user-supplied threshold, negative values, or grid fallback.</p>
 <p>Candidate screening never defines the evaluation portfolio. Every retained
 centre is scored against all records in the complete active portfolio, so a
 point outside the candidate-generation subset still contributes when it lies
 within the radius. Point-to-raster-cell membership is stored during
 preparation and reused to retrieve nearby records; candidate regions within
-one hotspot iteration share one exact-evaluation index. When
+one hotspot iteration share the same active-portfolio evaluation state. When
 `optimize_hotspot(n_hotspots &gt; 1)` or
 `concentration_hotspot(n_hotspots &gt; 1)` is used,
 the points in the selected hotspot are removed and the candidate-selection
@@ -232,7 +246,7 @@ the number of hotspots returned by `n_hotspots`.</p>
 <span class="r-in"><span><span class="co"># Full geometric reference search</span></span></span>
 <span class="r-in"><span><span class="va">full</span> <span class="op">&lt;-</span> <span class="fu">optimize_hotspot</span><span class="op">(</span><span class="va">model</span>, progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Screened production search</span></span></span>
+<span class="r-in"><span><span class="co"># Screened continuous search</span></span></span>
 <span class="r-in"><span><span class="va">screened</span> <span class="op">&lt;-</span> <span class="va">model</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">select_candidates</span><span class="op">(</span>progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">optimize_hotspot</span><span class="op">(</span>progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>

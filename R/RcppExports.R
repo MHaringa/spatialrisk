@@ -25,12 +25,20 @@ indexed_points_in_radius_cpp <- function(x_center, y_center, x_ref, y_ref, value
     .Call('_spatialrisk_indexed_points_in_radius_cpp', PACKAGE = 'spatialrisk', x_center, y_center, x_ref, y_ref, value_ref, ix_ref, radius, cell_width)
 }
 
+cell_point_upper_bounds_cpp <- function(candidate_cell_ids, x_candidates, y_candidates, point_cell_ids, x_ref, y_ref, value_ref, radius, xres, yres, raster_nrow, raster_ncol) {
+    .Call('_spatialrisk_cell_point_upper_bounds_cpp', PACKAGE = 'spatialrisk', candidate_cell_ids, x_candidates, y_candidates, point_cell_ids, x_ref, y_ref, value_ref, radius, xres, yres, raster_nrow, raster_ncol)
+}
+
+candidate_union_rows_cpp <- function(candidate_cell_ids, x_candidates, y_candidates, point_cell_ids, x_ref, y_ref, search_radius, xres, yres, raster_nrow, raster_ncol) {
+    .Call('_spatialrisk_candidate_union_rows_cpp', PACKAGE = 'spatialrisk', candidate_cell_ids, x_candidates, y_candidates, point_cell_ids, x_ref, y_ref, search_radius, xres, yres, raster_nrow, raster_ncol)
+}
+
 pair_intersection_best_cpp <- function(x_candidates, y_candidates, x_ref, y_ref, value_ref, radius, cell_width) {
     .Call('_spatialrisk_pair_intersection_best_cpp', PACKAGE = 'spatialrisk', x_candidates, y_candidates, x_ref, y_ref, value_ref, radius, cell_width)
 }
 
-pair_intersection_best_groups_cpp <- function(candidate_rows, x_ref, y_ref, value_ref, ix_ref, radius, cell_width, selected_cell_ids, raster_geometry, filter_centres) {
-    .Call('_spatialrisk_pair_intersection_best_groups_cpp', PACKAGE = 'spatialrisk', candidate_rows, x_ref, y_ref, value_ref, ix_ref, radius, cell_width, selected_cell_ids, raster_geometry, filter_centres)
+pair_intersection_best_groups_cpp <- function(candidate_rows, x_ref, y_ref, value_ref, ix_ref, radius, cell_width, selected_cell_ids, raster_geometry, filter_centres, profile = FALSE, global_only = FALSE) {
+    .Call('_spatialrisk_pair_intersection_best_groups_cpp', PACKAGE = 'spatialrisk', candidate_rows, x_ref, y_ref, value_ref, ix_ref, radius, cell_width, selected_cell_ids, raster_geometry, filter_centres, profile, global_only)
 }
 
 haversine_cpp_vec <- function(lat_from, lon_from, lat_to, lon_to, r) {

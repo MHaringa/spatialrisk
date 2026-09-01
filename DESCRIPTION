@@ -1,7 +1,7 @@
 Package: spatialrisk
 Type: Package
 Title: Spatial Concentration and Radius-Based Risk Calculations
-Version: 0.8.1.9000
+Version: 0.8.2
 Authors@R: c(person("Martin", "Haringa", role = c("aut", "cre"), 
     email = "mtharinga@gmail.com"))
 Author: Martin Haringa [aut, cre]
@@ -15,9 +15,9 @@ Description: Provides computational building blocks for fixed-radius spatial
     geometries. These methods are useful for applications such as insurance, 
     urban analytics, environmental exposure analysis, and other spatial point 
     pattern workflows. The fixed-radius circle placement problem is discussed 
-    by Chazelle and Lee (1986) <https://doi.org/10.1007/BF02238188>, and 
+    by Chazelle and Lee (1986) <doi:10.1007/BF02238188>, and 
     related maximum covering problems are described by Church (1974) 
-    <https://doi.org/10.1007/BF01942293>.
+    <doi:10.1007/BF01942293>.
 License: GPL (>= 2)
 URL: https://github.com/mharinga/spatialrisk, https://mharinga.github.io/spatialrisk/
 LazyData: true

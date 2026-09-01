@@ -9,7 +9,7 @@ terra::focal().'><meta property="og:image" content="https://mharinga.github.io/s
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,11 +57,11 @@ terra::focal().'><meta property="og:image" content="https://mharinga.github.io/s
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><code>mw_create()</code> is a modified version of
-<code><a href="https://rspatial.github.io/terra/reference/focalMat.html" class="external-link">terra::focalMat()</a></code>. While <code><a href="https://rspatial.github.io/terra/reference/focalMat.html" class="external-link">terra::focalMat()</a></code> creates a matrix
-where the border is the distance from the center of the focal cell,
-<code>mw_create()</code> creates a matrix where the border of the moving window
-is the distance from the edge of the focal cell.</p>
+    <p>The returned mask includes raster-cell centres whose Euclidean
+  distance from the focal-cell centre is no greater than `radius` plus the
+  full raster-cell diagonal. This conservative expansion accounts for the
+  possible displacement of both a disk centre and a contributing point from
+  their respective cell centres.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

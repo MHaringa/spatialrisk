@@ -1,0 +1,30 @@
+R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.5.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Europe/Amsterdam
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] spatialrisk_0.8.2 testthat_3.3.2   
+
+loaded via a namespace (and not attached):
+ [1] terra_1.9-34       vctrs_0.7.3        cli_3.6.6          rlang_1.3.0       
+ [5] KernSmooth_2.23-26 otel_0.2.0         DBI_1.3.0          pkgload_1.5.3     
+ [9] generics_0.1.4     sf_1.1-2           data.table_1.18.4  glue_1.8.1        
+[13] rprojroot_2.1.1    e1071_1.7-17       pkgbuild_1.4.8     brio_1.1.5        
+[17] grid_4.6.1         RcppProgress_0.4.2 classInt_0.4-11    tibble_3.3.1      
+[21] lifecycle_1.0.5    compiler_4.6.1     codetools_0.2-20   dplyr_1.2.1       
+[25] fs_2.1.0           Rcpp_1.1.2         pkgconfig_2.0.3    R6_2.6.1          
+[29] class_7.3-23       tidyselect_1.2.1   pillar_1.11.1      magrittr_2.0.5    
+[33] tools_4.6.1        proxy_0.4-29       units_1.0-1        desc_1.4.3        

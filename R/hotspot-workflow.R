@@ -7,7 +7,8 @@
 #' prepared portfolio is used in more than one hotspot search strategy.
 #'
 #' @param data A data.frame containing point-level exposures. Must include
-#'   longitude, latitude, and the value of interest.
+#'   longitude and latitude in EPSG:4326 and the value of interest. Coordinates
+#'   are projected internally to `crs_metric`.
 #' @param value A string giving the numeric column in `data` to aggregate
 #'   within each radius.
 #' @param radius Numeric. Radius of the circle in meters.
@@ -65,24 +66,37 @@
 #'
 #' In `select_candidates()`, `threshold = NULL` estimates a lower bound by
 #' taking the highest focal raster cells, refining those cells on a small local
-#' grid, and using the best refined value as the candidate-cell threshold. The
-#' selected candidates are focal cells whose moving-window sum is at least this
-#' lower bound. The focal window includes the requested radius plus a raster-cell
+#' grid, evaluating those centres in the projected metric coordinates, and using
+#' the best feasible value as the candidate-cell threshold. The
+#' focal cells first survive when their moving-window sum is at least this
+#' lower bound. For continuous search with non-negative values and an automatic
+#' threshold, a second bound sums only active points whose minimum distance to
+#' the closed centre-cell rectangle is within the radius, allowing for the
+#' scoring tolerance. It does not count the entire value of an extra raster
+#' cell. The five highest surviving point bounds also seed feasible trial
+#' centres; only their actual portfolio sums can raise the lower bound.
+#' Cells with a point bound strictly below that lower bound are removed.
+#' The focal window includes the requested radius plus a raster-cell
 #' diagonal. With non-negative values, its sum is therefore an upper bound for
 #' every exact centre located in that focal cell. Under the default automatic
 #' threshold, observed and pair-intersection centres are mapped back to the
-#' raster and an exact radius sum is calculated only when the centre itself lies
-#' in a selected cell. For a point pair, its two possible circle centres are
-#' screened separately. This reduces exact evaluations without changing the
-#' screened search result under these assumptions. The pruning rule is not used
-#' for a user-supplied threshold or negative values.
+#' raster and exact evaluation is restricted to centres that lie in a selected
+#' cell. For a point pair, its two possible circle centres are screened
+#' separately. For a single hotspot, a streaming Rcpp angular sweep maintains
+#' the complete active-portfolio total at the retained pair-intersection events;
+#' this avoids materialising and separately querying every centre. With
+#' complete pair-intersection refinement and exact
+#' scoring, and provided no grid fallback occurs, this removes no cell that can
+#' contain a strictly improving centre and therefore preserves a global optimum
+#' of the single-disk problem. The guarantee does not apply to a
+#' user-supplied threshold, negative values, or grid fallback.
 #'
 #' Candidate screening never defines the evaluation portfolio. Every retained
 #' centre is scored against all records in the complete active portfolio, so a
 #' point outside the candidate-generation subset still contributes when it lies
 #' within the radius. Point-to-raster-cell membership is stored during
 #' preparation and reused to retrieve nearby records; candidate regions within
-#' one hotspot iteration share one exact-evaluation index. When
+#' one hotspot iteration share the same active-portfolio evaluation state. When
 #' `optimize_hotspot(n_hotspots > 1)` or
 #' `concentration_hotspot(n_hotspots > 1)` is used,
 #' the points in the selected hotspot are removed and the candidate-selection
@@ -99,7 +113,7 @@
 #' # Full geometric reference search
 #' full <- optimize_hotspot(model, progress = FALSE)
 #'
-#' # Screened production search
+#' # Screened continuous search
 #' screened <- model |>
 #'   select_candidates(progress = FALSE) |>
 #'   optimize_hotspot(progress = FALSE)
@@ -151,7 +165,7 @@ prepare_spatialrisk <- function(data, value, radius = 200, cell_size = 100,
 #' @rdname prepare_spatialrisk
 #' @export
 select_candidates <- function(x, grid_spacing = 1,
-                              max_refinement_points = 1000,
+                              max_refinement_points = 1500,
                               method = c("continuous", "observed", "grid"),
                               threshold = NULL, progress = TRUE,
                               grid_precision = lifecycle::deprecated()) {
@@ -162,7 +176,7 @@ select_candidates <- function(x, grid_spacing = 1,
 select_candidates.spatialrisk_hotspot_workflow <- function(
     x,
     grid_spacing = 1,
-    max_refinement_points = 1000,
+    max_refinement_points = 1500,
     method = c("continuous", "observed", "grid"),
     threshold = NULL,
     progress = TRUE,
@@ -232,6 +246,14 @@ select_candidates.spatialrisk_hotspot_workflow <- function(
   # Candidate cells are an interpretable inspection layer: their focal value is
   # high enough to warrant local refinement in the next optimisation step.
   candidate_cells <- cells_above_threshold_with_values(state$focal, threshold)
+  if (method == "continuous" && is.null(x$params$threshold) &&
+      all(x$metric[[p$value]] >= 0)) {
+    screened <- tighten_hotspot_candidate_cells(
+      candidate_cells, state, x$metric, p$value, p$radius, threshold
+    )
+    candidate_cells <- screened$cells
+    threshold <- screened$threshold
+  }
   approximate <- terra_screening_center(state$focal)
   approximate_cell <- terra::cellFromXY(
     state$raster,
@@ -512,7 +534,7 @@ complete_hotspot_workflow_params <- function(params) {
   defaults <- list(
     cell_size = 100,
     grid_spacing = 1,
-    max_refinement_points = 1000,
+    max_refinement_points = 1500,
     method = "continuous",
     threshold = NULL
   )
@@ -524,26 +546,49 @@ complete_hotspot_workflow_params <- function(params) {
   out
 }
 
+HOTSPOT_LOWER_BOUND_SEED_CELLS <- 5L
+HOTSPOT_LOWER_BOUND_TRIALS_PER_AXIS <- 10L
+
 estimate_hotspot_candidate_threshold <- function(focal, data, params) {
-  top_focals <- top_n_focals(focal, n = 5)
-  threshold_candidates <- concentration_per_candidate_cell(
-    top_focals,
+  top_focals <- top_n_focals(focal, n = HOTSPOT_LOWER_BOUND_SEED_CELLS)
+  metric_hotspot_lower_bound(top_focals, data, params)$concentration[1]
+}
+
+metric_hotspot_lower_bound <- function(candidate_cells, data, params,
+                                       points =
+                                         HOTSPOT_LOWER_BOUND_TRIALS_PER_AXIS,
+                                       metric = NULL) {
+  offsets <- seq(-params$cell_size / 2, params$cell_size / 2,
+                 length.out = points)
+  grid <- expand.grid(dx = offsets, dy = offsets)
+  x_candidates <- rep(candidate_cells$x, each = nrow(grid)) +
+    rep(grid$dx, times = nrow(candidate_cells))
+  y_candidates <- rep(candidate_cells$y, each = nrow(grid)) +
+    rep(grid$dy, times = nrow(candidate_cells))
+
+  if (is.null(metric)) metric <- convert_crs_df(
     data,
-    params$value,
-    params$cell_size,
-    points = 10,
-    cache = empty_hotspot_cache(),
+    crs_from = 4326,
+    crs_to = params$crs_metric,
+    lon_from = params$lon,
+    lat_from = params$lat,
+    lon_to = "x",
+    lat_to = "y"
+  )
+  ix <- if ("ix" %in% names(metric)) metric$ix else seq_len(nrow(metric))
+
+  # The screening threshold must be a feasible objective value in exactly the
+  # same projected Euclidean geometry used by pair-intersection refinement.
+  indexed_concentration_best_cpp(
+    x_candidates = x_candidates,
+    y_candidates = y_candidates,
+    x_ref = metric$x,
+    y_ref = metric$y,
+    value_ref = metric[[params$value]],
+    ix_ref = as.integer(ix),
     radius = params$radius,
-    crs_metric = params$crs_metric,
-    lon = params$lon,
-    lat = params$lat
+    cell_width = params$radius
   )
-  lower_bound <- highest_concentration_candidate(
-    threshold_candidates,
-    top_focals,
-    empty_hotspot_cache()
-  )
-  lower_bound$concentration[1]
 }
 
 initialise_prepare_hotspot_state <- function(data, value, radius, cell_size,
@@ -555,7 +600,7 @@ initialise_prepare_hotspot_state <- function(data, value, radius, cell_size,
       metric_sf <- convert_crs_df(data, 4326, crs_metric, lon, lat, "x", "y")
       terra_crs <- paste0("EPSG:", crs_metric)
       spatvctr <- terra::vect(metric_sf, geom = c("x", "y"), crs = terra_crs)
-      raster <- hotspot_raster_template(spatvctr, cell_size, terra_crs)
+      raster <- hotspot_raster_template(spatvctr, cell_size, terra_crs, radius)
       rasterized <- terra::rasterize(spatvctr, raster, field = value, fun = sum)
       point_cells <- terra::cellFromXY(
         raster,
@@ -584,6 +629,35 @@ cells_above_threshold_with_values <- function(focal, threshold) {
   values <- terra::values(focal, mat = FALSE)
   cells$focal_value <- values[cells$cell]
   cells
+}
+
+tighten_hotspot_candidate_cells <- function(cells, state, metric, value,
+                                            radius, threshold) {
+  if (!nrow(cells)) return(list(cells = cells, threshold = threshold))
+  geometry <- state$raster_geometry
+  # The mapping survives greedy removal; pass only the currently active rows.
+  point_cells <- state$point_cells$cell[
+    match(metric$ix, state$point_cells$ix)
+  ]
+  cells$point_upper_bound <- cell_point_upper_bounds_cpp(
+    as.integer(cells$cell), cells$x, cells$y, as.integer(point_cells),
+    metric$x, metric$y, metric[[value]], radius,
+    geometry$xres, geometry$yres, geometry$nrow, geometry$ncol
+  )
+  cells <- cells[cells$point_upper_bound >= threshold, , drop = FALSE]
+  if (!nrow(cells)) return(list(cells = cells, threshold = threshold))
+  seeds <- head(order(-cells$point_upper_bound, cells$cell),
+                HOTSPOT_LOWER_BOUND_SEED_CELLS)
+  # Bounds rank seed regions; only an actual full-portfolio disk value can
+  # raise the lower bound. The bound itself is never used as a hotspot value.
+  feasible <- metric_hotspot_lower_bound(
+    cells[seeds, , drop = FALSE], data = NULL,
+    params = list(cell_size = min(geometry$xres, geometry$yres),
+                  radius = radius, value = value), metric = metric
+  )$concentration[1]
+  threshold <- max(threshold, feasible)
+  cells <- cells[cells$point_upper_bound >= threshold, , drop = FALSE]
+  list(cells = cells, threshold = threshold)
 }
 
 candidate_cells_polygons <- function(focal, candidate_cells) {

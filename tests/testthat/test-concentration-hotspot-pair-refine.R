@@ -1,5 +1,16 @@
 library(spatialrisk)
 
+test_that("public hotspot refinement defaults are 1500 points", {
+  expect_identical(
+    formals(concentration_hotspot)$max_refinement_points,
+    1500
+  )
+  expect_identical(
+    formals(select_candidates)$max_refinement_points,
+    1500
+  )
+})
+
 continuous_metric_toy_data <- function() {
   metric <- data.frame(
     x = c(4300000, 4300050, 4300000, 4300200, 4301000, 4301200),
@@ -314,6 +325,116 @@ test_that("batched pair refinement matches separate candidate-cell calls", {
   expect_lt(filtered$diagnostics$evaluated_centres,
             batched$diagnostics$evaluated_centres)
   expect_equal(max(filtered$concentration), max(batched$concentration))
+
+  streaming <- spatialrisk:::pair_intersection_best_groups_cpp(
+    lapply(groups, as.integer), metric$x, metric$y, metric$amount, metric$ix,
+    radius = 200, cell_width = 200,
+    selected_cell_ids = as.integer(candidate_cells$cell),
+    raster_geometry = spatialrisk:::hotspot_raster_geometry_vector(state),
+    filter_centres = TRUE, profile = TRUE, global_only = TRUE
+  )
+  expect_equal(streaming$concentration, max(filtered$concentration))
+  expect_true(streaming$diagnostics$streaming_angular_sweep)
+  expect_lte(streaming$diagnostics$evaluated_intersection_centres,
+             filtered$diagnostics$evaluated_intersection_centres)
+})
+
+test_that("streaming refinement exposes optional phase diagnostics", {
+  old <- options(spatialrisk.profile = TRUE)
+  on.exit(options(old), add = TRUE)
+  x <- Groningen[1:200, c("lon", "lat", "amount")]
+
+  out <- concentration_hotspot(
+    x, value = "amount", radius = 200, cell_size = 100,
+    max_refinement_points = 1500, progress = FALSE
+  )
+  profile <- attr(out, "profile")[[1]]
+
+  expect_true(profile$streaming_angular_sweep)
+  expect_gte(profile$intersections_generated,
+             profile$evaluated_intersection_centres)
+  expect_gte(profile$time_local_extraction_seconds, 0)
+  expect_gte(profile$time_rcpp_batch_seconds, 0)
+})
+
+test_that("streaming sweep matches exhaustive pair scoring", {
+  for (seed in 1:20) {
+    set.seed(seed)
+    n <- 18L
+    x <- runif(n, 0, 600)
+    y <- runif(n, 0, 600)
+    if (seed == 1L) {
+      x[2] <- x[1]
+      y[2] <- y[1]
+    }
+    value <- sample(1:100, n, replace = TRUE)
+    rows <- list(seq_len(n))
+
+    exhaustive <- spatialrisk:::pair_intersection_best_cpp(
+      x, y, x, y, value, radius = 120, cell_width = 120
+    )
+    streaming <- spatialrisk:::pair_intersection_best_groups_cpp(
+      rows, x, y, value, seq_len(n), radius = 120, cell_width = 120,
+      selected_cell_ids = integer(), raster_geometry = rep(0, 8),
+      filter_centres = FALSE, profile = FALSE, global_only = TRUE
+    )
+
+    expect_equal(streaming$concentration, exhaustive$concentration)
+  }
+})
+
+test_that("streaming sweep handles dense candidate geometry", {
+  set.seed(20260815)
+  n <- 160L
+  x <- runif(n, 0, 240)
+  y <- runif(n, 0, 240)
+  value <- sample(1:1000, n, replace = TRUE)
+
+  exhaustive <- spatialrisk:::pair_intersection_best_cpp(
+    x, y, x, y, value, radius = 100, cell_width = 100
+  )
+  streaming <- spatialrisk:::pair_intersection_best_groups_cpp(
+    list(seq_len(n)), x, y, value, seq_len(n),
+    radius = 100, cell_width = 100,
+    selected_cell_ids = integer(), raster_geometry = rep(0, 8),
+    filter_centres = FALSE, profile = TRUE, global_only = TRUE
+  )
+
+  expect_equal(streaming$concentration, exhaustive$concentration)
+  expect_gt(streaming$diagnostics$intersections_generated, 10000)
+  expect_lt(streaming$diagnostics$evaluated_intersection_centres,
+            streaming$diagnostics$intersections_generated)
+  expect_equal(streaming$diagnostics$approx_pair_cache_payload_bytes, 0)
+})
+
+test_that("pair geometry handles tangent, coincident, and repeated centres", {
+  tangent <- spatialrisk:::pair_intersection_best_cpp(
+    c(0, 20), c(0, 0), c(0, 20), c(0, 0), c(1, 1),
+    radius = 10, cell_width = 10
+  )
+  expect_equal(tangent$concentration, 2)
+  expect_equal(tangent$x, 10, tolerance = 1e-12)
+  expect_equal(tangent$y, 0, tolerance = 1e-12)
+
+  coincident <- spatialrisk:::pair_intersection_best_cpp(
+    c(0, 0, 30), c(0, 0, 0), c(0, 0, 30), c(0, 0, 0), c(2, 3, 1),
+    radius = 10, cell_width = 10
+  )
+  expect_equal(coincident$concentration, 5)
+
+  angles <- c(0, 2 * pi / 3, 4 * pi / 3)
+  repeated <- spatialrisk:::pair_intersection_best_cpp(
+    10 * cos(angles), 10 * sin(angles),
+    10 * cos(angles), 10 * sin(angles), rep(1, 3),
+    radius = 10, cell_width = 10
+  )
+  expect_equal(repeated$concentration, 3)
+
+  equal_maxima <- spatialrisk:::pair_intersection_best_cpp(
+    c(0, 100), c(0, 0), c(0, 100), c(0, 0), c(5, 5),
+    radius = 10, cell_width = 10
+  )
+  expect_equal(equal_maxima$concentration, 5)
 })
 
 test_that("continuous falls back to grid refinement above point limit", {
