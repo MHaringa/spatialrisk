@@ -137,7 +137,8 @@ threshold, observed and pair-intersection centres are mapped back to the
 raster and exact evaluation is restricted to centres that lie in a selected
 cell. For a point pair, its two possible circle centres are screened
 separately. For a single hotspot, a streaming Rcpp angular sweep maintains
-the complete active-portfolio total at the retained pair-intersection events;
+conservative interval totals over all active neighbours, including distance
+slack. Competitive candidates are confirmed with the projected radius scorer;
 this avoids materialising and separately querying every centre. With
 complete pair-intersection refinement and exact
 scoring, and provided no grid fallback occurs, this removes no cell that can

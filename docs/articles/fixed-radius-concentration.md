@@ -456,15 +456,24 @@ during preparation is reused to retrieve points from nearby raster
 cells, rather than scanning the complete portfolio separately for every
 focal candidate cell. For the common single-hotspot search, the retained
 local point sets are combined and Rcpp traverses the pair geometry once
-as a streaming angular sweep. The sweep maintains the exact
-active-portfolio total at pair-intersection events, without
-materialising all centres or running a separate full radius query for
-each one. Only centres that can match or improve the current best
-receive a confirming indexed radius evaluation. Runtime therefore
-depends strongly on local pair density, not only on the total portfolio
-size. If the local refinement subset is larger than
-`max_refinement_points`, the function falls back to grid refinement for
-that iteration.
+as a streaming angular sweep. The sweep maintains conservative interval
+totals over all active neighbours, including the distance slack used by
+point-level scoring, without materialising all centres. Candidate angles
+remain those of the original radius-circle intersections. Grouping
+nearby events does not merge or move their pair-derived centre
+coordinates. Only centres whose interval bound can match or improve the
+current best receive a confirming indexed radius evaluation; signed
+weights bypass this upper-bound preselection. The numerical safeguards
+accommodate rounding but do not constitute a formal floating-point
+optimality certificate. Runtime therefore depends strongly on local pair
+density, not only on the total portfolio size. If the local refinement
+subset is larger than `max_refinement_points`, the function falls back
+to grid refinement for that iteration. Grid refinement and fallback use
+the same projected coordinates, closed-radius membership test, and
+complete active portfolio as continuous scoring. Only the
+candidate-centre search changes. The `refinement_methods` attribute of a
+continuous result reports `"pair_intersections"` or `"grid"`; grid
+fallback has no global-optimality guarantee.
 
 The focal moving window is deliberately wider than the requested radius
 by one raster-cell diagonal. Consequently, with non-negative values, the
@@ -500,7 +509,7 @@ For the remaining local point pairs, both radius-circle intersection
 centres are constructed geometrically. Each of those two centres is
 assigned to a raster cell using terra, and the centres are screened
 separately. Only a centre whose own cell passed focal screening is
-considered by the exact angular evaluation. This is more selective than
+considered for point-level confirmation. This is more selective than
 retaining both centres merely because one of them lies in a candidate
 cell. Every retained centre is evaluated using the full remaining active
 portfolio, not only the local points used to generate it. Points outside
@@ -620,7 +629,7 @@ value upper-bounds every centre in its cell, while the automatic
 threshold is the value of an actually feasible centre; a cell below that
 threshold therefore cannot contain a strictly better solution. All
 observed and pair-intersection candidates whose own cells survive are
-represented in the exact sweep and evaluated against the complete active
+represented by the search, and candidate values use the complete active
 portfolio. Under these conditions, `cell_size` affects screening
 resolution and computational cost, but not the global-optimum guarantee.
 

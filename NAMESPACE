@@ -31,46 +31,58 @@ export(select_candidates)
 export(summarise_points_by_polygon)
 import(RcppProgress)
 import(data.table)
-importFrom(Rcpp,evalCpp)
-importFrom(Rcpp,sourceCpp)
-importFrom(data.table,melt)
-importFrom(data.table,rbindlist)
-importFrom(data.table,setDT)
-importFrom(data.table,setkey)
-importFrom(data.table,setnames)
-importFrom(data.table,setorder)
+importFrom(Rcpp,
+  evalCpp,
+  sourceCpp
+)
+importFrom(data.table,
+  melt,
+  rbindlist,
+  setDT,
+  setkey,
+  setnames,
+  setorder
+)
 importFrom(dplyr,left_join)
-importFrom(fs,dir_create)
-importFrom(fs,dir_delete)
-importFrom(fs,dir_ls)
-importFrom(fs,file_create)
-importFrom(fs,file_size)
-importFrom(fs,file_temp)
-importFrom(fs,path)
+importFrom(fs,
+  dir_create,
+  dir_delete,
+  dir_ls,
+  file_create,
+  file_size,
+  file_temp,
+  path
+)
 importFrom(lifecycle,deprecate_warn)
 importFrom(rlang,abort)
-importFrom(sf,st_as_sf)
-importFrom(sf,st_buffer)
-importFrom(sf,st_coordinates)
-importFrom(sf,st_drop_geometry)
-importFrom(sf,st_geometry)
-importFrom(sf,st_join)
-importFrom(sf,st_transform)
+importFrom(sf,
+  st_as_sf,
+  st_buffer,
+  st_coordinates,
+  st_drop_geometry,
+  st_geometry,
+  st_join,
+  st_transform
+)
 importFrom(stats,as.formula)
-importFrom(terra,cellFromXY)
-importFrom(terra,cells)
-importFrom(terra,classify)
-importFrom(terra,crop)
-importFrom(terra,ext)
-importFrom(terra,focal)
-importFrom(terra,merge)
-importFrom(terra,rasterize)
-importFrom(terra,values)
-importFrom(terra,xres)
-importFrom(terra,xyFromCell)
-importFrom(utils,data)
-importFrom(utils,download.file)
-importFrom(utils,head)
-importFrom(utils,setTxtProgressBar)
-importFrom(utils,txtProgressBar)
+importFrom(terra,
+  cellFromXY,
+  cells,
+  classify,
+  crop,
+  ext,
+  focal,
+  merge,
+  rasterize,
+  values,
+  xres,
+  xyFromCell
+)
+importFrom(utils,
+  data,
+  download.file,
+  head,
+  setTxtProgressBar,
+  txtProgressBar
+)
 useDynLib(spatialrisk)

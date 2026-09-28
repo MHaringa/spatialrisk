@@ -1,10 +1,10 @@
-pandoc: 3.9.0.2
+pandoc: '3.10'
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   fixed-radius-concentration: fixed-radius-concentration.html
   visualisation: visualisation.html
-last_built: 2026-09-01T06:37Z
+last_built: 2026-09-28T06:23Z
 urls:
   reference: https://mharinga.github.io/spatialrisk/reference
   article: https://mharinga.github.io/spatialrisk/articles

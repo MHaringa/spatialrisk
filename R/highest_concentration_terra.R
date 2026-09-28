@@ -22,7 +22,7 @@
 #' @param method Hotspot search strategy. \code{"continuous"} is the default
 #'   and searches for a centre that may lie between observed points.
 #'   \code{"observed"} searches only observed point locations as candidate
-#'   centres. \code{"grid"} uses the original grid-refinement workflow.
+#'   centres. \code{"grid"} uses projected grid refinement.
 #' @param cell_size Numeric. Size of the initial screening cells in meters.
 #'   This is used by \code{method = "continuous"} and \code{method = "grid"}.
 #'   Smaller values give a finer initial search but increase computation time.
@@ -85,8 +85,9 @@
 #'   evaluation is consequently restricted to observed or pair-intersection
 #'   centres whose own raster cell passed screening; the two centres generated
 #'   by a point pair are tested separately. For a single hotspot, Rcpp processes
-#'   these centres as a streaming angular sweep and maintains their exact totals
-#'   over the complete active portfolio. It therefore avoids materialising all
+#'   these centres as a streaming angular sweep, using conservative interval
+#'   totals to select centres for point-level confirmation against the complete
+#'   active portfolio. It therefore avoids materialising all
 #'   centres or running a separate radius query for each one. A retained centre
 #'   is never scored only against the points used to generate it.
 #'   This centre-level pruning is disabled for a user-supplied threshold or
@@ -102,7 +103,14 @@
 #'   computation time. Use \code{\link{prepare_spatialrisk}},
 #'   \code{\link{select_candidates}}, and \code{\link{optimize_hotspot}} when
 #'   these steps need to be run or inspected separately. The high-level
-#'   function always uses the screened continuous search.
+#'   function uses the screened route for \code{method = "continuous"}.
+#'
+#' All three methods, including grid fallback, evaluate distances in
+#' \code{crs_metric} with the same closed-radius test and numerical boundary
+#' tolerance. Grid refinement restricts the searched centres, not the scoring
+#' portfolio. The continuous result's \code{refinement_methods} attribute
+#' identifies whether pair refinement or grid fallback was used. Floating-point
+#' safeguards do not constitute a formal numerical optimality certificate.
 #'
 #' @details
 #' The underlying continuous hotspot problem can be viewed as a fixed-radius
@@ -235,7 +243,10 @@ concentration_hotspot_terra <- function(data, value, top_n, radius, cell_size,
 
     hc <- candidate$hotspot
     hc$id <- i
-    pic <- hotspot_contributing_points(data, hc, radius, lon, lat)
+    selected <- candidate$selected
+    pic <- data[match(selected$ix, data$ix), , drop = FALSE]
+    pic$distance_m <- selected$distance_m
+    hc$concentration <- sum(pic[[value]])
     pic$id <- i
     pic[[output_col]] <- hc$concentration[1]
 
@@ -364,19 +375,19 @@ hotspot_raster_geometry <- function(raster) {
 refine_terra_hotspot_candidate <- function(focal, data, value, cell_size,
                                            grid_precision, threshold_cache,
                                            concentration_cache, radius,
-                                           crs_metric, lon, lat) {
+                                           crs_metric, lon, lat, metric = NULL) {
+  if (is.null(metric)) {
+    metric <- convert_crs_df(data, 4326, crs_metric, lon, lat, "x", "y")
+  }
   top_focals <- top_n_focals(focal, n = 5)
-  threshold_candidates <- concentration_per_candidate_cell(
+  threshold_candidates <- metric_grid_candidates(
     top_focals,
-    data,
+    metric,
     value,
     cell_size,
     points = 10,
     cache = threshold_cache,
-    radius = radius,
-    crs_metric = crs_metric,
-    lon = lon,
-    lat = lat
+    radius = radius
   )
   lower_bound <- highest_concentration_candidate(
     threshold_candidates,
@@ -388,29 +399,41 @@ refine_terra_hotspot_candidate <- function(focal, data, value, cell_size,
   # all cells below it cannot improve the currently observed candidate value.
   candidate_cells <- cells_above_threshold(focal, threshold)
   refinement_points <- max(1L, floor(cell_size / grid_precision))
-  refined_candidates <- concentration_per_candidate_cell(
+  refined_candidates <- metric_grid_candidates(
     candidate_cells,
-    data,
+    metric,
     value,
     cell_size,
     points = refinement_points,
     cache = concentration_cache,
-    radius = radius,
-    crs_metric = crs_metric,
-    lon = lon,
-    lat = lat
+    radius = radius
   )
   hotspot <- highest_concentration_candidate(
     refined_candidates,
     candidate_cells,
     concentration_cache
   )
+  selected <- indexed_points_in_radius_cpp(
+    hotspot$x[1], hotspot$y[1], metric$x, metric$y, metric[[value]],
+    as.integer(metric$ix), radius, radius
+  )
+  hotspot <- convert_crs_df(hotspot, crs_metric, 4326, "x", "y", lon, lat)
 
   list(
     hotspot = hotspot,
+    selected = selected,
     threshold = threshold,
     threshold_candidates = threshold_candidates,
     refined_candidates = refined_candidates
+  )
+}
+
+metric_grid_candidates <- function(candidate_cells, metric, value, size,
+                                   points, cache, radius) {
+  cells <- candidate_cells[!candidate_cells$cell %in% cache$cell, , drop = FALSE]
+  indexed_grid_best_cpp(
+    as.integer(cells$cell), cells$x, cells$y,
+    metric$x, metric$y, metric[[value]], size, as.integer(points), radius
   )
 }
 

@@ -140,8 +140,8 @@ concentration_hotspot_pair_refine <- function(
       hotspot_progress(progress, "Hotspot ", i, " of ", top_n,
                        ": a candidate area exceeds max_refinement_points = ",
                        max_refinement_points, "; using grid refinement.")
-      # Very dense local subsets can make the pair construction too expensive;
-      # the grid fallback preserves a bounded runtime for large portfolios.
+      # Limit dense pair construction while retaining the projected scorer;
+      # grid cost still depends on the searched area and spacing.
       candidate <- refine_terra_hotspot_candidate(
         focal = state$focal,
         data = data,
@@ -153,15 +153,11 @@ concentration_hotspot_pair_refine <- function(
         radius = radius,
         crs_metric = crs_metric,
         lon = lon,
-        lat = lat
+        lat = lat,
+        metric = metric
       )
       center_ll <- candidate$hotspot
-      selected <- points_within_radius(data,
-                                       lon_center = center_ll[[lon]][1],
-                                       lat_center = center_ll[[lat]][1],
-                                       lon = lon,
-                                       lat = lat,
-                                       radius = radius)
+      selected <- candidate$selected
       if (!"ix" %in% names(selected)) {
         rlang::abort("Selected points do not contain point indices.",
                      call = NULL)

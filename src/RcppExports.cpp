@@ -64,6 +64,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// indexed_grid_best_cpp
+Rcpp::DataFrame indexed_grid_best_cpp(Rcpp::IntegerVector cells, Rcpp::NumericVector x_cells, Rcpp::NumericVector y_cells, Rcpp::NumericVector x_ref, Rcpp::NumericVector y_ref, Rcpp::NumericVector value_ref, double cell_size, int points, double radius);
+RcppExport SEXP _spatialrisk_indexed_grid_best_cpp(SEXP cellsSEXP, SEXP x_cellsSEXP, SEXP y_cellsSEXP, SEXP x_refSEXP, SEXP y_refSEXP, SEXP value_refSEXP, SEXP cell_sizeSEXP, SEXP pointsSEXP, SEXP radiusSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type cells(cellsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_cells(x_cellsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_cells(y_cellsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_ref(x_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_ref(y_refSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value_ref(value_refSEXP);
+    Rcpp::traits::input_parameter< double >::type cell_size(cell_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    rcpp_result_gen = Rcpp::wrap(indexed_grid_best_cpp(cells, x_cells, y_cells, x_ref, y_ref, value_ref, cell_size, points, radius));
+    return rcpp_result_gen;
+END_RCPP
+}
 // indexed_concentration_best_cpp
 Rcpp::DataFrame indexed_concentration_best_cpp(Rcpp::NumericVector x_candidates, Rcpp::NumericVector y_candidates, Rcpp::NumericVector x_ref, Rcpp::NumericVector y_ref, Rcpp::NumericVector value_ref, Rcpp::IntegerVector ix_ref, double radius, double cell_width);
 RcppExport SEXP _spatialrisk_indexed_concentration_best_cpp(SEXP x_candidatesSEXP, SEXP y_candidatesSEXP, SEXP x_refSEXP, SEXP y_refSEXP, SEXP value_refSEXP, SEXP ix_refSEXP, SEXP radiusSEXP, SEXP cell_widthSEXP) {
@@ -352,6 +371,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_spatialrisk_block_loop_cpp", (DL_FUNC) &_spatialrisk_block_loop_cpp, 3},
     {"_spatialrisk_concentration_loop_xy_cpp", (DL_FUNC) &_spatialrisk_concentration_loop_xy_cpp, 3},
     {"_spatialrisk_concentration_loop_cpp2", (DL_FUNC) &_spatialrisk_concentration_loop_cpp2, 3},
+    {"_spatialrisk_indexed_grid_best_cpp", (DL_FUNC) &_spatialrisk_indexed_grid_best_cpp, 9},
     {"_spatialrisk_indexed_concentration_best_cpp", (DL_FUNC) &_spatialrisk_indexed_concentration_best_cpp, 8},
     {"_spatialrisk_indexed_points_in_radius_cpp", (DL_FUNC) &_spatialrisk_indexed_points_in_radius_cpp, 8},
     {"_spatialrisk_cell_point_upper_bounds_cpp", (DL_FUNC) &_spatialrisk_cell_point_upper_bounds_cpp, 12},

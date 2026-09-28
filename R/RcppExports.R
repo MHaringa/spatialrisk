@@ -17,6 +17,10 @@ concentration_loop_cpp2 <- function(sub, ref, radius = 200) {
     .Call('_spatialrisk_concentration_loop_cpp2', PACKAGE = 'spatialrisk', sub, ref, radius)
 }
 
+indexed_grid_best_cpp <- function(cells, x_cells, y_cells, x_ref, y_ref, value_ref, cell_size, points, radius) {
+    .Call('_spatialrisk_indexed_grid_best_cpp', PACKAGE = 'spatialrisk', cells, x_cells, y_cells, x_ref, y_ref, value_ref, cell_size, points, radius)
+}
+
 indexed_concentration_best_cpp <- function(x_candidates, y_candidates, x_ref, y_ref, value_ref, ix_ref, radius, cell_width) {
     .Call('_spatialrisk_indexed_concentration_best_cpp', PACKAGE = 'spatialrisk', x_candidates, y_candidates, x_ref, y_ref, value_ref, ix_ref, radius, cell_width)
 }

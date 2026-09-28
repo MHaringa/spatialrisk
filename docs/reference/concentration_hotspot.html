@@ -23,7 +23,7 @@ optimize_hotspot."><meta property="og:image" content="https://mharinga.github.io
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -160,7 +160,7 @@ hotspot search steps. This is useful for larger portfolios and for
 <dd><p>Hotspot search strategy. <code>"continuous"</code> is the default
 and searches for a centre that may lie between observed points.
 <code>"observed"</code> searches only observed point locations as candidate
-centres. <code>"grid"</code> uses the original grid-refinement workflow.</p></dd>
+centres. <code>"grid"</code> uses projected grid refinement.</p></dd>
 
 
 <dt id="arg-top-n">top_n<a class="anchor" aria-label="anchor" href="#arg-top-n"></a></dt>
@@ -203,8 +203,9 @@ centres. <code>"grid"</code> uses the original grid-refinement workflow.</p></dd
   evaluation is consequently restricted to observed or pair-intersection
   centres whose own raster cell passed screening; the two centres generated
   by a point pair are tested separately. For a single hotspot, Rcpp processes
-  these centres as a streaming angular sweep and maintains their exact totals
-  over the complete active portfolio. It therefore avoids materialising all
+  these centres as a streaming angular sweep, using conservative interval
+  totals to select centres for point-level confirmation against the complete
+  active portfolio. It therefore avoids materialising all
   centres or running a separate radius query for each one. A retained centre
   is never scored only against the points used to generate it.
   This centre-level pruning is disabled for a user-supplied threshold or
@@ -220,7 +221,13 @@ centres. <code>"grid"</code> uses the original grid-refinement workflow.</p></dd
   computation time. Use <code><a href="prepare_spatialrisk.html">prepare_spatialrisk</a></code>,
   <code><a href="prepare_spatialrisk.html">select_candidates</a></code>, and <code><a href="prepare_spatialrisk.html">optimize_hotspot</a></code> when
   these steps need to be run or inspected separately. The high-level
-  function always uses the screened continuous search.</p>
+  function uses the screened route for <code>method = "continuous"</code>.</p>
+<p>All three methods, including grid fallback, evaluate distances in
+<code>crs_metric</code> with the same closed-radius test and numerical boundary
+tolerance. Grid refinement restricts the searched centres, not the scoring
+portfolio. The continuous result's <code>refinement_methods</code> attribute
+identifies whether pair refinement or grid fallback was used. Floating-point
+safeguards do not constitute a formal numerical optimality certificate.</p>
 <p>The underlying continuous hotspot problem can be viewed as a fixed-radius
 weighted circle placement problem. For point observations with non-negative
 values in a projected metric coordinate system, candidate centres formed by

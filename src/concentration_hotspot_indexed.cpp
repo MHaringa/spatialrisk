@@ -85,6 +85,26 @@ GridIndex build_grid_index(const Rcpp::NumericVector& x_ref,
   return index;
 }
 
+struct RadiusIndexBounds {
+  long long xmin, xmax, ymin, ymax;
+};
+
+RadiusIndexBounds radius_index_bounds(double x, double y, double min_x,
+                                      double min_y, double radius,
+                                      double cell_width, int neighbor_range) {
+  const long long gx = cell_id(x, min_x, cell_width);
+  const long long gy = cell_id(y, min_y, cell_width);
+  const double reach = radius + distance_tolerance(radius);
+  // The distance tolerance can cross an index-cell edge; retrieve that cell
+  // too, but let the unchanged point-level membership test decide coverage.
+  return RadiusIndexBounds{
+    std::min(gx - neighbor_range, cell_id(x - reach, min_x, cell_width)),
+    std::max(gx + neighbor_range, cell_id(x + reach, min_x, cell_width)),
+    std::min(gy - neighbor_range, cell_id(y - reach, min_y, cell_width)),
+    std::max(gy + neighbor_range, cell_id(y + reach, min_y, cell_width))
+  };
+}
+
 double indexed_sum_at_center(const double x_center,
                              const double y_center,
                              const Rcpp::NumericVector& x_ref,
@@ -97,17 +117,16 @@ double indexed_sum_at_center(const double x_center,
                              const double radius2,
                              const double cell_width,
                              const int neighbor_range) {
-  const long long gx_center = cell_id(x_center, min_x, cell_width);
-  const long long gy_center = cell_id(y_center, min_y, cell_width);
+  const RadiusIndexBounds bounds = radius_index_bounds(
+    x_center, y_center, min_x, min_y, radius, cell_width, neighbor_range
+  );
 
   double total = 0.0;
   const double coordinate_tolerance = distance_tolerance(radius);
   const double radius2_tolerance = squared_distance_tolerance(radius2);
 
-  for (long long gx = gx_center - neighbor_range;
-       gx <= gx_center + neighbor_range; ++gx) {
-    for (long long gy = gy_center - neighbor_range;
-         gy <= gy_center + neighbor_range; ++gy) {
+  for (long long gx = bounds.xmin; gx <= bounds.xmax; ++gx) {
+    for (long long gy = bounds.ymin; gy <= bounds.ymax; ++gy) {
 
       GridIndex::const_iterator it = index.find(cell_key(gx, gy));
       if (it == index.end()) {
@@ -191,7 +210,8 @@ struct AngularEvent {
   double angle;
   double weight;
   bool starts;
-  bool candidate_endpoint;
+  int partner; // -1 for a scoring event; otherwise the generating record.
+  bool positive_side;
 };
 
 bool angular_event_less(const AngularEvent& lhs, const AngularEvent& rhs) {
@@ -597,8 +617,21 @@ PairBestResult pair_intersection_best_union_sweep(
 
   const double radius2 = radius * radius;
   const double max_pair_distance2 = 4.0 * radius2;
+  bool non_negative = true;
+  double coordinate_scale = 1.0;
+  for (int i = 0; i < n_ref; ++i) {
+    non_negative = non_negative && value_ref[i] >= 0.0;
+    coordinate_scale = std::max(coordinate_scale,
+      std::max(std::fabs(x_ref[i]), std::fabs(y_ref[i])));
+  }
+  // Scoring intervals enclose the point scorer's tolerance-expanded disk.
+  // Pair-derived candidate angles still use the original, unexpanded radius.
+  const double scoring_radius = std::sqrt(
+    radius2 + squared_distance_tolerance(radius2)) +
+    distance_tolerance(radius) +
+    16 * std::numeric_limits<double>::epsilon() * coordinate_scale;
   const int pair_neighbor_range =
-    static_cast<int>(std::ceil((2.0 * radius) / cell_width));
+    static_cast<int>(std::ceil((radius + scoring_radius) / cell_width));
   const int evaluation_neighbor_range =
     static_cast<int>(std::ceil(radius / cell_width));
   const double two_pi = 2.0 * std::acos(-1.0);
@@ -636,16 +669,24 @@ PairBestResult pair_intersection_best_union_sweep(
 
   const ProfileClock::time_point pair_start = ProfileClock::now();
   std::vector<AngularEvent> events;
-  // For centres at distance r from an anchor, every nearby active point
-  // defines the closed angular interval over which it is covered. Sweeping
-  // the interval endpoints visits the same pair-boundary events as explicit
-  // radius-r circle intersections, while exact scoring still uses all active
-  // points rather than only the candidate-generation subset.
+  const auto normalise_angle = [two_pi](double angle) {
+    while (angle < 0.0) angle += two_pi;
+    while (angle >= two_pi) angle -= two_pi;
+    return angle;
+  };
   for (std::size_t pos = 0; pos < candidates.size(); ++pos) {
     const int anchor = candidates[pos];
     const long long gx_anchor = cell_id(x_ref[anchor], min_x, cell_width);
     const long long gy_anchor = cell_id(y_ref[anchor], min_y, cell_width);
-    double current = value_ref[anchor];
+    long double current = 0;
+    long double update_magnitude = 0;
+    std::size_t updates = 0;
+    const auto update_total = [&](double weight) {
+      current += static_cast<long double>(weight);
+      update_magnitude += std::fabs(static_cast<long double>(weight));
+      ++updates;
+    };
+    update_total(value_ref[anchor]);
     events.clear();
 
     for (long long gx = gx_anchor - pair_neighbor_range;
@@ -667,7 +708,7 @@ PairBestResult pair_intersection_best_union_sweep(
           const double dy = y_ref[other] - y_ref[anchor];
           const double d2 = dx * dx + dy * dy;
           if (d2 <= 0.0) {
-            current += value_ref[other];
+            update_total(value_ref[other]);
             continue;
           }
           const bool generates_candidate =
@@ -675,33 +716,42 @@ PairBestResult pair_intersection_best_union_sweep(
           if (generates_candidate) {
             ++profile.pairs_considered;
           }
-          if (d2 > max_pair_distance2) {
+          const double distance = std::sqrt(d2);
+          if (distance > radius + scoring_radius) {
             continue;
           }
-          if (generates_candidate) {
+          const double theta = std::atan2(dy, dx);
+          if (generates_candidate && d2 <= max_pair_distance2) {
             ++profile.pairs_within_2r;
             ++unique_pair_count;
             profile.intersections_generated += 2;
+            const double alpha = std::acos(std::min(1.0,
+                                                    distance / (2.0 * radius)));
+            events.push_back(AngularEvent{
+              normalise_angle(theta - alpha), 0.0, false, other, false
+            });
+            events.push_back(AngularEvent{
+              normalise_angle(theta + alpha), 0.0, false, other, true
+            });
           }
 
-          const double distance = std::sqrt(d2);
-          const double theta = std::atan2(dy, dx);
-          const double alpha = std::acos(std::min(1.0,
-                                                  distance / (2.0 * radius)));
-          double start = theta - alpha;
-          double end = theta + alpha;
-          while (start < 0.0) start += two_pi;
-          while (start >= two_pi) start -= two_pi;
-          while (end < 0.0) end += two_pi;
-          while (end >= two_pi) end -= two_pi;
+          if (distance <= scoring_radius - radius) {
+            update_total(value_ref[other]);
+            continue;
+          }
+          const double cosine = (d2 + radius2 - scoring_radius * scoring_radius) /
+            (2.0 * radius * distance);
+          const double alpha = std::acos(std::max(-1.0, std::min(1.0, cosine)));
+          const double start = normalise_angle(theta - alpha);
+          const double end = normalise_angle(theta + alpha);
           if (start > end) {
-            current += value_ref[other];
+            update_total(value_ref[other]);
           }
           events.push_back(AngularEvent{
-            start, value_ref[other], true, generates_candidate
+            start, value_ref[other], true, -1, false
           });
           events.push_back(AngularEvent{
-            end, value_ref[other], false, generates_candidate
+            end, value_ref[other], false, -1, false
           });
         }
       }
@@ -721,27 +771,47 @@ PairBestResult pair_intersection_best_union_sweep(
                kAngularEventTolerance) {
         ++group_end;
       }
-      bool candidate_endpoint = false;
       for (std::size_t k = event; k < group_end; ++k) {
         if (events[k].starts) {
-          current += events[k].weight;
+          update_total(events[k].weight);
         }
-        candidate_endpoint = candidate_endpoint ||
-          events[k].candidate_endpoint;
       }
 
-      if (candidate_endpoint) {
-        const double candidate_x = x_ref[anchor] + radius * std::cos(angle);
-        const double candidate_y = y_ref[anchor] + radius * std::sin(angle);
+      // Grouping bounds coverage over the whole angular group, but must not
+      // move a geometric candidate to a different event's angle.
+      for (std::size_t k = event; k < group_end; ++k) {
+        const int other = events[k].partner;
+        if (other < 0) continue;
+        // Use the reference route's Cartesian construction, not sin/cos of a
+        // grouped angle: rounding can change membership at an exact boundary.
+        const double dx = x_ref[other] - x_ref[anchor];
+        const double dy = y_ref[other] - y_ref[anchor];
+        const double d2 = dx * dx + dy * dy;
+        const double d = std::sqrt(d2);
+        const double mx = (x_ref[anchor] + x_ref[other]) / 2.0;
+        const double my = (y_ref[anchor] + y_ref[other]) / 2.0;
+        const double h = std::sqrt(std::max(0.0, radius2 - d2 / 4.0));
+        const double ux = -dy / d, uy = dx / d;
+        const double candidate_x = events[k].positive_side ? mx + h * ux : mx - h * ux;
+        const double candidate_y = events[k].positive_side ? my + h * uy : my - h * uy;
         if (candidate_center_is_selected(
               candidate_x, candidate_y, filter_centres,
               selected_cells, raster)) {
-          // The sweep total determines whether an exact radius query can still
-          // match the incumbent. This guard prevents round-off in interval
-          // updates from suppressing a potentially improving confirmation.
+          // Include accumulated update error and point-sum rounding when using
+          // the sweep as an upper bound. Signed weights always get confirmed.
+          const long double update_error = updates *
+            std::numeric_limits<long double>::epsilon();
+          const long double score_error = n_ref *
+            static_cast<long double>(std::numeric_limits<double>::epsilon());
+          long double upper = std::numeric_limits<long double>::infinity();
+          if (update_error < 0.5L && score_error < 0.5L) {
+            upper = std::max(0.0L, current +
+              2 * update_error / (1 - update_error) * update_magnitude) /
+              (1 - score_error);
+          }
           const double comparison_tolerance = kObjectiveComparisonTolerance *
             std::max(1.0, std::fabs(best.concentration));
-          if (current + comparison_tolerance >= best.concentration) {
+          if (!non_negative || upper + comparison_tolerance >= best.concentration) {
             const ProfileClock::time_point score_start = ProfileClock::now();
             const double exact_total = indexed_sum_at_center(
               candidate_x, candidate_y, x_ref, y_ref, value_ref,
@@ -765,7 +835,7 @@ PairBestResult pair_intersection_best_union_sweep(
 
       for (std::size_t k = event; k < group_end; ++k) {
         if (!events[k].starts) {
-          current -= events[k].weight;
+          if (events[k].partner < 0) update_total(-events[k].weight);
         }
       }
       event = group_end;
@@ -795,16 +865,15 @@ Rcpp::DataFrame indexed_points_at_center(
   const double radius2_tolerance = squared_distance_tolerance(radius2);
   const int neighbor_range =
     static_cast<int>(std::ceil(radius / cell_width));
-  const long long gx_center = cell_id(x_center, min_x, cell_width);
-  const long long gy_center = cell_id(y_center, min_y, cell_width);
+  const RadiusIndexBounds bounds = radius_index_bounds(
+    x_center, y_center, min_x, min_y, radius, cell_width, neighbor_range
+  );
   std::vector<int> ix_out;
   std::vector<double> distance_out;
   std::vector<double> value_out;
 
-  for (long long gx = gx_center - neighbor_range;
-       gx <= gx_center + neighbor_range; ++gx) {
-    for (long long gy = gy_center - neighbor_range;
-         gy <= gy_center + neighbor_range; ++gy) {
+  for (long long gx = bounds.xmin; gx <= bounds.xmax; ++gx) {
+    for (long long gy = bounds.ymin; gy <= bounds.ymax; ++gy) {
       GridIndex::const_iterator it = index.find(cell_key(gx, gy));
       if (it == index.end()) {
         continue;
@@ -836,6 +905,54 @@ Rcpp::DataFrame indexed_points_at_center(
 }
 
 } // namespace
+
+// [[Rcpp::export]]
+Rcpp::DataFrame indexed_grid_best_cpp(
+    Rcpp::IntegerVector cells,
+    Rcpp::NumericVector x_cells,
+    Rcpp::NumericVector y_cells,
+    Rcpp::NumericVector x_ref,
+    Rcpp::NumericVector y_ref,
+    Rcpp::NumericVector value_ref,
+    double cell_size, int points, double radius) {
+  check_numeric_inputs(x_cells, y_cells, "x_cells", "y_cells");
+  if (cells.size() != x_cells.size() || x_ref.size() != y_ref.size() ||
+      x_ref.size() != value_ref.size() || x_ref.size() == 0 ||
+      !std::isfinite(cell_size) || cell_size <= 0 || points < 1 ||
+      !std::isfinite(radius) || radius <= 0) {
+    Rcpp::stop("Grid refinement requires matching vectors and positive settings.");
+  }
+  const double min_x = vector_min(x_ref), min_y = vector_min(y_ref);
+  const double radius2 = radius * radius;
+  GridIndex index = build_grid_index(x_ref, y_ref, min_x, min_y, radius);
+  Rcpp::NumericVector x(cells.size()), y(cells.size()), total(cells.size());
+  const double step = points > 1 ? cell_size / (points - 1) : 0;
+  // Reuse the same active-portfolio index and scorer as continuous refinement.
+  // Generate one grid centre at a time, rather than a portfolio-wide grid table.
+  for (int i = 0; i < cells.size(); ++i) {
+    total[i] = -std::numeric_limits<double>::infinity();
+    for (int col = 0; col < points; ++col) {
+      Rcpp::checkUserInterrupt();
+      const double cx = x_cells[i] - cell_size / 2 + col * step;
+      for (int row = 0; row < points; ++row) {
+        const double cy = y_cells[i] - cell_size / 2 + row * step;
+        const double value = indexed_sum_at_center(
+          cx, cy, x_ref, y_ref, value_ref, index, min_x, min_y,
+          radius, radius2, radius, 1
+        );
+        if (value > total[i]) {
+          total[i] = value;
+          x[i] = cx;
+          y[i] = cy;
+        }
+      }
+    }
+  }
+  return Rcpp::DataFrame::create(
+    Rcpp::Named("cell") = cells, Rcpp::Named("x") = x,
+    Rcpp::Named("y") = y, Rcpp::Named("concentration") = total
+  );
+}
 
 // [[Rcpp::export]]
 Rcpp::DataFrame indexed_concentration_best_cpp(
@@ -933,17 +1050,16 @@ Rcpp::DataFrame indexed_points_in_radius_cpp(
 
   GridIndex index = build_grid_index(x_ref, y_ref, min_x, min_y, cell_width);
 
-  const long long gx_center = cell_id(x_center, min_x, cell_width);
-  const long long gy_center = cell_id(y_center, min_y, cell_width);
+  const RadiusIndexBounds bounds = radius_index_bounds(
+    x_center, y_center, min_x, min_y, radius, cell_width, neighbor_range
+  );
 
   std::vector<int> ix_out;
   std::vector<double> distance_out;
   std::vector<double> value_out;
 
-  for (long long gx = gx_center - neighbor_range;
-       gx <= gx_center + neighbor_range; ++gx) {
-    for (long long gy = gy_center - neighbor_range;
-         gy <= gy_center + neighbor_range; ++gy) {
+  for (long long gx = bounds.xmin; gx <= bounds.xmax; ++gx) {
+    for (long long gy = bounds.ymin; gy <= bounds.ymax; ++gy) {
 
       GridIndex::const_iterator it = index.find(cell_key(gx, gy));
       if (it == index.end()) {

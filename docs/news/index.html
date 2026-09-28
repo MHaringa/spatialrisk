@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.2" id="spatialrisk-082">spatialrisk 0.8.2<a class="anchor" aria-label="anchor" href="#spatialrisk-082"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.3" id="spatialrisk-083">spatialrisk 0.8.3<a class="anchor" aria-label="anchor" href="#spatialrisk-083"></a></h2>
+<ul><li>Grid hotspot refinement and continuous-to-grid fallback now generate and score centres in <code>crs_metric</code>, using the same tolerance-aware closed-radius test as continuous search. Contributing records use that same projected test. Grid results can consequently differ from earlier longitude/latitude calculations; grid fallback remains an approximation, not a global optimum.</li>
+<li>Fixed continuous sweep preselection near radius boundaries. Conservative scoring intervals include the point scorer’s distance slack without moving the geometric candidate centres. Near-equal angular events retain their own pair-derived coordinates, using the same construction as the full reference search. Accumulation guards account for sweep updates; signed weights bypass this upper-bound preselection.</li>
+<li>Protected indexed radius queries when the boundary tolerance crosses an index-cell edge. The additional cell is retrieved, but only points passing the existing distance test contribute. Added numerical-boundary, grid, fallback, and active-portfolio regression tests.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.2" id="spatialrisk-082">spatialrisk 0.8.2<a class="anchor" aria-label="anchor" href="#spatialrisk-082"></a></h2><p class="text-muted">CRAN release: 2026-09-01</p>
 <ul><li><p>Tightened automatic continuous screening with a point-to-cell distance bound. Boundary points remain protected by numerical tolerances, without counting entire neighbouring raster cells. Additional feasible trial centres improve the lower bound. Both steps reuse the active portfolio and stored terra cell assignments; the full geometric route and user-supplied thresholds are unchanged.</p></li>
 <li><p>Accelerated the single-hotspot continuous refinement with a streaming Rcpp angular sweep. Nearby pair intersections are processed once over the union of the screened candidate regions, exact active-portfolio totals are updated at angular events, and only competitive centres require a confirming indexed radius query. Terra remains responsible for raster-cell assignment and safe candidate-cell screening. Optional internal profiling is available through <code>options(spatialrisk.profile = TRUE)</code> without changing the standard result.</p></li>
 <li><p>Made the default continuous screening bounds geometrically consistent. The focal window now spans the radius plus the full raster-cell diagonal, also for non-square cells, and the automatic feasible lower bound is evaluated in the same projected Euclidean coordinates as pair refinement. Added direct tests of the upper bound, feasible lower bound, safe cell pruning, and an optimum at a pair intersection near a raster-cell edge.</p></li>

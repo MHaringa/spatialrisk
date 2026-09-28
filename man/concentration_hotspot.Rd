@@ -76,7 +76,7 @@ hotspot search steps. This is useful for larger portfolios and for
 \item{method}{Hotspot search strategy. \code{"continuous"} is the default
 and searches for a centre that may lie between observed points.
 \code{"observed"} searches only observed point locations as candidate
-centres. \code{"grid"} uses the original grid-refinement workflow.}
+centres. \code{"grid"} uses projected grid refinement.}
 
 \item{top_n}{Deprecated. Use \code{n_hotspots} instead.}
 
@@ -123,8 +123,9 @@ The default \code{method = "continuous"} first uses terra
   evaluation is consequently restricted to observed or pair-intersection
   centres whose own raster cell passed screening; the two centres generated
   by a point pair are tested separately. For a single hotspot, Rcpp processes
-  these centres as a streaming angular sweep and maintains their exact totals
-  over the complete active portfolio. It therefore avoids materialising all
+  these centres as a streaming angular sweep, using conservative interval
+  totals to select centres for point-level confirmation against the complete
+  active portfolio. It therefore avoids materialising all
   centres or running a separate radius query for each one. A retained centre
   is never scored only against the points used to generate it.
   This centre-level pruning is disabled for a user-supplied threshold or
@@ -140,7 +141,14 @@ The default \code{method = "continuous"} first uses terra
   computation time. Use \code{\link{prepare_spatialrisk}},
   \code{\link{select_candidates}}, and \code{\link{optimize_hotspot}} when
   these steps need to be run or inspected separately. The high-level
-  function always uses the screened continuous search.
+  function uses the screened route for \code{method = "continuous"}.
+
+All three methods, including grid fallback, evaluate distances in
+\code{crs_metric} with the same closed-radius test and numerical boundary
+tolerance. Grid refinement restricts the searched centres, not the scoring
+portfolio. The continuous result's \code{refinement_methods} attribute
+identifies whether pair refinement or grid fallback was used. Floating-point
+safeguards do not constitute a formal numerical optimality certificate.
 
 The underlying continuous hotspot problem can be viewed as a fixed-radius
 weighted circle placement problem. For point observations with non-negative
