@@ -1,3 +1,5 @@
+# spatialrisk (development version)
+
 # spatialrisk 0.8.3
 
 * Grid hotspot refinement and continuous-to-grid fallback now generate and
