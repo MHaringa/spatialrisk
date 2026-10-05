@@ -11,7 +11,7 @@ plot() on the object returned by concentration_hotspot."><meta property="og:imag
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ plot() on the object returned by concentration_hotspot."><meta property="og:imag
 <span>  legend_title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  palette <span class="op">=</span> <span class="st">"viridis"</span>,</span>
 <span>  legend_position <span class="op">=</span> <span class="st">"bottomleft"</span>,</span>
-<span>  providers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CartoDB.Positron"</span>, <span class="st">"nlmaps.luchtfoto"</span><span class="op">)</span>,</span>
+<span>  providers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span>, <span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldImagery"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -80,7 +80,10 @@ plot() on the object returned by concentration_hotspot."><meta property="og:imag
 
 
 <dt id="arg-providers">providers<a class="anchor" aria-label="anchor" href="#arg-providers"></a></dt>
-<dd><p>Leaflet tile providers.</p></dd>
+<dd><p>Leaflet tile providers. The first provider is shown
+initially; the others are available in the layer control. Defaults to
+<code>"Esri.WorldGrayCanvas"</code>, <code>"OpenStreetMap"</code>, and
+<code>"Esri.WorldImagery"</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

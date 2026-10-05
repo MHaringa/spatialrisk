@@ -9,7 +9,8 @@
   type = c("concentration", "focal", "rasterized", "updated_focal"),
   color1 = NULL,
   max.rad = 20,
-  ...
+  ...,
+  basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery")
 )
 }
 \arguments{
@@ -29,6 +30,11 @@ Default is \code{20}.}
 \item{...}{Additional arguments passed to \code{mapview::mapview()} for the
 contributing point layer when \code{type = "concentration"}, or to the
 raster mapview call for diagnostic raster layers.}
+
+\item{basemaps}{Character vector of basemap providers. The first provider
+is shown initially; the others are available in the layer control.
+Defaults to \code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+\code{"Esri.WorldImagery"}. Applied to all map layers and plot types.}
 }
 \value{
 A \code{mapview} object.

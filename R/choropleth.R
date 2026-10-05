@@ -19,6 +19,12 @@
 #'   Prefix the name with \code{"-"} to reverse the order. Default is
 #'   \code{"viridis"}.
 #' @param id_name Deprecated. Use \code{id} instead.
+#' @param basemaps Character vector of basemap providers for
+#'   \code{mode = "view"}. The first provider is shown initially; the others
+#'   are available in the layer control. Defaults to
+#'   \code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+#'   \code{"Esri.WorldImagery"}. Ignored in static mode. Passed to
+#'   \code{tmap::tm_basemap()}.
 #' @param ... Additional arguments passed to \code{tmap::tm_polygons()}.
 #'
 #' @details The function uses the Fisher–Jenks algorithm
@@ -34,13 +40,17 @@
 #' choropleth(test, value = "amount_sum")
 #' \dontrun{
 #' choropleth(test, value = "amount_sum", id = "areaname", mode = "view")
+#' choropleth(test, value = "amount_sum", mode = "view",
+#'            basemaps = "Esri.WorldImagery")
 #' }
 #'
 #' @export
 choropleth <- function(data, value = "output", id = NULL,
                        mode = c("plot", "view"), n = 7,
                        legend_title = "Value", palette = "viridis",
-                       id_name = NULL, ...) {
+                       id_name = NULL, ...,
+                       basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap",
+                                    "Esri.WorldImagery")) {
 
   if (!requireNamespace("tmap", quietly = TRUE)) {
     stop("tmap is needed for this function to work. Install it via ",
@@ -113,8 +123,7 @@ choropleth <- function(data, value = "output", id = NULL,
 
     tmap::tm_shape(data) +
       do.call(tmap::tm_polygons, polygon_args) +
-      tmap::tm_basemap(c("OpenStreetMap", "Esri.WorldGrayCanvas",
-                         "Esri.WorldTopoMap"))
+      tmap::tm_basemap(basemaps)
   } else {
     polygon_args$lwd <- if (is.null(polygon_args$lwd)) .1 else polygon_args$lwd
 

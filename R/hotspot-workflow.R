@@ -42,6 +42,10 @@
 #' @param progress Logical. Whether to print progress messages.
 #' @param type Plot type. `"auto"` shows the prepared raster before candidate
 #'   selection and selected focal candidate cells afterwards.
+#' @param basemaps Character vector of basemap providers for `plot()`.
+#'   The first provider is shown initially; the others are available in the
+#'   layer control. Defaults to `"Esri.WorldGrayCanvas"`, `"OpenStreetMap"`,
+#'   and `"Esri.WorldImagery"`. Passed to `mapview::mapview()`.
 #' @param ... Additional arguments passed to `mapview::mapview()`.
 #'
 #' @return
@@ -447,7 +451,10 @@ print.spatialrisk_hotspot_workflow <- function(x, ...) {
 #' @export
 plot.spatialrisk_hotspot_workflow <- function(x, type = c("auto", "raster",
                                                           "candidates"),
-                                              ...) {
+                                              ...,
+                                              basemaps = c("Esri.WorldGrayCanvas",
+                                                           "OpenStreetMap",
+                                                           "Esri.WorldImagery")) {
   type <- match.arg(type)
   if (type == "auto") {
     type <- if (is.null(x$candidates)) "raster" else "candidates"
@@ -473,6 +480,7 @@ plot.spatialrisk_hotspot_workflow <- function(x, type = c("auto", "raster",
     return(mapview::mapview(
       rasterized,
       layer.name = paste0(p$value, " sum per raster cell"),
+      map.types = basemaps,
       ...
     ))
   }
@@ -484,7 +492,7 @@ plot.spatialrisk_hotspot_workflow <- function(x, type = c("auto", "raster",
     candidates <- convert_df_to_sf(candidates, p$lon, p$lat, 4326,
                                    p$crs_metric)
     return(mapview::mapview(candidates, layer.name = "Observed candidates",
-                            ...))
+                            map.types = basemaps, ...))
   }
 
   candidate_polygons <- candidate_cells_polygons(x$state$focal,
@@ -492,6 +500,7 @@ plot.spatialrisk_hotspot_workflow <- function(x, type = c("auto", "raster",
   mapview::mapview(candidate_polygons,
                    zcol = "focal_value",
                    layer.name = "Candidate focal cells",
+                   map.types = basemaps,
                    ...)
 }
 

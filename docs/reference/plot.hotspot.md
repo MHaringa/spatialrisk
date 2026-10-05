@@ -15,7 +15,8 @@ plot(
   type = c("concentration", "focal", "rasterized", "updated_focal"),
   color1 = NULL,
   max.rad = 20,
-  ...
+  ...,
+  basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery")
 )
 ```
 
@@ -50,6 +51,13 @@ plot(
   [`mapview::mapview()`](https://r-spatial.github.io/mapview/reference/mapView.html)
   for the contributing point layer when `type = "concentration"`, or to
   the raster mapview call for diagnostic raster layers.
+
+- basemaps:
+
+  Character vector of basemap providers. The first provider is shown
+  initially; the others are available in the layer control. Defaults to
+  `"Esri.WorldGrayCanvas"`, `"OpenStreetMap"`, and
+  `"Esri.WorldImagery"`. Applied to all map layers and plot types.
 
 ## Value
 

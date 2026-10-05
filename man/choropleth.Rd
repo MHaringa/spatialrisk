@@ -13,7 +13,8 @@ choropleth(
   legend_title = "Value",
   palette = "viridis",
   id_name = NULL,
-  ...
+  ...,
+  basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery")
 )
 }
 \arguments{
@@ -40,6 +41,13 @@ Prefix the name with \code{"-"} to reverse the order. Default is
 \item{id_name}{Deprecated. Use \code{id} instead.}
 
 \item{...}{Additional arguments passed to \code{tmap::tm_polygons()}.}
+
+\item{basemaps}{Character vector of basemap providers for
+\code{mode = "view"}. The first provider is shown initially; the others
+are available in the layer control. Defaults to
+\code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+\code{"Esri.WorldImagery"}. Ignored in static mode. Passed to
+\code{tmap::tm_basemap()}.}
 }
 \value{
 A \code{tmap} object (static or interactive, depending on
@@ -60,6 +68,8 @@ test <- summarise_points_by_polygon(nl_provincie, insurance, "amount")
 choropleth(test, value = "amount_sum")
 \dontrun{
 choropleth(test, value = "amount_sum", id = "areaname", mode = "view")
+choropleth(test, value = "amount_sum", mode = "view",
+           basemaps = "Esri.WorldImagery")
 }
 
 }

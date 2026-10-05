@@ -38,7 +38,12 @@ optimize_hotspot(
 )
 
 # S3 method for class 'spatialrisk_hotspot_workflow'
-plot(x, type = c("auto", "raster", "candidates"), ...)
+plot(
+  x,
+  type = c("auto", "raster", "candidates"),
+  ...,
+  basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery")
+)
 ```
 
 ## Arguments
@@ -132,6 +137,13 @@ plot(x, type = c("auto", "raster", "candidates"), ...)
 - ...:
 
   Additional arguments passed to \`mapview::mapview()\`.
+
+- basemaps:
+
+  Character vector of basemap providers for \`plot()\`. The first
+  provider is shown initially; the others are available in the layer
+  control. Defaults to \`"Esri.WorldGrayCanvas"\`, \`"OpenStreetMap"\`,
+  and \`"Esri.WorldImagery"\`. Passed to \`mapview::mapview()\`.
 
 ## Value
 

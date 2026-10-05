@@ -18,7 +18,8 @@ choropleth(
   legend_title = "Value",
   palette = "viridis",
   id_name = NULL,
-  ...
+  ...,
+  basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery")
 )
 ```
 
@@ -65,6 +66,14 @@ choropleth(
   Additional arguments passed to
   [`tmap::tm_polygons()`](https://r-tmap.github.io/tmap/reference/tm_polygons.html).
 
+- basemaps:
+
+  Character vector of basemap providers for `mode = "view"`. The first
+  provider is shown initially; the others are available in the layer
+  control. Defaults to `"Esri.WorldGrayCanvas"`, `"OpenStreetMap"`, and
+  `"Esri.WorldImagery"`. Ignored in static mode. Passed to
+  [`tmap::tm_basemap()`](https://r-tmap.github.io/tmap/reference/tm_basemap.html).
+
 ## Value
 
 A `tmap` object (static or interactive, depending on `mode`).
@@ -84,6 +93,13 @@ Martin Haringa
 test <- summarise_points_by_polygon(nl_provincie, insurance, "amount")
 #> 109 points are outside any polygon.
 choropleth(test, value = "amount_sum")
+#> Registered S3 method overwritten by 'stars':
+#>   method                  from
+#>   st_interpolate_aw.stars sf  
 
+if (FALSE) { # \dontrun{
 choropleth(test, value = "amount_sum", id = "areaname", mode = "view")
+choropleth(test, value = "amount_sum", mode = "view",
+           basemaps = "Esri.WorldImagery")
+} # }
 ```

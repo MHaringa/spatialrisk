@@ -413,6 +413,9 @@ point-based bounds for the default continuous search.
 prepared <- prepare_spatialrisk(portfolio, value = "amount", radius = 200,
                                 cell_size = 100)
 plot(prepared)
+#> Registered S3 method overwritten by 'stars':
+#>   method                  from
+#>   st_interpolate_aw.stars sf
 ```
 
 ``` r

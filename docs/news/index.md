@@ -1,6 +1,17 @@
 # Changelog
 
+## spatialrisk (development version)
+
+- Interactive maps now use `Esri.WorldGrayCanvas` by default, with
+  `OpenStreetMap` and `Esri.WorldImagery` available in the basemap
+  selector. CARTO is no longer included by default. Basemaps can be set
+  through `basemaps` in mapview-based plots and
+  [`choropleth()`](https://mharinga.github.io/spatialrisk/reference/choropleth.md),
+  and `providers` in the legacy Leaflet plot methods.
+
 ## spatialrisk 0.8.3
+
+CRAN release: 2026-09-30
 
 - Grid hotspot refinement and continuous-to-grid fallback now generate
   and score centres in `crs_metric`, using the same tolerance-aware

@@ -525,6 +525,10 @@ new_hotspot_object <- function(hotspots, contributing_points, radius,
 #'   \code{NULL}, colours are chosen with \code{grDevices::hcl.colors()}.
 #' @param max.rad Maximum point radius passed to \code{mapview::mapview()}.
 #'   Default is \code{20}.
+#' @param basemaps Character vector of basemap providers. The first provider
+#'   is shown initially; the others are available in the layer control.
+#'   Defaults to \code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+#'   \code{"Esri.WorldImagery"}. Applied to all map layers and plot types.
 #' @param ... Additional arguments passed to \code{mapview::mapview()} for the
 #'   contributing point layer when \code{type = "concentration"}, or to the
 #'   raster mapview call for diagnostic raster layers.
@@ -539,7 +543,9 @@ new_hotspot_object <- function(hotspots, contributing_points, radius,
 #' @export
 plot.hotspot <- function(x, type = c("concentration", "focal",
                                      "rasterized", "updated_focal"),
-                         color1 = NULL, max.rad = 20, ...) {
+                         color1 = NULL, max.rad = 20, ...,
+                         basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap",
+                                      "Esri.WorldImagery")) {
   type <- match.arg(type)
   rasterized <- attr(x, "rasterized")
   focal <- attr(x, "focal")
@@ -592,6 +598,7 @@ plot.hotspot <- function(x, type = c("concentration", "focal",
            max.rad = max.rad,
            zcol = "id",
            layer.name = "Contributing points",
+           map.types = basemaps,
            legend = FALSE),
       list(...)
     )
@@ -603,6 +610,7 @@ plot.hotspot <- function(x, type = c("concentration", "focal",
                         zcol = "id",
                         alpha.regions = .1,
                         layer.name = "Hotspot radius",
+                        map.types = basemaps,
                         legend = legend)
     if (!legend) {
       buffer_args$col.region <- color1[1]
@@ -613,11 +621,11 @@ plot.hotspot <- function(x, type = c("concentration", "focal",
   }
 
   if (type == "focal") {
-    ut <- mapview::mapview(focal, ...)
+    ut <- mapview::mapview(focal, map.types = basemaps, ...)
   }
 
   if (type == "rasterized") {
-    ut <- mapview::mapview(rasterized, ...)
+    ut <- mapview::mapview(rasterized, map.types = basemaps, ...)
   }
 
   if (type == "updated_focal") {
@@ -628,7 +636,7 @@ plot.hotspot <- function(x, type = c("concentration", "focal",
     }
     foc_upd <- terra::classify(focal, cbind(-Inf, threshold, NA), right = FALSE)
     foc_trim <- terra::trim(foc_upd)
-    ut <- mapview::mapview(foc_trim, ...)
+    ut <- mapview::mapview(foc_trim, map.types = basemaps, ...)
   }
   ut
 }

@@ -137,7 +137,7 @@ create_grid_points <- function(df, meters) {
 
 #' @keywords internal
 add_providers_to_map <- function(x, providers) {
-  prov <- NULL
+  prov <- character()
   if (!is.null(providers)) {
     for (i in seq_along(providers)) {
       if (providers[i] %in% names(leaflet::providers)) {
@@ -153,6 +153,13 @@ add_providers_to_map <- function(x, providers) {
                 call. = FALSE)
       }
     }
+  }
+  if (!length(prov)) {
+    x <- leaflet::addTiles(x, group = "OpenStreetMap")
+    prov <- "OpenStreetMap"
+  }
+  if (length(prov) > 1L) {
+    x <- leaflet::hideGroup(x, prov[-1L])
   }
   return(list(map = x, used_providers = prov))
 }

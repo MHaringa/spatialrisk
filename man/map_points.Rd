@@ -12,7 +12,8 @@ map_points(
   crs = 4326,
   at = NULL,
   layer_name = NULL,
-  ...
+  ...,
+  basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery")
 )
 }
 \arguments{
@@ -35,6 +36,11 @@ Default is \code{4326}.}
 \item{layer_name}{Optional layer name passed to \code{mapview}.}
 
 \item{...}{Additional arguments passed to \code{mapview::mapview()}.}
+
+\item{basemaps}{Character vector of basemap providers. The first provider
+is shown initially; the others are available in the layer control.
+Defaults to \code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+\code{"Esri.WorldImagery"}. Passed to \code{mapview::mapview()}.}
 }
 \value{
 An interactive \code{mapview} object.
@@ -46,6 +52,7 @@ point coordinates, optionally colored by a selected variable.
 \examples{
 \dontrun{
 map_points(Groningen, value = "amount")
+map_points(Groningen, value = "amount", basemaps = "OpenStreetMap")
 }
 
 }

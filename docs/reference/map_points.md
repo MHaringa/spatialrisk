@@ -14,7 +14,8 @@ map_points(
   crs = 4326,
   at = NULL,
   layer_name = NULL,
-  ...
+  ...,
+  basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery")
 )
 ```
 
@@ -57,6 +58,14 @@ map_points(
   Additional arguments passed to
   [`mapview::mapview()`](https://r-spatial.github.io/mapview/reference/mapView.html).
 
+- basemaps:
+
+  Character vector of basemap providers. The first provider is shown
+  initially; the others are available in the layer control. Defaults to
+  `"Esri.WorldGrayCanvas"`, `"OpenStreetMap"`, and
+  `"Esri.WorldImagery"`. Passed to
+  [`mapview::mapview()`](https://r-spatial.github.io/mapview/reference/mapView.html).
+
 ## Value
 
 An interactive `mapview` object.
@@ -66,5 +75,6 @@ An interactive `mapview` object.
 ``` r
 if (FALSE) { # \dontrun{
 map_points(Groningen, value = "amount")
+map_points(Groningen, value = "amount", basemaps = "OpenStreetMap")
 } # }
 ```

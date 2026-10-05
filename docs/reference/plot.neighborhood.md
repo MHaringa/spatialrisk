@@ -20,7 +20,7 @@ plot(
   palette_circle = "YlOrRd",
   legend_position_circle = "bottomright",
   legend_title_circle = "Highest concentration",
-  providers = c("CartoDB.Positron", "nlmaps.luchtfoto"),
+  providers = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery"),
   ...
 )
 ```
@@ -61,7 +61,10 @@ plot(
 
 - providers:
 
-  Leaflet tile providers.
+  Leaflet tile providers. The first provider is shown initially; the
+  others are available in the layer control. Defaults to
+  `"Esri.WorldGrayCanvas"`, `"OpenStreetMap"`, and
+  `"Esri.WorldImagery"`.
 
 - ...:
 

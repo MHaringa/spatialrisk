@@ -9,7 +9,7 @@ point coordinates, optionally colored by a selected variable."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,8 @@ point coordinates, optionally colored by a selected variable.</p>
 <span>  crs <span class="op">=</span> <span class="fl">4326</span>,</span>
 <span>  at <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  layer_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  basemaps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span>, <span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldImagery"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -91,6 +92,13 @@ Default is <code>4326</code>.</p></dd>
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to <code><a href="https://r-spatial.github.io/mapview/reference/mapView.html" class="external-link">mapview::mapview()</a></code>.</p></dd>
 
+
+<dt id="arg-basemaps">basemaps<a class="anchor" aria-label="anchor" href="#arg-basemaps"></a></dt>
+<dd><p>Character vector of basemap providers. The first provider
+is shown initially; the others are available in the layer control.
+Defaults to <code>"Esri.WorldGrayCanvas"</code>, <code>"OpenStreetMap"</code>, and
+<code>"Esri.WorldImagery"</code>. Passed to <code><a href="https://r-spatial.github.io/mapview/reference/mapView.html" class="external-link">mapview::mapview()</a></code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -101,6 +109,7 @@ Default is <code>4326</code>.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu">map_points</span><span class="op">(</span><span class="va">Groningen</span>, value <span class="op">=</span> <span class="st">"amount"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">map_points</span><span class="op">(</span><span class="va">Groningen</span>, value <span class="op">=</span> <span class="st">"amount"</span>, basemaps <span class="op">=</span> <span class="st">"OpenStreetMap"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

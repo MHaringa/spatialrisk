@@ -17,7 +17,7 @@ plot(
   legend_title = NULL,
   palette = "viridis",
   legend_position = "bottomleft",
-  providers = c("CartoDB.Positron", "nlmaps.luchtfoto"),
+  providers = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery"),
   ...
 )
 ```
@@ -46,7 +46,10 @@ plot(
 
 - providers:
 
-  Leaflet tile providers.
+  Leaflet tile providers. The first provider is shown initially; the
+  others are available in the layer control. Defaults to
+  `"Esri.WorldGrayCanvas"`, `"OpenStreetMap"`, and
+  `"Esri.WorldImagery"`.
 
 - ...:
 

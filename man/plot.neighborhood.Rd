@@ -13,7 +13,7 @@
   palette_circle = "YlOrRd",
   legend_position_circle = "bottomright",
   legend_title_circle = "Highest concentration",
-  providers = c("CartoDB.Positron", "nlmaps.luchtfoto"),
+  providers = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery"),
   ...
 )
 }
@@ -34,7 +34,10 @@
 
 \item{legend_title_circle}{Optional legend title for the circle layer.}
 
-\item{providers}{Leaflet tile providers.}
+\item{providers}{Leaflet tile providers. The first provider is shown
+initially; the others are available in the layer control. Defaults to
+\code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+\code{"Esri.WorldImagery"}.}
 
 \item{...}{Additional arguments passed to the interactive map.}
 }

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -185,6 +185,17 @@ for polygon labels in interactive maps.</p>
 across municipalities. The function returns a <code>tmap</code> object,
 so the map can be further adjusted with <code>tmap</code> if a report
 requires additional formatting.</p>
+<p>Interactive maps use <code>Esri.WorldGrayCanvas</code> initially,
+with <code>OpenStreetMap</code> and <code>Esri.WorldImagery</code>
+available in the basemap selector. Set <code>basemaps</code> in
+<code><a href="../reference/choropleth.html">choropleth()</a></code> to choose a different background:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/choropleth.html">choropleth</a></span><span class="op">(</span><span class="va">municipality_exposure</span>, value <span class="op">=</span> <span class="st">"amount_sum"</span>, mode <span class="op">=</span> <span class="st">"view"</span>,</span>
+<span>           basemaps <span class="op">=</span> <span class="st">"Esri.WorldImagery"</span><span class="op">)</span></span></code></pre></div>
+<p>The same <code>basemaps</code> argument is available for
+<code><a href="../reference/map_points.html">map_points()</a></code> and hotspot or workflow <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
+methods, for example
+<code>map_points(point_exposures, basemaps = "OpenStreetMap")</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="interpreting-the-map">Interpreting the map<a class="anchor" aria-label="anchor" href="#interpreting-the-map"></a>

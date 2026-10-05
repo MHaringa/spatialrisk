@@ -13,7 +13,7 @@ in a specified column, with clustering based on the Fisher–Jenks algorithm."><
 
     <a class="navbar-brand me-2" href="../index.html">spatialrisk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,8 @@ in a specified column, with clustering based on the Fisher–Jenks algorithm.</p
 <span>  legend_title <span class="op">=</span> <span class="st">"Value"</span>,</span>
 <span>  palette <span class="op">=</span> <span class="st">"viridis"</span>,</span>
 <span>  id_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  basemaps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span>, <span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldImagery"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,6 +105,15 @@ Prefix the name with <code>"-"</code> to reverse the order. Default is
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to <code><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tmap::tm_polygons()</a></code>.</p></dd>
 
+
+<dt id="arg-basemaps">basemaps<a class="anchor" aria-label="anchor" href="#arg-basemaps"></a></dt>
+<dd><p>Character vector of basemap providers for
+<code>mode = "view"</code>. The first provider is shown initially; the others
+are available in the layer control. Defaults to
+<code>"Esri.WorldGrayCanvas"</code>, <code>"OpenStreetMap"</code>, and
+<code>"Esri.WorldImagery"</code>. Ignored in static mode. Passed to
+<code><a href="https://r-tmap.github.io/tmap/reference/tm_basemap.html" class="external-link">tmap::tm_basemap()</a></code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -125,8 +135,15 @@ Prefix the name with <code>"-"</code> to reverse the order. Default is
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="summarise_points_by_polygon.html">summarise_points_by_polygon</a></span><span class="op">(</span><span class="va">nl_provincie</span>, <span class="va">insurance</span>, <span class="st">"amount"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 109 points are outside any polygon.</span>
 <span class="r-in"><span><span class="fu">choropleth</span><span class="op">(</span><span class="va">test</span>, value <span class="op">=</span> <span class="st">"amount_sum"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'stars':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   method                  from</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   st_interpolate_aw.stars sf  </span>
 <span class="r-plt img"><img src="choropleth-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu">choropleth</span><span class="op">(</span><span class="va">test</span>, value <span class="op">=</span> <span class="st">"amount_sum"</span>, id <span class="op">=</span> <span class="st">"areaname"</span>, mode <span class="op">=</span> <span class="st">"view"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">choropleth</span><span class="op">(</span><span class="va">test</span>, value <span class="op">=</span> <span class="st">"amount_sum"</span>, mode <span class="op">=</span> <span class="st">"view"</span>,</span></span>
+<span class="r-in"><span>           basemaps <span class="op">=</span> <span class="st">"Esri.WorldImagery"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

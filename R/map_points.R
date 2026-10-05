@@ -14,6 +14,10 @@
 #'   Default is \code{4326}.
 #' @param at Optional numeric vector; breakpoints used for visualization.
 #' @param layer_name Optional layer name passed to \code{mapview}.
+#' @param basemaps Character vector of basemap providers. The first provider
+#'   is shown initially; the others are available in the layer control.
+#'   Defaults to \code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+#'   \code{"Esri.WorldImagery"}. Passed to \code{mapview::mapview()}.
 #' @param ... Additional arguments passed to \code{mapview::mapview()}.
 #'
 #' @return An interactive \code{mapview} object.
@@ -23,11 +27,14 @@
 #' @examples
 #' \dontrun{
 #' map_points(Groningen, value = "amount")
+#' map_points(Groningen, value = "amount", basemaps = "OpenStreetMap")
 #' }
 #'
 #' @export
 map_points <- function(data, value = NULL, lon = "lon", lat = "lat",
-                       crs = 4326, at = NULL, layer_name = NULL, ...) {
+                       crs = 4326, at = NULL, layer_name = NULL, ...,
+                       basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap",
+                                    "Esri.WorldImagery")) {
 
   if (!requireNamespace("mapview", quietly = TRUE)) {
     stop("mapview is needed for this function to work. Install it via ",
@@ -80,5 +87,6 @@ map_points <- function(data, value = NULL, lon = "lon", lat = "lat",
     layer_name <- if (is.null(value)) "points" else value
   }
 
-  mapview::mapview(obj_sf, zcol = value, layer.name = layer_name, at = at, ...)
+  mapview::mapview(obj_sf, zcol = value, layer.name = layer_name, at = at,
+                   map.types = basemaps, ...)
 }

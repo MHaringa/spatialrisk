@@ -132,6 +132,24 @@ This map shows how the total point-level exposure is distributed across
 municipalities. The function returns a `tmap` object, so the map can be
 further adjusted with `tmap` if a report requires additional formatting.
 
+Interactive maps use `Esri.WorldGrayCanvas` initially, with
+`OpenStreetMap` and `Esri.WorldImagery` available in the basemap
+selector. Set `basemaps` in
+[`choropleth()`](https://mharinga.github.io/spatialrisk/reference/choropleth.md)
+to choose a different background:
+
+``` r
+
+choropleth(municipality_exposure, value = "amount_sum", mode = "view",
+           basemaps = "Esri.WorldImagery")
+```
+
+The same `basemaps` argument is available for
+[`map_points()`](https://mharinga.github.io/spatialrisk/reference/map_points.md)
+and hotspot or workflow
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) methods, for
+example `map_points(point_exposures, basemaps = "OpenStreetMap")`.
+
 ## Interpreting the map
 
 A choropleth map represents values attached to predefined polygons. In

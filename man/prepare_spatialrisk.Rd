@@ -34,7 +34,12 @@ optimize_hotspot(
   top_n = lifecycle::deprecated()
 )
 
-\method{plot}{spatialrisk_hotspot_workflow}(x, type = c("auto", "raster", "candidates"), ...)
+\method{plot}{spatialrisk_hotspot_workflow}(
+  x,
+  type = c("auto", "raster", "candidates"),
+  ...,
+  basemaps = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery")
+)
 }
 \arguments{
 \item{data}{A data.frame containing point-level exposures. Must include
@@ -91,6 +96,11 @@ return.}
 selection and selected focal candidate cells afterwards.}
 
 \item{...}{Additional arguments passed to `mapview::mapview()`.}
+
+\item{basemaps}{Character vector of basemap providers for `plot()`.
+The first provider is shown initially; the others are available in the
+layer control. Defaults to `"Esri.WorldGrayCanvas"`, `"OpenStreetMap"`,
+and `"Esri.WorldImagery"`. Passed to `mapview::mapview()`.}
 }
 \value{
 `prepare_spatialrisk()` and `select_candidates()` return an object of class

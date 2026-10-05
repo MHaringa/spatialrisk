@@ -10,7 +10,7 @@
   legend_title = NULL,
   palette = "viridis",
   legend_position = "bottomleft",
-  providers = c("CartoDB.Positron", "nlmaps.luchtfoto"),
+  providers = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldImagery"),
   ...
 )
 }
@@ -25,7 +25,10 @@
 
 \item{legend_position}{Legend position for the point layer.}
 
-\item{providers}{Leaflet tile providers.}
+\item{providers}{Leaflet tile providers. The first provider is shown
+initially; the others are available in the layer control. Defaults to
+\code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+\code{"Esri.WorldImagery"}.}
 
 \item{...}{Additional arguments passed to the interactive map.}
 }

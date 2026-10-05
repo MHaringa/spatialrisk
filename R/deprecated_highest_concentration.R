@@ -302,7 +302,10 @@ neighborhood_gh_search <- function(hc, highest_geohash = 1, max.call = 1000,
 #' @param legend_title Optional legend title.
 #' @param palette Palette used for the point layer.
 #' @param legend_position Legend position for the point layer.
-#' @param providers Leaflet tile providers.
+#' @param providers Leaflet tile providers. The first provider is shown
+#'   initially; the others are available in the layer control. Defaults to
+#'   \code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+#'   \code{"Esri.WorldImagery"}.
 #' @param ... Additional arguments passed to the interactive map.
 #'
 #' @return An interactive map.
@@ -319,7 +322,8 @@ plot.conc <- function(x,
                       legend_title = NULL,
                       palette = "viridis",
                       legend_position = "bottomleft",
-                      providers = c("CartoDB.Positron", "nlmaps.luchtfoto"),
+                      providers = c("Esri.WorldGrayCanvas", "OpenStreetMap",
+                                    "Esri.WorldImagery"),
                       ...) {
 
   if (!inherits(x, "conc")) {
@@ -386,11 +390,7 @@ plot.conc <- function(x,
   cols <- colourvalues::colour_values(pts_sf[[value_nm]], palette = palette)
   qpal <- leaflet::colorNumeric(palette, pts_sf[[value_nm]])
 
-  ml <- leaflet::leaflet() |>
-
-    # Base groups
-    leaflet::addTiles(group = "OSM")
-
+  ml <- leaflet::leaflet()
   ml <- add_providers_to_map(ml, providers)
 
   ml[["map"]] |>
@@ -419,7 +419,7 @@ plot.conc <- function(x,
 
     # Layers control
     leaflet::addLayersControl(
-      baseGroups = c("OSM", ml[["used_providers"]]),
+      baseGroups = ml[["used_providers"]],
       overlayGroups = c("Points", "Geohash"),
       options = leaflet::layersControlOptions(collapsed = FALSE)
     ) |>
@@ -443,7 +443,10 @@ plot.conc <- function(x,
 #' @param palette_circle Palette used for the circle layer.
 #' @param legend_position_circle Legend position for the circle layer.
 #' @param legend_title_circle Optional legend title for the circle layer.
-#' @param providers Leaflet tile providers.
+#' @param providers Leaflet tile providers. The first provider is shown
+#'   initially; the others are available in the layer control. Defaults to
+#'   \code{"Esri.WorldGrayCanvas"}, \code{"OpenStreetMap"}, and
+#'   \code{"Esri.WorldImagery"}.
 #' @param ... Additional arguments passed to the interactive map.
 #'
 #' @return An interactive map.
@@ -466,8 +469,9 @@ plot.neighborhood <- function(x,
                               palette_circle = "YlOrRd",
                               legend_position_circle = "bottomright",
                               legend_title_circle = "Highest concentration",
-                              providers = c("CartoDB.Positron",
-                                            "nlmaps.luchtfoto"),
+                              providers = c("Esri.WorldGrayCanvas",
+                                            "OpenStreetMap",
+                                            "Esri.WorldImagery"),
                               ...) {
 
   if (!requireNamespace("leaflet", quietly = TRUE)) {
@@ -539,11 +543,7 @@ plot.neighborhood <- function(x,
     popuptxt <- paste(popuptxt, x)
   }
 
-  m <- leaflet::leaflet() |>
-
-    # Base groups
-    leaflet::addTiles(group = "OSM")
-
+  m <- leaflet::leaflet()
   ml <- add_providers_to_map(m, providers)
 
   # Overlay groups with 200m circles
@@ -593,7 +593,7 @@ plot.neighborhood <- function(x,
 
     # Layers control
     leaflet::addLayersControl(
-      baseGroups = c("OSM", ml[["used_providers"]]),
+      baseGroups = ml[["used_providers"]],
       overlayGroups = c("Points", "Circle", "Geohash"),
       options = leaflet::layersControlOptions(collapsed = FALSE)
     ) |>
