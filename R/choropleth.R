@@ -32,7 +32,9 @@
 #' @examples
 #' test <- summarise_points_by_polygon(nl_provincie, insurance, "amount")
 #' choropleth(test, value = "amount_sum")
+#' \dontrun{
 #' choropleth(test, value = "amount_sum", id = "areaname", mode = "view")
+#' }
 #'
 #' @export
 choropleth <- function(data, value = "output", id = NULL,
