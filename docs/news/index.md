@@ -1,13 +1,20 @@
 # Changelog
 
-## spatialrisk (development version)
+## spatialrisk 0.8.4
 
 - Interactive maps now use `Esri.WorldGrayCanvas` by default, with
   `OpenStreetMap` and `Esri.WorldImagery` available in the basemap
-  selector. CARTO is no longer included by default. Basemaps can be set
-  through `basemaps` in mapview-based plots and
+  selector. CARTO basemaps are no longer included by default because
+  they now require an API key (see [mapview
+  issue](https://github.com/r-spatial/mapview/issues/520)
+  [\#520](https://github.com/mharinga/spatialrisk/issues/520)). Basemaps
+  can be set through `basemaps` in mapview-based plots and
   [`choropleth()`](https://mharinga.github.io/spatialrisk/reference/choropleth.md),
   and `providers` in the legacy Leaflet plot methods.
+- Interactive
+  [`choropleth()`](https://mharinga.github.io/spatialrisk/reference/choropleth.md)
+  examples are now wrapped in `\dontrun{}` to avoid opening interactive
+  maps when running package examples.
 
 ## spatialrisk 0.8.3
 
