@@ -10,7 +10,6 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/cells_above_threshold.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/choropleth.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/choropleth_ggplot2.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/conc_per_cell_new.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/concentration.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/concentration_hotspot.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/concentration_per_candidate_cell.html</loc></url>
@@ -18,7 +17,6 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/convert_df_to_sf.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/find_highest_concentration.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/haversine.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/highest_conc.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/highest_concentration.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/highest_concentration_candidate.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/index.html</loc></url>
@@ -28,7 +26,6 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/knmi_stations.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/map_points.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/map_points_to_cells.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/max_cover_circle.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/mw_create.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/neighborhood_gh_search.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/nl_corop.html</loc></url>
@@ -42,15 +39,12 @@
 <url><loc>https://mharinga.github.io/spatialrisk/reference/plot.neighborhood.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/plot_points.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/points_in_circle_vec.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_to_polygon.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/points_within_radius.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/prepare_spatialrisk.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/radius_sum.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/spatialrisk-deprecated.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/summarise_points_by_polygon.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/top_n_focals.html</loc></url>
-<url><loc>https://mharinga.github.io/spatialrisk/reference/update_db.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/update_focal.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/update_hotspot_cache.html</loc></url>
 <url><loc>https://mharinga.github.io/spatialrisk/reference/update_rasterize.html</loc></url>
