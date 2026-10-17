@@ -1,3 +1,5 @@
+# spatialrisk (development version)
+
 # spatialrisk 0.8.4
 
 * Interactive maps now use `Esri.WorldGrayCanvas` by default, with
