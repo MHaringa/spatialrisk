@@ -1,6 +1,10 @@
 # Changelog
 
+## spatialrisk (development version)
+
 ## spatialrisk 0.8.4
+
+CRAN release: 2026-10-16
 
 - Interactive maps now use `Esri.WorldGrayCanvas` by default, with
   `OpenStreetMap` and `Esri.WorldImagery` available in the basemap
